@@ -1,0 +1,397 @@
+#!/bin/sh
+
+checklist() {
+    while
+        clear
+        printf "\033[1m%s\n\033[0m" "Filelist: $FILELIST"
+        printf "\033[1m\033[34m\n%s\n\033[0m" "Do you want to add addons? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
+        for loop in "Yes" "No"; do echo "$((i += 1))) $loop"; done
+        printf "#? "
+        read -r choose
+    do
+        unset i
+        case $choose in
+            "1")
+                printf "\033[1m\033[34m\n%s\n\033[0m" "Please enter addons names or addons' absolute path to server."
+                unset STRING
+                read -r STRING
+                FILELISTTMP="$STRING"
+                FILELIST="$FILELIST
+$FILELISTTMP"
+                FILELIST=$(printf "%s\n" "$FILELIST" | awk '!a[$0]++')
+                checklist
+                break
+                ;;
+            "2")
+                break
+                ;;
+        esac
+    done
+}
+
+case "$1" in
+
+    -h | --help)
+        printf "%s\n" "
+CLI for server related tools of SRB2/SRB2Kart
+
+Usage: srb2srv [OPTION] <addon-path>
+  OPTIONS:
+     -h, --help                             Show this help text
+     -c, --checkport                        Check if SRB2/SRB2Kart server is reachable
+     -d, --dedicated      <addon-path>      Start dedicated SRB2 server
+     -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server
+     -k, --kart                             Go to SRB2Kart Master Server
+     -s, --server         <addon-path>      Start SRB server and play
+     -sk, --serverkart    <addon-path>      Start SRB2Kart server and play
+
+  EXAMPLES:
+     1. Go to SRB2Kart Master Server and connect to selected server from list:
+            srb2srv
+
+     2. Go to SRB2Kart Master Server and connect to selected server from list:
+            srb2srv --kart
+
+     3. Check if port for SRB2/SRB2Kart server is opened:
+            srb2srv --checkport
+
+     4. Run SRB2 server and add path to addon or directory of addons:
+            srb2srv --server ~/addon.pk3
+
+     Exporting SRB2/SRB2Kart executable path, Google Chrome/Chromium sandbox directory, Node modules path in "SRB2" or "SRB2KART","CHROME_DEVEL_SANDBOX" and "NODE_PATH" environment variables in shell configuration file is required for script to work.
+"
+        exit
+        ;;
+
+    "")
+        SRB2MSJS="
+const puppeteer = require('puppeteer');
+
+// Puppeteer page event types to catch
+const pevents = [
+    'response'
+];
+
+async function main() {
+    // Create headless session
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    const client = await page.target().createCDPSession();
+
+    // Log puppeter page notifications
+    pevents.forEach((peventName) => {
+        page.on(peventName, async (plistenerFunc) => {
+            console.log({ peventName, plistenerFunc });
+            if (peventName == 'response') {
+                await plistenerFunc.text()
+                    .then((textBody) => {
+                        console.log('textBody: ', textBody);
+                    }, (err) => {
+                        console.error(plistenerFunc, err);
+                        console.log(plistenerFunc, err);
+                    })
+                ;
+            }
+        });
+    });
+
+    // Open a page, than close
+    await page.goto('https://old.mb.srb2.org/masterserver.php', { waitUntil: ['networkidle2'], timeout: 100000
+});
+    await page.close();
+    await browser.close();
+}
+
+main();
+"
+        SRVCODE=$(printf "%s\n" "$SRB2MSJS" | node - | awk '/title="Query Server Details"/{flag=1;next}/title="File Complaint"/{flag=0}flag {gsub("\r$","");print}')
+        SRVNAME=$(printf "%s$(printf "%s\n" "$SRVCODE" | awk -F'<div class="servername-background" style="background:#002200;color:White;display:inline-block;border-radius:10px;padding:4px 8px;font-size:small;"><b><span style="color: inherit;">|</b></div>' '/<div class="servername-background"/ {(gsub("&amp;","\\46") gsub("<span style=\"color:inherit;\">","") gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m")) gsub("</span>","\033[0m"); print $2}')\n")
+        SRVIP=$(printf "%s\n" "$SRVCODE" | awk '/<td align="left" style="width: 200px; padding: 5px;" class="alt*.*">/{flag=1;next}/<\/td>/{flag=0}flag {print}' | awk '/:/ {!a[$0]++; print}')
+        PLAYERS=$(printf "%s\n" "$SRVCODE" | awk '/<td align="center" style="width: 50px; padding: 5px;" class="alt*.*">/{flag=1;next}/<\/td>/{flag=0}flag && /[0-9]*\/[0-9]*/ && !/</ {print}')
+        GAMETYPE=$(printf "%s\n" "$SRVCODE" | awk '/<td align="center" style="width: 100px; padding: 5px;" class="alt*.*">/{flag=1;next}/<\/td>/{flag=0}flag{print}')
+        SRB2VER=$(printf "%s\n" "$SRVCODE" | awk -F'<span style="text-decoration:none;border-bottom:1px dotted;" title="*.*">|</span>' '/<span style="text-decoration:none;border-bottom:1px dotted;" title="*.*">/,/<\/span>/ {!a[$0]++; print $2}')
+
+        ###SRB2 Master Server API###
+        #        SRVCODE=$(curl -s "https://mb.srb2.org/MS/0/servers/")
+        #        SRVNAMETMP=$(printf "%s\n" "$SRVCODE" | awk '/[0-9]*.[0-9]*.[0-9]*.[0-9]* [0-9]*/ {(gsub("%80","\\e[0m") gsub("%AB|%E2|%A1","") gsub("%20"," ") gsub("%2A","*") gsub("%2B","+") gsub("%60","`") gsub("%2F","/") gsub("%28","(") gsub("%29",")") gsub("%3F","?") gsub("%27","\47") gsub("%7C","|") gsub("%21","!") gsub("%5B","[") gsub("%5D","]") gsub("%82","\\e[0;38;2;255;255;15m") gsub("%84","\\e[0;38;2;115;115;255m") gsub("%87","\\e[0;38;2;255;151;54m") gsub("%85","\\e[0;38;2;255;63;63m") gsub("%86","\\e[0;38;2;196;196;225m") gsub("%81","\\e[0;38;2;223;0;223m") gsub("%89","\\e[0;38;2;207;127;207m") gsub("%83","\\e[0;38;2;105;224;70m") gsub("%88","\\e[0;38;2;85;200;255m") ); for(i=3;i<=NF-1;++i)printf $i""FS ; print ""}')
+        #        SRVNAME=$(printf "$(printf "%s\n" "$SRVNAMETMP" | awk '{gsub("$","\\e[0m"); print}')")
+        #        SRVIP=$(printf "%s\n" "$SRVCODE" | awk '/[0-9]*.[0-9]*.[0-9]*.[0-9]* [0-9]*/ {print $1":"$2}')
+        #        SRB2VER=$(printf "%s\n" "$SRVCODE" | awk '/[0-9]*.[0-9]*.[0-9]*.[0-9]* [0-9]*/ {print $NF}')
+        #        array=$(printf "%s\nRefresh" "$SRVCODE" | awk '/[0-9]*.[0-9]*.[0-9]*.[0-9]* [0-9]*|Refresh/ {print $1":"$2}' | awk '{gsub("Refresh:","Refresh"); print}')
+
+        array=$(printf "%s\nRefresh" "$(awk -v left="$SRVNAME" -v center="$SRVIP" -v right="$PLAYERS" 'BEGIN{
+split(left,l,/\n/)
+split(center,c,/\n/)
+split(right,r,/\n/)
+for (i = 1; i in l; i++) {print l[i] " : " c[i] " : " r[i]}}' | sort -t : +3 -rn | awk -F':' '!/? \/ ?/ {print $2":"$3}')")
+        arrayname=$(printf "%s\n\033[1m\033[34mRefresh\033[0m" "$(awk -v left="$SRVNAME" -v leftcenter="$SRVIP" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$SRB2VER" 'BEGIN{
+split(left,l,/\n/)
+split(leftcenter,lc,/\n/)
+split(center,c,/\n/)
+split(rightcenter,rc,/\n/)
+split(right,r,/\n/)
+for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[0m\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mVersion: "r[i]"\033[0m"}}' | sort -t : +3 -rn | awk '!/? \/ ?/ {print}')")
+
+        count=$(printf "%s\n" "$array" | wc -l)
+        n=""
+        clear
+        while true; do
+            printf "\033[1m\033[34m%s\n\033[0m" "Please choose server by typing number and then pressing enter. Press enter or ctrl+c to quit."
+            printf "%s\n" "$arrayname" | awk '{print NR")", $0}'
+            printf "#? "
+            read -r n
+            if [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
+                OPTURL=$(printf "%s\n" "$array" | awk 'NR=='"${n}"'')
+                if [ "$OPTURL" = "Refresh" ]; then
+                    clear
+                    exec "$0"
+                else
+                    printf "\033[1m\033[34m%s\n\033[0m" "Connecting to server $OPTURL ."
+                    sleep 1
+                    $SRB2 -connect $OPTURL 2>&1
+                fi
+                break
+            else
+                printf "%s\n" "No option has been chosen."
+                exit
+            fi
+        done 2> /dev/null
+        ;;
+
+    -c | --checkport)
+        printf "\033[1m\033[34m%s\n\n\033[0m" "Before running this, make sure that your server is up."
+        if [ -n "$(curl -s "https://www.jameds.org/SRB2/port/" | awk '/is unreachable/')" ]; then
+            curl -s "https://www.jameds.org/SRB2/port/" | awk '/<p class="ip">/,/<\/div>/ {split($0,a,"<"); print a[1]}' | awk '{getline a; getline b; getline c; print "\033[7;31m"a""b" "c"\033[0m";next}1'
+        else
+            curl -s "https://www.jameds.org/SRB2/port/" | awk '/<p class="ip">/,/<\/div>/ {split($0,a,"<"); print a[1]}' | awk 'NF{getline a; getline b; print "\033[7;32m"$0" "b"\033[0m"}'
+        fi
+        ;;
+
+    -d | --dedicated)
+        ENDARG=$(printf "%s\n" "$*" | awk 'match($NF, /\//) {print substr($NF, RSTART, RLENGTH)}')
+        if [ "$ENDARG" = "/" ]; then
+            shift
+            FILELIST="-file $(find "$@" -maxdepth 1 -type f)"
+        else
+            checklist
+            if [ -n "$FILELIST" ]; then
+                FILELIST="-file $(find $FILELIST -maxdepth 1 -type f)"
+            else
+                FILELIST=""
+            fi
+        fi
+        while
+            clear
+            printf "\033[1m%s\n\033[0m" "Filelist:
+${FILELIST##* }"
+            printf "\033[1m\033[34m\n%s\n\033[0m" "Do you want to advertise your server? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
+            for loop in "Yes" "No"; do echo "$((i += 1))) $loop"; done
+            printf "#? "
+            read -r choose
+        do
+            unset i
+            if [ -n "$choose" ]; then
+                case $choose in
+                    "1")
+                        while
+                            printf "\033[1m\033[34m\n%s\n\033[0m" "Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
+                            for loop in "Standard" "Casual" "Custom"; do echo "$((i += 1))) $loop"; done
+                            printf "#? "
+                            read -r choose
+                        do
+                            unset i
+                            if [ -n "$choose" ]; then
+                                case $choose in
+                                    "1")
+                                        $SRB2 -dedicated -room 33 $FILELIST
+                                        break
+                                        ;;
+                                    "2")
+                                        $SRB2 -dedicated -room 28 $FILELIST
+                                        break
+                                        ;;
+                                    "3")
+                                        $SRB2 -dedicated -room 38 $FILELIST
+                                        break
+                                        ;;
+                                esac
+                            else
+                                printf "\n%s\n" "Quitting."
+                                exit
+                            fi
+                        done
+                        break
+                        ;;
+                    "2")
+                        $SRB2 -dedicated $FILELIST
+                        break
+                        ;;
+                esac
+            else
+                printf "\n%s\n" "Quitting."
+                exit
+            fi
+        done
+        ;;
+
+    -dk | --dedicatedkart)
+        ENDARG=$(printf "%s\n" "$*" | awk 'match($NF, /\//) {print substr($NF, RSTART, RLENGTH)}')
+        if [ "$ENDARG" = "/" ]; then
+            shift
+            FILELIST="-file $(find "$@" -maxdepth 1 -type f)"
+            clear
+            printf "\033[1m%s\n\033[0m" "Filelist:
+${FILELIST##* }"
+        else
+            checklist
+            if [ -n "$FILELIST" ]; then
+                FILELIST="-file $(find $FILELIST -maxdepth 1 -type f)"
+            else
+                FILELIST=""
+            fi
+        fi
+        printf "\033[1m\033[34m\n%s\n\n\033[0m" "Remember to type 'advertise 1' in console to advertise in Master Server."
+        sleep 1
+        $SRB2KART -dedicated $FILELIST
+        ;;
+
+    -k | --kart)
+        SRVCODE=$(curl -s https://srb2kart.aqua.fyi/browser/index.html)
+
+        SRVIP=$(printf "%s\n" "$SRVCODE" | awk -F'<td><a href="srb2kart://*.*">|</a></td>' '/<td><a href="srb2kart:\/\/*.*">[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*<\/a><\/td>/ {print $2}')
+
+        SRVNAME=$(printf "%s$(printf "%s\n" "$SRVCODE" | awk '/<td id="name_[0-9]*">/ && !/alt="Unreachable server"/ && gsub("<span style=\"color:inherit\">|<span style=\"color:inherit;\">|</td>|<td id=\"name_[0-9]*\">","") {(gsub(/&#x27;/,"\47") gsub("%","\\45") gsub(/^[ \t]+/, "")); print}' | awk '{(gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m")) gsub("</span>","\033[0m"); print}')\n")
+
+        PLAYERS=$(printf "%s\n" "$SRVCODE" | awk -F'<td id="players_*.*">|</td>' '/<td id="players_*.*">/ {print $2}')
+
+        GAMETYPE=$(printf "%s\n" "$SRVCODE" | awk -F'<td id="gametype_*.*">|</td>' '/<td id="gametype_*.*">/ {print $2}')
+
+        KARTSPEED=$(printf "%s\n" "$SRVCODE" | awk -F'<td id="kartspeed_*.*">|</td>' '/<td id="kartspeed_*.*">/ {print $2}')
+
+        arrayname=$(printf "%s\n\033[1m\033[34mRefresh\033[0m" "$(awk -v left="$SRVNAME" -v leftcenter="$SRVIP" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" 'BEGIN{
+split(left,l,/\n/)
+split(leftcenter,lc,/\n/)
+split(center,c,/\n/)
+split(rightcenter,rc,/\n/)
+split(right,r,/\n/)
+for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[0m\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mKartspeed: "r[i]"\033[0m"}}')")
+
+        array=$(printf "%s\nRefresh" "$(awk -v left="$SRVIP" -v right="$GAMETYPE" 'BEGIN{
+split(left,l,/\n/)
+split(right,r,/\n/)
+for (i = 1; i in l; i++) {print l[i],r[i]}}' | awk '!/-$/ {print $1}')")
+
+        count="$(printf "%s\n" "$arrayname" | wc -l)"
+        n=""
+        while true; do
+            printf "\033[1m\033[34m%s\n\033[0m" "Please choose server by typing number and then pressing enter. Press enter or ctrl+c to quit."
+            printf "%s\n" "$arrayname" | awk '{print NR")", $0}'
+            printf "#? "
+            read -r n
+            if [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
+                OPTURL=$(printf "%s\n" "$array" | awk 'NR=='"${n}"'')
+                if [ "$OPTURL" = "Refresh" ]; then
+                    clear
+                    exec "$0" --kart
+                else
+                    printf "\033[1m\033[34m%s\n\n\033[0m" "Connecting to server $OPTURL ."
+                    sleep 2
+                    $SRB2KART -connect $OPTURL 2>&1
+                fi
+                break
+            else
+                printf "%s\n" "No option has been chosen."
+                exit
+            fi
+        done 2> /dev/null
+        ;;
+
+    -s | --server)
+        ENDARG=$(printf "%s\n" "$*" | awk 'match($NF, /\//) {print substr($NF, RSTART, RLENGTH)}')
+        if [ "$ENDARG" = "/" ]; then
+            shift
+            FILELIST="-file $(find "$@" -maxdepth 1 -type f)"
+        else
+            checklist
+            if [ -n "$FILELIST" ]; then
+                FILELIST="-file $(find $FILELIST -maxdepth 1 -type f)"
+            else
+                FILELIST=""
+            fi
+        fi
+        while
+            clear
+            printf "\033[1m%s\n\033[0m" "Filelist:
+${FILELIST##* }"
+            printf "\033[1m\033[34m\n%s\n\033[0m" "Do you want to advertise your server? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
+            for loop in "Yes" "No"; do echo "$((i += 1))) $loop"; done
+            printf "#? "
+            read -r choose
+        do
+            unset i
+            if [ -n "$choose" ]; then
+                case $choose in
+                    "1")
+                        while
+                            printf "\033[1m\033[34m\n%s\n\033[0m" "Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
+                            for loop in "Standard" "Casual" "Custom"; do echo "$((i += 1))) $loop"; done
+                            printf "#? "
+                            read -r choose
+                        do
+                            unset i
+                            if [ -n "$choose" ]; then
+                                case $choose in
+                                    "1")
+                                        $SRB2 -server -room 33 $FILELIST
+                                        break
+                                        ;;
+                                    "2")
+                                        $SRB2 -server -room 28 $FILELIST
+                                        break
+                                        ;;
+                                    "3")
+                                        $SRB2 -server -room 38 $FILELIST
+                                        break
+                                        ;;
+                                esac
+                            else
+                                printf "\n%s\n" "Quitting."
+                                exit
+                            fi
+                        done
+                        break
+                        ;;
+                    "2")
+                        $SRB2 -server $FILELIST
+                        break
+                        ;;
+                esac
+            else
+                printf "\n%s\n" "Quitting."
+                exit
+            fi
+        done
+        ;;
+
+    -sk | --serverkart)
+        ENDARG=$(printf "%s\n" "$*" | awk 'match($NF, /\//) {print substr($NF, RSTART, RLENGTH)}')
+        if [ "$ENDARG" = "/" ]; then
+            shift
+            FILELIST="-file $(find "$@" -maxdepth 1 -type f)"
+            clear
+            printf "\033[1m%s\n\033[0m" "Filelist:
+${FILELIST##* }"
+        else
+            checklist
+            if [ -n "$FILELIST" ]; then
+                FILELIST="-file $(find $FILELIST -maxdepth 1 -type f)"
+            else
+                FILELIST=""
+            fi
+        fi
+        printf "\033[1m\033[34m\n%s\n\n\033[0m" "Remember to type 'advertise 1' in console to advertise in Master Server."
+        sleep 1
+        $SRB2KART -server $FILELIST
+        ;;
+
+esac
