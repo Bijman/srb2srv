@@ -32,7 +32,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 - Gentoo/Gentoo based: `sudo emerge -av coreutils bash curl gawk nodejs`,
 
-4. Install Puppeteer: `npm i puppeteer`.
+2. Install Puppeteer: `npm i puppeteer`.
 
 **Windows:**
 1. Installing Git Bash:
