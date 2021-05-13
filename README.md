@@ -79,10 +79,10 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 3. Set path to Google Chrome/Chromium sandbox (installed for example in node_modules/puppeteer/.local-chromium/linux-869685/chrome-linux/chrome_sandbox or node_modules/puppeteer/.local-chromium/win64-869685/chrome-win/chrome.exe): `export CHROME_DEVEL_SANDBOX="/path/to/chrome-sandbox"`,
 
-**If you want to run to server in SRB2:**
+**If you want start your own server in SRB2:**
 1. Enter your path to SRB2 executable file (lsdlsrb2, srb2win.exe) in shell configuration file (for example .bash_profile or .bashrc in user's home directory): `export SRB2="/path/to/SRB2-executable-file"`,
 
-**If you want to connect to server or run your server in SRB2Kart:**
+**If you want to connect to server or start your own server in SRB2Kart:**
 1. Enter your path to SRB2Kart executable file (srb2kart.exe, srb2kart) in shell configuration file (for example .bash_profile or .bashrc in user's home directory): `export SRB2KART="/path/to/SRB2Kart-executable-file"`.
 
 **Usage (from help text):**
