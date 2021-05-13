@@ -3,7 +3,8 @@
 checklist() {
     while
         clear
-        printf "\033[1m%s\n\033[0m" "Filelist: $FILELIST"
+        printf "\033[1m%s\n\033[0m" "Filelist:
+$(printf "%s\n" "$FILELIST" | awk '{gsub(":","\n"); print}' | awk -F'/' '{print $NF}')"
         printf "\033[1m\033[34m\n%s\n\033[0m" "Do you want to add addons? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
         for loop in "Yes" "No"; do echo "$((i += 1))) $loop"; done
         printf "#? "
@@ -16,8 +17,7 @@ checklist() {
                 unset STRING
                 read -r STRING
                 FILELISTTMP="$STRING"
-                FILELIST="$FILELIST
-$FILELISTTMP"
+                FILELIST="$FILELISTTMP:$FILELIST"
                 FILELIST=$(printf "%s\n" "$FILELIST" | awk '!a[$0]++')
                 checklist
                 break
@@ -42,7 +42,7 @@ Usage: srb2srv [OPTION] <addon-path>
      -d, --dedicated      <addon-path>      Start dedicated SRB2 server
      -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server
      -k, --kart                             Go to SRB2Kart Master Server
-     -s, --server         <addon-path>      Start SRB server and play
+     -s, --server         <addon-path>      Start SRB2 server and play
      -sk, --serverkart    <addon-path>      Start SRB2Kart server and play
 
   EXAMPLES:
@@ -146,7 +146,11 @@ for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\0
                     clear
                     exec "$0"
                 else
-                    printf "\033[1m\033[34m%s\n\033[0m" "Connecting to server $OPTURL ."
+                    IFS=':'
+                    SRB2=$(printf "%s\n" "$SRB2" | awk '{gsub(" /",":/") && gsub(" -",":-");print}' | awk '{gsub(" ","\\ ");print}' | awk '{gsub(":-\\\\","\\ -\\");print}')
+                    OPTURL=$(printf "%s\n" "$OPTURL" | awk '{gsub(" ","");print}')
+
+                    printf "\033[1m\033[34m\n%s\n\033[0m" "Connecting to server $OPTURL."
                     sleep 1
                     $SRB2 -connect $OPTURL 2>&1
                 fi
@@ -168,14 +172,16 @@ for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\0
         ;;
 
     -d | --dedicated)
-        ENDARG=$(printf "%s\n" "$*" | awk 'match($NF, /\//) {print substr($NF, RSTART, RLENGTH)}')
+        ENDARG=$(printf "%s\n" "$*" | awk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+        IFS=':'
+        SRB2=$(printf "%s\n" "$SRB2" | awk '{gsub(" /",":/") && gsub(" -",":-");print}' | awk '{gsub(" ","\\ ");print}' | awk '{gsub(":-\\\\","\\ -\\");print}')
         if [ "$ENDARG" = "/" ]; then
             shift
-            FILELIST="-file $(find "$@" -maxdepth 1 -type f)"
+            FILELIST="$(find "$@" -maxdepth 1 -type f -printf "%p:")"
         else
             checklist
             if [ -n "$FILELIST" ]; then
-                FILELIST="-file $(find $FILELIST -maxdepth 1 -type f)"
+                FILELIST="$(find $FILELIST -maxdepth 1 -type f -printf "%p:")"
             else
                 FILELIST=""
             fi
@@ -183,7 +189,7 @@ for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\0
         while
             clear
             printf "\033[1m%s\n\033[0m" "Filelist:
-${FILELIST##* }"
+$(printf "%s\n" "$FILELIST" | awk '{gsub(":","\n"); print}' | awk -F'/' '{print $NF}')"
             printf "\033[1m\033[34m\n%s\n\033[0m" "Do you want to advertise your server? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
             for loop in "Yes" "No"; do echo "$((i += 1))) $loop"; done
             printf "#? "
@@ -203,15 +209,15 @@ ${FILELIST##* }"
                             if [ -n "$choose" ]; then
                                 case $choose in
                                     "1")
-                                        $SRB2 -dedicated -room 33 $FILELIST
+                                        $SRB2 -dedicated -room 33 -file $FILELIST
                                         break
                                         ;;
                                     "2")
-                                        $SRB2 -dedicated -room 28 $FILELIST
+                                        $SRB2 -dedicated -room 28 -file $FILELIST
                                         break
                                         ;;
                                     "3")
-                                        $SRB2 -dedicated -room 38 $FILELIST
+                                        $SRB2 -dedicated -room 38 -file $FILELIST
                                         break
                                         ;;
                                 esac
@@ -223,7 +229,7 @@ ${FILELIST##* }"
                         break
                         ;;
                     "2")
-                        $SRB2 -dedicated $FILELIST
+                        $SRB2 -dedicated -file $FILELIST
                         break
                         ;;
                 esac
@@ -235,24 +241,26 @@ ${FILELIST##* }"
         ;;
 
     -dk | --dedicatedkart)
-        ENDARG=$(printf "%s\n" "$*" | awk 'match($NF, /\//) {print substr($NF, RSTART, RLENGTH)}')
+        ENDARG=$(printf "%s\n" "$*" | awk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+        IFS=':'
+        SRB2KART=$(printf "%s\n" "$SRB2KART" | awk '{gsub(" /",":/") && gsub(" -",":-");print}' | awk '{gsub(" ","\\ ");print}' | awk '{gsub(":-\\\\","\\ -\\");print}')
         if [ "$ENDARG" = "/" ]; then
             shift
-            FILELIST="-file $(find "$@" -maxdepth 1 -type f)"
+            FILELIST="$(find "$@" -maxdepth 1 -type f -printf "%p:")"
             clear
             printf "\033[1m%s\n\033[0m" "Filelist:
-${FILELIST##* }"
+$(printf "%s\n" "$FILELIST" | awk '{gsub(":","\n"); print}' | awk -F'/' '{print $NF}')"
         else
             checklist
             if [ -n "$FILELIST" ]; then
-                FILELIST="-file $(find $FILELIST -maxdepth 1 -type f)"
+                FILELIST="$(find $FILELIST -maxdepth 1 -type f -printf "%p:")"
             else
                 FILELIST=""
             fi
         fi
         printf "\033[1m\033[34m\n%s\n\n\033[0m" "Remember to type 'advertise 1' in console to advertise in Master Server."
         sleep 1
-        $SRB2KART -dedicated $FILELIST
+        $SRB2KART -dedicated -file $FILELIST
         ;;
 
     -k | --kart)
@@ -294,8 +302,11 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | awk '!/-$/ {print $1}')")
                     clear
                     exec "$0" --kart
                 else
-                    printf "\033[1m\033[34m%s\n\n\033[0m" "Connecting to server $OPTURL ."
-                    sleep 2
+                    IFS=':'
+                    SRB2KART=$(printf "%s\n" "$SRB2KART" | awk '{gsub(" /",":/") && gsub(" -",":-");print}' | awk '{gsub(" ","\\ ");print}' | awk '{gsub(":-\\\\","\\ -\\");print}')
+                    OPTURL=$(printf "%s\n" "$OPTURL" | awk '{gsub(" ","");print}')
+                    printf "\033[1m\033[34m\n%s\n\033[0m" "Connecting to server $OPTURL."
+                    sleep 1
                     $SRB2KART -connect $OPTURL 2>&1
                 fi
                 break
@@ -307,14 +318,16 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | awk '!/-$/ {print $1}')")
         ;;
 
     -s | --server)
-        ENDARG=$(printf "%s\n" "$*" | awk 'match($NF, /\//) {print substr($NF, RSTART, RLENGTH)}')
+        ENDARG=$(printf "%s\n" "$*" | awk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+        IFS=':'
+        SRB2=$(printf "%s\n" "$SRB2" | awk '{gsub(" /",":/") && gsub(" -",":-");print}' | awk '{gsub(" ","\\ ");print}' | awk '{gsub(":-\\\\","\\ -\\");print}')
         if [ "$ENDARG" = "/" ]; then
             shift
-            FILELIST="-file $(find "$@" -maxdepth 1 -type f)"
+            FILELIST="$(find "$@" -maxdepth 1 -type f -printf "%p:")"
         else
             checklist
             if [ -n "$FILELIST" ]; then
-                FILELIST="-file $(find $FILELIST -maxdepth 1 -type f)"
+                FILELIST="$(find $FILELIST -maxdepth 1 -type f -printf "%p:")"
             else
                 FILELIST=""
             fi
@@ -322,7 +335,7 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | awk '!/-$/ {print $1}')")
         while
             clear
             printf "\033[1m%s\n\033[0m" "Filelist:
-${FILELIST##* }"
+$(printf "%s\n" "$FILELIST" | awk '{gsub(":","\n"); print}' | awk -F'/' '{print $NF}')"
             printf "\033[1m\033[34m\n%s\n\033[0m" "Do you want to advertise your server? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
             for loop in "Yes" "No"; do echo "$((i += 1))) $loop"; done
             printf "#? "
@@ -342,15 +355,15 @@ ${FILELIST##* }"
                             if [ -n "$choose" ]; then
                                 case $choose in
                                     "1")
-                                        $SRB2 -server -room 33 $FILELIST
+                                        $SRB2 -server -room 33 -file $FILELIST
                                         break
                                         ;;
                                     "2")
-                                        $SRB2 -server -room 28 $FILELIST
+                                        $SRB2 -server -room 28 -file $FILELIST
                                         break
                                         ;;
                                     "3")
-                                        $SRB2 -server -room 38 $FILELIST
+                                        $SRB2 -server -room 38 -file $FILELIST
                                         break
                                         ;;
                                 esac
@@ -362,7 +375,7 @@ ${FILELIST##* }"
                         break
                         ;;
                     "2")
-                        $SRB2 -server $FILELIST
+                        $SRB2 -server -file $FILELIST
                         break
                         ;;
                 esac
@@ -374,24 +387,26 @@ ${FILELIST##* }"
         ;;
 
     -sk | --serverkart)
-        ENDARG=$(printf "%s\n" "$*" | awk 'match($NF, /\//) {print substr($NF, RSTART, RLENGTH)}')
+        ENDARG=$(printf "%s\n" "$*" | awk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+        IFS=':'
+        SRB2KART=$(printf "%s\n" "$SRB2KART" | awk '{gsub(" /",":/") && gsub(" -",":-");print}' | awk '{gsub(" ","\\ ");print}' | awk '{gsub(":-\\\\","\\ -\\");print}')
         if [ "$ENDARG" = "/" ]; then
             shift
-            FILELIST="-file $(find "$@" -maxdepth 1 -type f)"
+            FILELIST="$(find "$@" -maxdepth 1 -type f -printf "%p:")"
             clear
             printf "\033[1m%s\n\033[0m" "Filelist:
-${FILELIST##* }"
+$(printf "%s\n" "$FILELIST" | awk '{gsub(":","\n"); print}' | awk -F'/' '{print $NF}')"
         else
             checklist
             if [ -n "$FILELIST" ]; then
-                FILELIST="-file $(find $FILELIST -maxdepth 1 -type f)"
+                FILELIST="$(find $FILELIST -maxdepth 1 -type f -printf "%p:")"
             else
                 FILELIST=""
             fi
         fi
         printf "\033[1m\033[34m\n%s\n\n\033[0m" "Remember to type 'advertise 1' in console to advertise in Master Server."
         sleep 1
-        $SRB2KART -server $FILELIST
+        $SRB2KART -server -file $FILELIST
         ;;
 
 esac
