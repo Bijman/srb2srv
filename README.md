@@ -26,17 +26,17 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 **Linux:** 
 
 1. In terminal enter this following commands:
-* Debian/Ubuntu/Debian based/Ubuntu based: `sudo apt install coreutils bash curl gawk nodejs npm`,
+- Debian/Ubuntu/Debian based/Ubuntu based: `sudo apt install coreutils bash curl gawk nodejs npm`,
 
-* Arch/Arch based: `sudo pacman -S coreutils bash curl gawk nodejs npm`,
+- Arch/Arch based: `sudo pacman -S coreutils bash curl gawk nodejs npm`,
 
-* Gentoo/Gentoo based: `sudo emerge coreutils bash curl gawk nodejs`,
+- Gentoo/Gentoo based: `sudo emerge -av coreutils bash curl gawk nodejs`,
 
 4. Install Puppeteer: `npm i puppeteer`.
 
 **Windows:**
 1. Installing Git Bash:
-* Watch this video from 7:19 to 9:33 in [HERE](https://youtu.be/SWYqp7iY_Tc?t=439),
+- Watch this video from 7:19 to 9:33 in [HERE](https://youtu.be/SWYqp7iY_Tc?t=439),
 
 2. Git Bash can be found on start menu,
 
