@@ -63,7 +63,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 4. Copy script to ~/bin: `cp /path/to/srb2srv ~/bin`,
 
-5. Change script's permissions to be executable: `chmod 755 srb2srv`,
+5. Change script's permissions to be executable: `chmod 755 ~/bin/srb2srv`,
 
 6. Enter: `nano ~/.bash_profile`,
 
