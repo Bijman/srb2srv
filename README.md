@@ -1,15 +1,16 @@
 This shellscript has number of uses related to SRB2/SRB2Kart server. 
+
 Mainly, the script obtains information about IP, number of players, gametype, etc. from https://old.mb.srb2.org/masterserver.php and https://srb2kart.aqua.fyi/browser/index.html, which allows user to connect directly to selected server from SRB2/SRB2Kart Master Server list. 
 
 ![output](https://user-images.githubusercontent.com/16626326/116865885-c59d4180-ac0a-11eb-84d9-481940569c5b.gif)
 
-#Features:
+# Features:
 - Connecting directly to selected server's IP from SRB2/SRB2Kart Master Server,
 - Starting server and playing, or just creating dedicated one,
 - Checking if server is reachable (using jameds.org's Port Checker),
 - Runs on Linux and Windows (Git Bash).
 
-#Dependencies:
+# Dependencies:
 - GNU Coreutils,
 - Bash or any POSIX compliant shell,
 - Curl,
@@ -21,8 +22,9 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 \* These are only needed to obtain SRB2 Master Server list.
 
-#Dependencies Installation:
-- **Linux:** 
+# Dependencies Installation:
+**Linux:** 
+
 In terminal enter this following commands:
 1. Debian/Ubuntu/Debian based/Ubuntu based: `sudo apt install coreutils bash curl gawk nodejs npm`,
 
@@ -32,7 +34,7 @@ In terminal enter this following commands:
 
 4. Install Puppeteer: `npm i puppeteer`.
 
-- **Windows:**
+**Windows:**
 1. Installing Git Bash:
 - Watch this video from 7:19 to 9:33 : https://youtu.be/SWYqp7iY_Tc?t=439
 
@@ -44,15 +46,15 @@ In terminal enter this following commands:
 
 5. The rest of dependencies are installed, if you followed video.
 
-#Installation:
-- **Linux:**
+# Installation:
+**Linux:**
 1. Open Git Bash
 
 2. Enter `git clone https://github.com/Bijman/srb2srv`.
 
 3. Enter `sudo make install` , which will install to /usr/bin, or just place script in your directory and change script's permissions to be executable: `chmod 755 srb2srv`.
 
-- **Windows:**
+**Windows:**
 1. Open Git Bash,
 
 2. Enter `git clone https://github.com/Bijman/srb2srv`.
@@ -69,7 +71,7 @@ In terminal enter this following commands:
 
 8. Enter: `source ~/.bash_profile` or restart Git Bash.
 
-#Configuration:
+# Configuration:
 **If you want to connect to server in SRB2:**
 1. Enter your path to SRB2 executable file (lsdlsrb2, srb2win.exe) in shell configuration file (for example .bash_profile or .bashrc in user's home directory): `export SRB2="/path/to/SRB2-executable-file"`,
 
