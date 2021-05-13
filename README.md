@@ -63,13 +63,15 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 4. Copy script to ~/bin: `cp /path/to/srb2srv ~/bin`,
 
-5. Enter: `nano ~/.bash_profile`,
+5. Change script's permissions to be executable: `chmod 755 srb2srv`,
 
-6. Write new path to executables with environment variable PATH like `export PATH="~/bin:$PATH"` in ~/.bash_profile,
+6. Enter: `nano ~/.bash_profile`,
 
-7. Check if you set properly other environment variables from "Configuration" section,
+7. Write new path to executables with environment variable PATH like `export PATH="~/bin:$PATH"` in ~/.bash_profile,
 
-8. Enter: `source ~/.bash_profile` or restart Git Bash.
+8. Check if you set properly other environment variables from "Configuration" section,
+
+9. Enter: `source ~/.bash_profile` or restart Git Bash.
 
 # Configuration
 **If you want to connect to server in SRB2:**
