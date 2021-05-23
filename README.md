@@ -8,7 +8,7 @@ Mainly, the script obtains information about IP, number of players, gametype, et
 - Connecting directly to selected server's IP from SRB2/SRB2Kart Master Server,
 - Starting server and playing, or just creating dedicated one,
 - Checking if server is reachable (using jameds.org's Port Checker),
-- Runs on Linux and Windows (Git Bash).
+- Runs on Linux, macOS and Windows (Git Bash).
 
 # Dependencies
 - GNU Coreutils,
