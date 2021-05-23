@@ -46,46 +46,61 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 5. The rest of dependencies are installed, if you followed video.
 
+**MacOS:**
+1. In terminal enter this following commands:
+- `brew install gawk curl node`,
+
+2. Install Puppeteer: `npm i puppeteer`.
+
 # Installation
 **Linux:**
 1. Open terminal,
 
 2. Enter `git clone https://github.com/Bijman/srb2srv`.
 
-3. Enter `sudo make install` , which will install to /usr/bin, or just place script in your directory and change script's permissions to be executable: `chmod 755 srb2srv`.
+3. Enter `sudo make install`, which will install to "/usr/bin", or just place script in your directory and change script's permissions to be executable: `chmod 755 srb2srv`.
 
 **Windows:**
 1. Open Git Bash,
 
-2. Enter `git clone https://github.com/Bijman/srb2srv`.
+2. Go to your user directory (usually "C:/Users/[Your username]"): `cd ~`,
 
-3. Create directory "bin" with command: `mkdir ~/bin`,
+3. Enter `git clone https://github.com/Bijman/srb2srv`, which is always up to date, to user directory,
 
-4. Copy script to ~/bin: `cp /path/to/srb2srv ~/bin`,
+4. Create directory "bin" with command: `mkdir ~/bin`,
 
-5. Change script's permissions to be executable: `chmod 755 ~/bin/srb2srv`,
+5. Copy script to "~/bin": `cp /path/to/srb2srv ~/bin`,
 
-6. Enter: `nano ~/.bash_profile`,
+6. Change script's permissions to be executable: `chmod 755 ~/bin/srb2srv`,
 
-7. Write new path to executables with environment variable PATH like `export PATH="~/bin:$PATH"` in ~/.bash_profile,
+7. Open text editor for "~/.bash_profile": `nano ~/.bash_profile`,
 
-8. Check if you set properly other environment variables from "Configuration" section,
+8. Write new path to executables with environment variable PATH like `export PATH="~/bin:$PATH"` in "~/.bash_profile",
 
-9. Enter: `source ~/.bash_profile` or restart Git Bash.
+9. Check if you set properly other environment variables from "Configuration" section,
+
+10. Enter: `source ~/.bash_profile` or restart Git Bash.
+
+**MacOS:**
+1. Open terminal,
+
+2. Enter `git clone https://github.com/Bijman/srb2srv`,
+
+3. Enter `sudo make install`, which will install to "/usr/local/bin", or just place script in your directory and change script's permissions to be executable: `chmod 755 srb2srv`.
 
 # Configuration
 **If you want to connect to server in SRB2:**
-1. Enter your path to SRB2 executable file (lsdlsrb2, srb2win.exe) in shell configuration file (for example .bash_profile or .bashrc in user's home directory): `export SRB2="/path/to/SRB2-executable-file"`,
+1. Enter your path to SRB2 executable file ("lsdlsrb2", "srb2win.exe") in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2="/path/to/SRB2-executable-file"`,
 
 2. Set path to Node.js modules directory: `export NODE_PATH="/path/to/node_modules"`,
 
-3. Set path to Google Chrome/Chromium sandbox (installed for example in node_modules/puppeteer/.local-chromium/linux-869685/chrome-linux/chrome_sandbox or node_modules/puppeteer/.local-chromium/win64-869685/chrome-win/chrome.exe): `export CHROME_DEVEL_SANDBOX="/path/to/chrome-sandbox"`,
+3. Set path to Google Chrome/Chromium sandbox (installed for example in "node_modules/puppeteer/.local-chromium/linux-869685/chrome-linux/chrome_sandbox","node_modules/puppeteer/.local-chromium/win64-869685/chrome-win/chrome.exe" or "node_modules/puppeteer/.local-chromium/mac-869685/chrome-mac/Chromium.app/Contents/MacOS/Chromium"): `export CHROME_DEVEL_SANDBOX="/path/to/chrome-sandbox"`,
 
 **If you want start your own server in SRB2:**
-1. Enter your path to SRB2 executable file (lsdlsrb2, srb2win.exe) in shell configuration file (for example .bash_profile or .bashrc in user's home directory): `export SRB2="/path/to/SRB2-executable-file"`,
+1. Enter your path to SRB2 executable file ("lsdlsrb2", "srb2win.exe") in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2="/path/to/SRB2-executable-file"`,
 
 **If you want to connect to server or start your own server in SRB2Kart:**
-1. Enter your path to SRB2Kart executable file (srb2kart.exe, srb2kart) in shell configuration file (for example .bash_profile or .bashrc in user's home directory): `export SRB2KART="/path/to/SRB2Kart-executable-file"`.
+1. Enter your path to SRB2Kart executable file ("srb2kart.exe", "srb2kart") in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2KART="/path/to/SRB2Kart-executable-file"`.
 
 **Usage (from help text):**
 ```
