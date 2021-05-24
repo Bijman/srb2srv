@@ -47,7 +47,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 5. The rest of dependencies are installed, if you followed video.
 
 **MacOS:**
-1. In terminal enter this following commands:
+1. In terminal enter this following command:
 - `brew install gawk curl node`,
 
 2. Install Puppeteer: `npm i puppeteer`.
@@ -91,6 +91,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 # Configuration
 **If you want to connect to server in SRB2:**
 1. Enter your path to SRB2 executable file ("lsdlsrb2", "srb2win.exe") in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2="/path/to/SRB2-executable-file"`,
+- Note for MacOS users: SRB2 executable file should be in "/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2", if "Sonic Robo Blast 2.app" is installed in "Applications".
 
 2. Set path to Node.js modules directory: `export NODE_PATH="/path/to/node_modules"`,
 
