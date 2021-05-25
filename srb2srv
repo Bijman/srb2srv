@@ -131,7 +131,7 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
     $SRB2KART -dedicated -port $PORT -file $FILELIST 2>&1
 }
 
-help() {
+usage() {
     printf "%s\n" "
 CLI for server related tools of SRB2/SRB2Kart
 
@@ -167,7 +167,7 @@ Usage: srb2srv [OPTIONS] <addon-path>
     exit
 }
 
-kart() {
+srb2kart() {
     SRVCODE=$(curl -s https://srb2kart.aqua.fyi/browser/index.html)
     SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'<td><a href="srb2kart://*.*">|</a></td>' '/<td><a href="srb2kart:\/\/*.*">[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*<\/a><\/td>/ {print $2}')
     SRVNAME=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/<td id="name_[0-9]*">/ && !/alt="Unreachable server"/ && gsub("<span style=\"color:inherit\">|<span style=\"color:inherit;\">|</td>|<td id=\"name_[0-9]*\">","") {(gsub(/&#x27;/,"\47") gsub("%","\\45") gsub(/^[ \t]+/, "")); print}' | gawk '{(gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m")) gsub("</span>","\033[0m"); print}')\n")
@@ -433,7 +433,7 @@ esac
 case "$1" in
 
     -h | --help)
-        help
+        usage
         ;;
 
     "")
@@ -453,7 +453,7 @@ case "$1" in
         ;;
 
     -k | --kart)
-        kart
+        srb2kart
         ;;
 
     -s | --server)
