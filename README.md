@@ -109,7 +109,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 ```
 CLI for server related tools of SRB2/SRB2Kart
 
-Usage: srb2srv [OPTIONS] <addon-path>
+Usage: srb2srv [OPTION] <parameter>
   OPTIONS:
      -h, --help                             Show this help text.
      -c, --checkport                        Check if SRB2/SRB2Kart server is reachable.
