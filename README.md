@@ -8,7 +8,7 @@ Mainly, the script obtains information about IP, number of players, gametype, et
 - Connecting directly to selected server's IP from SRB2/SRB2Kart Master Server,
 - Starting server and playing, or just creating dedicated one,
 - Checking if server is reachable (using jameds.org's Port Checker),
-- Runs on Linux, macOS and Windows (Git Bash).
+- Runs on Linux, MacOS and Windows (Git Bash).
 
 # Dependencies
 - GNU Coreutils,
@@ -32,7 +32,8 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 - Gentoo/Gentoo based: `sudo emerge -av coreutils bash curl gawk nodejs`,
 
-2. Install Puppeteer: `npm i puppeteer`.
+2. Install Puppeteer: 
+- `npm i puppeteer`.
 
 **Windows:**
 1. Installing Git Bash:
@@ -50,7 +51,8 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 1. In terminal enter this following command:
 - `brew install gawk curl node`,
 
-2. Install Puppeteer: `npm i puppeteer`.
+2. Install Puppeteer: 
+- `npm i puppeteer`.
 
 # Installation
 **Linux:**
@@ -107,18 +109,19 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 ```
 CLI for server related tools of SRB2/SRB2Kart
 
-Usage: srb2srv [OPTION] <addon-path>
+Usage: srb2srv [OPTIONS] <addon-path>
   OPTIONS:
-     -h, --help                             Show this help text
-     -c, --checkport                        Check if SRB2/SRB2Kart server is reachable
-     -d, --dedicated      <addon-path>      Start dedicated SRB2 server
-     -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server
-     -k, --kart                             Go to SRB2Kart Master Server
-     -s, --server         <addon-path>      Start SRB2 server and play
-     -sk, --serverkart    <addon-path>      Start SRB2Kart server and play
+     -h, --help                             Show this help text.
+     -c, --checkport                        Check if SRB2/SRB2Kart server is reachable.
+     -d, --dedicated      <addon-path>      Start dedicated SRB2 server.
+     -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server/
+     -k, --kart                             Go to SRB2Kart Master Server.
+     -p, --port           <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -s and -sk options.
+     -s, --server         <addon-path>      Start SRB2 server and play.
+     -sk, --serverkart    <addon-path>      Start SRB2Kart server and play.
 
   EXAMPLES:
-     1. Go to SRB2Kart Master Server and connect to selected server from list:
+     1. Go to SRB2 Master Server and connect to selected server from list:
             srb2srv
 
      2. Go to SRB2Kart Master Server and connect to selected server from list:
@@ -130,5 +133,8 @@ Usage: srb2srv [OPTION] <addon-path>
      4. Run SRB2 server and add path to addon or directory of addons:
             srb2srv --server ~/addon.pk3
 
-     Exporting SRB2/SRB2Kart executable path, Google Chrome/Chromium sandbox directory, Node modules path in "SRB2" or "SRB2KART","CHROME_DEVEL_SANDBOX" and "NODE_PATH" environment variables in shell configuration file is required for script to work.
+     5. Run SRB2Kart dedicated server with port 5030, and add path to addon or directory of addons:
+            srb2srv --dedicatedkart ~/addon.pk3 --port 5030
+
+     Exporting SRB2/SRB2Kart/Google Chrome/Chromium sandbox paths to executable files, Node modules path in "SRB2" or "SRB2KART","CHROME_DEVEL_SANDBOX" and "NODE_PATH" environment variables in shell configuration file is required for script to work.
 ```
