@@ -32,7 +32,7 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
 checkport() {
     printf "\033[1m\033[34m\n%s\n\n\033[0m" "Before running this, make sure that your server is up."
     if [ -n "$(curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/is unreachable/')" ]; then
-        curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/<p class="ip">/,/<\/div>/ {split($0,a,"<"); print a[1]}' | gawk '{getline a; getline b; getline c; print "\033[7;31m"a""b" "c"\033[0m";next}1'
+        curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/<p class="ip">/,/<\/div>/ {split($0,a,"<"); print a[1]}' | gawk '{getline a; getline b; getline c; print "\033[7;31m"a""b" "c"\033[0m";next}' | gawk '!a[$0]++'
     else
         curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/<p class="ip">/,/<\/div>/ {split($0,a,"<"); print a[1]}' | gawk 'NF{getline a; getline b; print "\033[7;32m"$0" "b"\033[0m"}'
     fi
@@ -40,12 +40,12 @@ checkport() {
 
 dedicated() {
     IFS=":"
-    PATHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+    SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
     SRB2=$(printf "%s\n" "$SRB2" | gawk '{gsub(" /",":/") gsub(" -",":-");print}')
-    if [ "$PATHARG" = "/" ] && ([ "$1" = "-d" ] || [ "$1" = "--dedicated" ]); then
-        ARGS=$(printf "%s" "$*" | gawk '{gsub("-d:|--dedicated:|-p:[0-9][0-9]|:--port:[0-9][0-9]*","");print}' | gawk '{gsub("^ | $","");print}')
-        FILELIST=$(find $ARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
-    elif [ "$PATHARG" = "/" ] && ([ "$3" = "-d" ] || [ "$3" = "--dedicated" ]); then
+    if [ "$SLASHARG" = "/" ] && ([ "$1" = "-d" ] || [ "$1" = "--dedicated" ]); then
+        PATHARGS=$(printf "%s" "$*" | gawk '{gsub("-d:|--dedicated:|:-p:[0-9][0-9]*|:--port:[0-9][0-9]*|-p:[0-9][0-9]*:|--port:[0-9][0-9]*:","");print}' | gawk '{$1=$1; print}')
+        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
+    elif [ "$SLASHARG" = "/" ] && ([ "$3" = "-d" ] || [ "$3" = "--dedicated" ]); then
         shift 3
         FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
     else
@@ -111,14 +111,14 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
 
 dedicatedkart() {
     IFS=":"
-    PATHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+    SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
     SRB2KART=$(printf "%s\n" "$SRB2KART" | gawk '{gsub(" /",":/") gsub(" -",":-");print}')
-    if [ "$PATHARG" = "/" ] && ([ "$1" = "-dk" ] || [ "$1" = "--dedicatedkart" ]); then
-        ARGS=$(printf "%s" "$*" | gawk '{gsub("-dk:|--dedicatedkart:|-p:[0-9][0-9]|:--port:[0-9][0-9]*","");print}' | gawk '{gsub("^ | $","");print}')
-        FILELIST=$(find $ARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
+    if [ "$SLASHARG" = "/" ] && ([ "$1" = "-dk" ] || [ "$1" = "--dedicatedkart" ]); then
+        PATHARGS=$(printf "%s" "$*" | gawk '{gsub("-dk:|--dedicatedkart:|:-p:[0-9][0-9]*|:--port:[0-9][0-9]*|-p:[0-9][0-9]*:|--port:[0-9][0-9]*:","");print}' | gawk '{$1=$1; print}')
+        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
         printf "\033[1m%s\n\033[0m" "Filelist:
 $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
-    elif [ "$PATHARG" = "/" ] && ([ "$3" = "-dk" ] || [ "$3" = "--dedicatedkart" ]); then
+    elif [ "$SLASHARG" = "/" ] && ([ "$3" = "-dk" ] || [ "$3" = "--dedicatedkart" ]); then
         shift 3
         FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
         printf "\033[1m%s\n\033[0m" "Filelist:
@@ -167,59 +167,14 @@ Usage: srb2srv [OPTION] <parameter>
     exit
 }
 
-srb2kart() {
-    SRVCODE=$(curl -s https://srb2kart.aqua.fyi/browser/index.html)
-    SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'<td><a href="srb2kart://*.*">|</a></td>' '/<td><a href="srb2kart:\/\/*.*">[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*<\/a><\/td>/ {print $2}')
-    SRVNAME=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/<td id="name_[0-9]*">/ && !/alt="Unreachable server"/ && gsub("<span style=\"color:inherit\">|<span style=\"color:inherit;\">|</td>|<td id=\"name_[0-9]*\">","") {(gsub(/&#x27;/,"\47") gsub("%","\\45") gsub(/^[ \t]+/, "")); print}' | gawk '{(gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m")) gsub("</span>","\033[0m"); print}')\n")
-    PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F'<td id="players_*.*">|</td>' '/<td id="players_*.*">/ {print $2}')
-    GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F'<td id="gametype_*.*">|</td>' '/<td id="gametype_*.*">/ {print $2}')
-    KARTSPEED=$(printf "%s\n" "$SRVCODE" | gawk -F'<td id="kartspeed_*.*">|</td>' '/<td id="kartspeed_*.*">/ {print $2}')
-    arrayname=$(printf "%s\n\033[1m\033[34mRefresh\033[0m" "$(gawk -v left="$SRVNAME" -v leftcenter="$SRVIP" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" 'BEGIN{
-split(left,l,/\n/)
-split(leftcenter,lc,/\n/)
-split(center,c,/\n/)
-split(rightcenter,rc,/\n/)
-split(right,r,/\n/)
-for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[0m\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mKartspeed: "r[i]"\033[0m"}}')")
-    array=$(printf "%s\nRefresh" "$(gawk -v left="$SRVIP" -v right="$GAMETYPE" 'BEGIN{
-split(left,l,/\n/)
-split(right,r,/\n/)
-for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/-$/ {print $1}')")
-    count=$(printf "%s\n" "$arrayname" | wc -l)
-    n=""
-    while true; do
-        printf "\033[1m\033[34m%s\n\033[0m" "Please choose server by typing number and then pressing enter. Press enter or ctrl+c to quit."
-        printf "%s\n" "$arrayname" | gawk '{print NR")", $0}'
-        printf "#? "
-        read -r n
-        if [ -n "$n" ] && [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
-            OPTURL=$(printf "%s\n" "$array" | gawk 'NR=='"${n}"'')
-            if [ "$OPTURL" = "Refresh" ]; then
-                exec "$0" --kart
-            else
-                IFS=":"
-                SRB2KART=$(printf "%s\n" "$SRB2KART" | gawk '{gsub(" /",":/") gsub(" -",":-");print}')
-                OPTURL=$(printf "%s\n" "$OPTURL" | gawk '{gsub(" ","");print}')
-                printf "\033[1m\033[34m\n%s\n\n\033[0m" "Connecting to server $OPTURL."
-                sleep 1
-                $SRB2KART -connect $OPTURL 2>&1
-            fi
-            break
-        else
-            printf "\n%s\n" "No option has been chosen."
-            exit
-        fi
-    done
-}
-
 server() {
     IFS=":"
-    PATHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+    SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
     SRB2=$(printf "%s\n" "$SRB2" | gawk '{gsub(" /",":/") gsub(" -",":-");print}')
-    if [ "$PATHARG" = "/" ] && ([ "$1" = "-s" ] || [ "$1" = "--server" ]); then
-        ARGS=$(printf "%s" "$*" | gawk '{gsub("-s:|--server:|-p:[0-9][0-9]|:--port:[0-9][0-9]*","");print}' | gawk '{gsub("^ | $","");print}')
-        FILELIST=$(find $ARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
-    elif [ "$PATHARG" = "/" ] && ([ "$3" = "-s" ] || [ "$3" = "--server" ]); then
+    if [ "$SLASHARG" = "/" ] && ([ "$1" = "-s" ] || [ "$1" = "--server" ]); then
+        PATHARGS=$(printf "%s" "$*" | gawk '{gsub("-s:|--server:|:-p:[0-9][0-9]*|:--port:[0-9][0-9]*|-p:[0-9][0-9]*:|--port:[0-9][0-9]*:","");print}' | gawk '{$1=$1; print}')
+        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
+    elif [ "$SLASHARG" = "/" ] && ([ "$3" = "-s" ] || [ "$3" = "--server" ]); then
         shift 3
         FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
     else
@@ -285,14 +240,14 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
 
 serverkart() {
     IFS=":"
-    PATHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+    SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
     SRB2KART=$(printf "%s\n" "$SRB2KART" | gawk '{gsub(" /",":/") gsub(" -",":-");print}')
-    if [ "$PATHARG" = "/" ] && ([ "$1" = "-sk" ] || [ "$1" = "--serverkart" ]); then
-        ARGS=$(printf "%s" "$*" | gawk '{gsub("-sk:|--serverkart:|-p:[0-9][0-9]|:--port:[0-9][0-9]*","");print}' | gawk '{gsub("^ | $","");print}')
-        FILELIST=$(find $ARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
+    if [ "$SLASHARG" = "/" ] && ([ "$1" = "-sk" ] || [ "$1" = "--serverkart" ]); then
+        PATHARGS=$(printf "%s" "$*" | gawk '{gsub("-sk:|--serverkart:|:-p:[0-9][0-9]*|:--port:[0-9][0-9]*|-p:[0-9][0-9]*:|--port:[0-9][0-9]*:","");print}' | gawk '{$1=$1; print}')
+        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
         printf "\033[1m%s\n\033[0m" "Filelist:
 $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
-    elif [ "$PATHARG" = "/" ] && ([ "$3" = "-sk" ] || [ "$3" = "--serverkart" ]); then
+    elif [ "$SLASHARG" = "/" ] && ([ "$3" = "-sk" ] || [ "$3" = "--serverkart" ]); then
         shift 3
         FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
         printf "\033[1m%s\n\033[0m" "Filelist:
@@ -305,7 +260,7 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
     $SRB2KART -server -port $PORT -file $FILELIST 2>&1
 }
 
-srb2() {
+srb2ms() {
     SRB2MSJS="
 const puppeteer = require('puppeteer');
 
@@ -401,6 +356,51 @@ for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\0
     done
 }
 
+srb2kartms() {
+    SRVCODE=$(curl -s https://srb2kart.aqua.fyi/browser/index.html)
+    SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'<td><a href="srb2kart://*.*">|</a></td>' '/<td><a href="srb2kart:\/\/*.*">[0-9]*.[0-9]*.[0-9]*.[0-9]*:[0-9]*<\/a><\/td>/ {print $2}')
+    SRVNAME=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/<td id="name_[0-9]*">/ && !/alt="Unreachable server"/ && gsub("<span style=\"color:inherit\">|<span style=\"color:inherit;\">|</td>|<td id=\"name_[0-9]*\">","") {(gsub(/&#x27;/,"\47") gsub("%","\\45") gsub(/^[ \t]+/, "")); print}' | gawk '{(gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m")) gsub("</span>","\033[0m"); print}')\n")
+    PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F'<td id="players_*.*">|</td>' '/<td id="players_*.*">/ {print $2}')
+    GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F'<td id="gametype_*.*">|</td>' '/<td id="gametype_*.*">/ {print $2}')
+    KARTSPEED=$(printf "%s\n" "$SRVCODE" | gawk -F'<td id="kartspeed_*.*">|</td>' '/<td id="kartspeed_*.*">/ {print $2}')
+    arrayname=$(printf "%s\n\033[1m\033[34mRefresh\033[0m" "$(gawk -v left="$SRVNAME" -v leftcenter="$SRVIP" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" 'BEGIN{
+split(left,l,/\n/)
+split(leftcenter,lc,/\n/)
+split(center,c,/\n/)
+split(rightcenter,rc,/\n/)
+split(right,r,/\n/)
+for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[0m\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mKartspeed: "r[i]"\033[0m"}}')")
+    array=$(printf "%s\nRefresh" "$(gawk -v left="$SRVIP" -v right="$GAMETYPE" 'BEGIN{
+split(left,l,/\n/)
+split(right,r,/\n/)
+for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/-$/ {print $1}')")
+    count=$(printf "%s\n" "$arrayname" | wc -l)
+    n=""
+    while true; do
+        printf "\033[1m\033[34m%s\n\033[0m" "Please choose server by typing number and then pressing enter. Press enter or ctrl+c to quit."
+        printf "%s\n" "$arrayname" | gawk '{print NR")", $0}'
+        printf "#? "
+        read -r n
+        if [ -n "$n" ] && [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
+            OPTURL=$(printf "%s\n" "$array" | gawk 'NR=='"${n}"'')
+            if [ "$OPTURL" = "Refresh" ]; then
+                exec "$0" --kart
+            else
+                IFS=":"
+                SRB2KART=$(printf "%s\n" "$SRB2KART" | gawk '{gsub(" /",":/") gsub(" -",":-");print}')
+                OPTURL=$(printf "%s\n" "$OPTURL" | gawk '{gsub(" ","");print}')
+                printf "\033[1m\033[34m\n%s\n\n\033[0m" "Connecting to server $OPTURL."
+                sleep 1
+                $SRB2KART -connect $OPTURL 2>&1
+            fi
+            break
+        else
+            printf "\n%s\n" "No option has been chosen."
+            exit
+        fi
+    done
+}
+
 PORTARG=$(printf "%s\n" "$*" | gawk 'match($0, /-p [0-9][0-9]*|--port [0-9][0-9]*/) {print substr($0, RSTART, RLENGTH)}')
 if [ -n "$PORTARG" ]; then
     if ([ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /-p/) {print substr($0, RSTART, RLENGTH)}')" = "-p" ] || [ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /--port/) {print substr($0, RSTART, RLENGTH)}')" = "--port" ]) && [ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /[0-9][0-9]*/) {print substr($0, RSTART, RLENGTH)}')" -ge 0 ] && [ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /[0-9][0-9]*/) {print substr($0, RSTART, RLENGTH)}')" -le 65535 ]; then
@@ -437,7 +437,7 @@ case "$1" in
         ;;
 
     "")
-        srb2
+        srb2ms
         ;;
 
     -c | --checkport)
@@ -453,7 +453,7 @@ case "$1" in
         ;;
 
     -k | --kart)
-        srb2kart
+        srb2kartms
         ;;
 
     -s | --server)
