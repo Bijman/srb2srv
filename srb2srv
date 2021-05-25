@@ -192,7 +192,7 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/-$/ {print $1}')")
         printf "%s\n" "$arrayname" | gawk '{print NR")", $0}'
         printf "#? "
         read -r n
-        if [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
+        if [ -n "$n" ] && [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
             OPTURL=$(printf "%s\n" "$array" | gawk 'NR=='"${n}"'')
             if [ "$OPTURL" = "Refresh" ]; then
                 exec "$0" --kart
@@ -381,7 +381,7 @@ for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\0
         printf "%s\n" "$arrayname" | gawk '{print NR")", $0}'
         printf "#? "
         read -r n
-        if [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
+        if [ -n "$n" ] && [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
             OPTURL=$(printf "%s\n" "$array" | gawk 'NR=='"${n}"'')
             if [ "$OPTURL" = "Refresh" ]; then
                 exec "$0"
