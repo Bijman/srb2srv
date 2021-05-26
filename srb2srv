@@ -6,7 +6,7 @@ checklist() {
         printf "\033[1m%s\n\033[0m" "Filelist:
 $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
         printf "\033[1m\033[34m\n%s\n\033[0m" "Do you want to add addons? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
-        for loop in "Yes" "No"; do echo "$((i += 1))) $loop"; done
+        for loop in "Yes" "No"; do printf "%s\n" "$((i += 1))) $loop"; done
         printf "#? "
         read -r choose
     do
@@ -32,7 +32,7 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
 checkport() {
     printf "\033[1m\033[34m\n%s\n\n\033[0m" "Before running this, make sure that your server is up."
     if [ -n "$(curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/is unreachable/')" ]; then
-        curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/<p class="ip">/,/<\/div>/ {split($0,a,"<"); print a[1]}' | gawk '{getline a; getline b; getline c; print "\033[7;31m"a""b" "c"\033[0m";next}' | gawk '!a[$0]++'
+        curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/<p class="ip">/,/<\/div>/ {split($0,a,"<"); print a[1]}' | gawk '{getline a; getline b; getline c; print "\033[7;31m"a""b" "c"\033[0m"}'
     else
         curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/<p class="ip">/,/<\/div>/ {split($0,a,"<"); print a[1]}' | gawk 'NF{getline a; getline b; print "\033[7;32m"$0" "b"\033[0m"}'
     fi
@@ -56,7 +56,7 @@ dedicated() {
         printf "\033[1m%s\n\033[0m" "Filelist:
 $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
         printf "\033[1m\033[34m\n%s\n\033[0m" "Do you want to advertise your server in Master Server? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
-        for loop in "Yes" "No"; do echo "$((i += 1))) $loop"; done
+        for loop in "Yes" "No"; do printf "%s\n" "$((i += 1))) $loop"; done
         printf "#? "
         read -r choose
     do
@@ -66,7 +66,7 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
                 "1")
                     while
                         printf "\033[1m\033[34m\n%s\n\033[0m" "Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
-                        for loop in "Standard" "Casual" "Custom"; do echo "$((i += 1))) $loop"; done
+                        for loop in "Standard" "Casual" "Custom"; do printf "%s\n" "$((i += 1))) $loop"; done
                         printf "#? "
                         read -r choose
                     do
@@ -140,7 +140,7 @@ Usage: srb2srv [OPTION] <parameter>
      -h, --help                             Show this help text.
      -c, --checkport                        Check if SRB2/SRB2Kart server is reachable.
      -d, --dedicated      <addon-path>      Start dedicated SRB2 server.
-     -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server/
+     -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server.
      -k, --kart                             Go to SRB2Kart Master Server.
      -p, --port           <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -s and -sk options.
      -s, --server         <addon-path>      Start SRB2 server and play.
@@ -185,7 +185,7 @@ server() {
         printf "\033[1m%s\n\033[0m" "Filelist:
 $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
         printf "\033[1m\033[34m\n%s\n\033[0m" "Do you want to advertise your server in Master Server? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
-        for loop in "Yes" "No"; do echo "$((i += 1))) $loop"; done
+        for loop in "Yes" "No"; do printf "%s\n" "$((i += 1))) $loop"; done
         printf "#? "
         read -r choose
     do
@@ -195,7 +195,7 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
                 "1")
                     while
                         printf "\033[1m\033[34m\n%s\n\033[0m" "Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
-                        for loop in "Standard" "Casual" "Custom"; do echo "$((i += 1))) $loop"; done
+                        for loop in "Standard" "Casual" "Custom"; do printf "%s\n" "$((i += 1))) $loop"; done
                         printf "#? "
                         read -r choose
                     do

@@ -114,7 +114,7 @@ Usage: srb2srv [OPTION] <parameter>
      -h, --help                             Show this help text.
      -c, --checkport                        Check if SRB2/SRB2Kart server is reachable.
      -d, --dedicated      <addon-path>      Start dedicated SRB2 server.
-     -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server/
+     -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server.
      -k, --kart                             Go to SRB2Kart Master Server.
      -p, --port           <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -s and -sk options.
      -s, --server         <addon-path>      Start SRB2 server and play.
