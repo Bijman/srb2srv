@@ -25,6 +25,10 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
             "2")
                 break
                 ;;
+            *)
+                printf "\n%s\n" "No option has been chosen."
+                exit
+                ;;
         esac
     done
 }
@@ -88,9 +92,13 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
                                     $SRB2 -dedicated -room 38 -port $PORT -file $FILELIST 2>&1
                                     break
                                     ;;
+                                *)
+                                    printf "\n%s\n" "No option has been chosen."
+                                    exit
+                                    ;;
                             esac
                         else
-                            printf "\n%s\n" "Quitting."
+                            printf "\n%s\n" "No option has been chosen."
                             exit
                         fi
                     done
@@ -101,9 +109,13 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
                     $SRB2 -dedicated -port $PORT -file $FILELIST 2>&1
                     break
                     ;;
+                *)
+                    printf "\n%s\n" "No option has been chosen."
+                    exit
+                    ;;
             esac
         else
-            printf "\n%s\n" "Quitting."
+            printf "\n%s\n" "No option has been chosen."
             exit
         fi
     done
@@ -217,9 +229,13 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
                                     $SRB2 -server -room 38 -port $PORT -file $FILELIST 2>&1
                                     break
                                     ;;
+                                *)
+                                    printf "\n%s\n" "No option has been chosen."
+                                    exit
+                                    ;;
                             esac
                         else
-                            printf "\n%s\n" "Quitting."
+                            printf "\n%s\n" "No option has been chosen.."
                             exit
                         fi
                     done
@@ -230,9 +246,13 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
                     $SRB2 -server -port $PORT -file $FILELIST 2>&1
                     break
                     ;;
+                *)
+                    printf "\n%s\n" "No option has been chosen."
+                    exit
+                    ;;
             esac
         else
-            printf "\n%s\n" "Quitting."
+            printf "\n%s\n" "No option has been chosen.."
             exit
         fi
     done
