@@ -16,7 +16,7 @@ $(printf "%s\n" "$FILELIST" | gawk '{gsub(":","\n"); print}' | gawk -F'/' '{prin
                 printf "\033[1m\033[34m\n%s\n\033[0m" "Please enter addons' absolute path to server."
                 unset STRING
                 read -r STRING
-                FILELISTTMP="$STRING"
+                FILELISTTMP="$(printf "%s\n" "$STRING" | gawk '{gsub("~/","'$HOME'/");print}')"
                 FILELIST="$FILELISTTMP:$FILELIST"
                 FILELIST=$(find $FILELIST -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
                 checklist
