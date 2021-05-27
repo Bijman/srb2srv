@@ -136,5 +136,5 @@ Usage: srb2srv [OPTION] <parameter>
      5. Run SRB2Kart dedicated server with port 5030, and add path to addon or directory of addons:
             srb2srv --dedicatedkart "$HOME/addon.pk3" --port 5030
 
-     Exporting SRB2/SRB2Kart/Google Chrome/Chromium sandbox paths to executable files, Node modules path in "SRB2" or "SRB2KART","CHROME_DEVEL_SANDBOX" and "NODE_PATH" environment variables in shell configuration file is required for script to work.
+     Exporting SRB2/SRB2Kart/Google Chrome/Chromium sandbox paths to executable files, Node modules path in "SRB2" or "SRB2KART", "CHROME_DEVEL_SANDBOX" and "NODE_PATH" environment variables in shell configuration file is required for script to work.
 ```
