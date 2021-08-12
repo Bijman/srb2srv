@@ -2,7 +2,7 @@ This shellscript has number of uses related to SRB2/SRB2Kart server.
 
 Mainly, the script obtains information about IP, number of players, gametype, etc. from https://old.mb.srb2.org/masterserver.php and https://srb2kart.aqua.fyi/browser/index.html, which allows user to connect directly to selected server from SRB2/SRB2Kart Master Server list. 
 
-![output](https://user-images.githubusercontent.com/16626326/116865885-c59d4180-ac0a-11eb-84d9-481940569c5b.gif)
+![srb2srv](https://user-images.githubusercontent.com/16626326/116865885-c59d4180-ac0a-11eb-84d9-481940569c5b.gif)
 
 # Features
 - Connecting directly to selected server's IP from SRB2/SRB2Kart Master Server,
@@ -13,6 +13,7 @@ Mainly, the script obtains information about IP, number of players, gametype, et
 # Dependencies
 - GNU Coreutils,
 - Bash or any POSIX compliant shell,
+- Findutils,
 - Curl,
 - Gawk,
 - Node.js *,
@@ -24,13 +25,12 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 # Dependencies Installation
 **Linux:** 
-
 1. In terminal enter this following commands:
-- Debian/Ubuntu/Debian based/Ubuntu based: `sudo apt install coreutils bash curl gawk nodejs npm`,
+- Debian/Ubuntu/Debian based/Ubuntu based: `sudo apt install coreutils findutils bash curl gawk nodejs npm`,
 
-- Arch/Arch based: `sudo pacman -S coreutils bash curl gawk nodejs npm`,
+- Arch/Arch based: `sudo pacman -S coreutils findutils bash curl gawk nodejs npm`,
 
-- Gentoo/Gentoo based: `sudo emerge -av coreutils bash curl gawk nodejs`,
+- Gentoo/Gentoo based: `sudo emerge -av coreutils findutils bash curl gawk nodejs`,
 
 2. Install Puppeteer: 
 - `npm i puppeteer`.
@@ -60,7 +60,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 2. Enter `git clone https://github.com/Bijman/srb2srv`.
 
-3. Enter `sudo make install`, which will install to "/usr/bin", or just place script in your directory and change script's permissions to be executable: `chmod 755 srb2srv`.
+3. Enter `sudo make install`, which will install to "/usr/bin" or "/usr/local/bin", if path exists, or just place script in your directory and change script's permissions to be executable: `chmod 755 srb2srv`.
 
 **Windows:**
 1. Open Git Bash,
