@@ -105,7 +105,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 **If you want to connect to server or start your own server in SRB2Kart:**
 1. Enter your path to SRB2Kart executable file ("srb2kart.exe", "srb2kart") in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2KART="/path/to/SRB2Kart-executable-file"`.
 
-**Usage (from help text):**
+# Usage (from help text)
 ```
 CLI for server related tools of SRB2/SRB2Kart
 
