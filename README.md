@@ -2,7 +2,7 @@ This shell script has number of uses related to SRB2/SRB2Kart server.
 
 Mainly, the script obtains information about IP, number of players, gametype, etc. from https://ms.srb2.org and https://srb2kart.aqua.fyi/browser/index.html, which allows user to connect directly to selected server from SRB2/SRB2Kart Master Server list.
 
-![srb2srv](https://user-images.githubusercontent.com/16626326/116865885-c59d4180-ac0a-11eb-84d9-481940569c5b.gif)
+![srb2srv](https://user-images.githubusercontent.com/16626326/134928198-1b1b3837-1da0-4f97-bb23-e533d4da3487.gif)
 
 # Features
 - Connecting directly to selected server's IP from SRB2/SRB2Kart Master Server,
@@ -86,14 +86,14 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 # Configuration
 **If you want to connect to server in SRB2:**
-1. Enter your path to SRB2 executable file ("lsdlsrb2", "srb2win.exe", "Sonic Robo Blast 2") or just type "flatpak" (linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2="/path/to/SRB2-executable-file"` or `export SRB2="flatpak"`,
+1. Enter your path to SRB2 executable file ("lsdlsrb2", "srb2win.exe", "Sonic Robo Blast 2") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2="/path/to/SRB2-executable-file"` or `export SRB2="flatpak"`,
 - Note for MacOS users: SRB2 executable file should be in "/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2", if "Sonic Robo Blast 2.app" or "Sonic Robo Blast 2 Kart.app" is installed in "Applications".
 
 **If you want start your own server in SRB2:**
-1. Enter your path to SRB2 executable file ("lsdlsrb2", "srb2win.exe", "Sonic Robo Blast 2") or just type "flatpak" (linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2="/path/to/SRB2-executable-file"` or `export SRB2="flatpak"`,
+1. Enter your path to SRB2 executable file ("lsdlsrb2", "srb2win.exe", "Sonic Robo Blast 2") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2="/path/to/SRB2-executable-file"` or `export SRB2="flatpak"`,
 
 **If you want to connect to server or start your own server in SRB2Kart:**
-1. Enter your path to SRB2Kart executable file ("srb2kart.exe", "lsdl2srb2kart", "Sonic Robo Blast 2 Kart") or just type "flatpak" (linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2KART="/path/to/SRB2Kart-executable-file"` or `export SRB2="flatpak"`,
+1. Enter your path to SRB2Kart executable file ("srb2kart.exe", "lsdl2srb2kart", "Sonic Robo Blast 2 Kart") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2KART="/path/to/SRB2Kart-executable-file"` or `export SRB2="flatpak"`,
 - Note for MacOS users: SRB2Kart executable file should be in "/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart", if "Sonic Robo Blast 2 Kart.app" is installed in "Applications".
 
 # Usage (from help text)
@@ -128,8 +128,8 @@ Usage: srb2srv [OPTION] <parameter>
             srb2srv --dedicatedkart "$HOME/addon.pk3" --port 5030
 
   NOTES:
-     Exporting SRB2/SRB2Kart executable file ("lsdlsrb2", "srb2win.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or flatpak in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile") is required for script to work.
-     Here is a few examples:
+     Exporting SRB2/SRB2Kart executable file ("lsdlsrb2", "srb2win.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or "flatpak" (for installed Flatpaks, Linux only) in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile") is required for script to work.
+     Here are a few examples:
        SRB2
          1. Linux:
             - export SRB2="$HOME/Games/SRB2/lsdlsrb2",

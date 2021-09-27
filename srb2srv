@@ -440,8 +440,8 @@ Usage: srb2srv [OPTION] <parameter>
             srb2srv --dedicatedkart \"\$HOME/addon.pk3\" --port 5030
 
   NOTES:
-     Exporting SRB2/SRB2Kart executable file (\"lsdlsrb2\", \"srb2win.exe\", \"Sonic Robo Blast 2\", \"lsdl2srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\") path or flatpak in \"SRB2\" or \"SRB2KART\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
-     Here is a few examples:
+     Exporting SRB2/SRB2Kart executable file (\"lsdlsrb2\", \"srb2win.exe\", \"Sonic Robo Blast 2\", \"lsdl2srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\") path or flatpak (for installed Flatpaks, Linux only) in \"SRB2\" or \"SRB2KART\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
+     Here are a few examples:
        SRB2
          1. Linux:
             - export SRB2=\"\$HOME/Games/SRB2/lsdlsrb2\",
