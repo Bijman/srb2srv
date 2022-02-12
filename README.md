@@ -8,7 +8,7 @@ Mainly, the script obtains information about IP, number of players, gametype, et
 - Connecting directly to selected server's IP from SRB2/SRB2Kart Master Server,
 - Starting server and playing, or just creating dedicated one,
 - Checking if server is reachable (using [jameds.org's Port Checker](https://www.jameds.org/SRB2/port)),
-- Runs on Linux, MacOS and Windows (Git Bash).
+- Runs on Linux, macOS and Windows (Git Bash).
 
 # Dependencies
 - GNU Coreutils,
@@ -36,7 +36,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 3. The rest of dependencies are installed, if you followed video.
 
-**MacOS:**
+**macOS:**
 1. In terminal enter this following command:
 - Homebrew: `brew install gawk curl`,
 - MacPorts: `sudo port install gawk curl`.
@@ -72,7 +72,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 9. Set other environment variables from "Configuration" section of README.
 
-**MacOS:**
+**macOS:**
 1. Open terminal,
 
 2. Enter `git clone https://github.com/Bijman/srb2srv`,
@@ -86,7 +86,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 # Configuration
 **If you want to connect to server in SRB2:**
 1. Enter your path to SRB2 executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export SRB2="[path to SRB2 executable file]"` or `export SRB2="flatpak"`,
-- Note for MacOS users: SRB2 executable file should be in "/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2", if "Sonic Robo Blast 2.app" or "Sonic Robo Blast 2 Kart.app" is installed in "/Applications",
+- Note for macOS users: SRB2 executable file should be in "/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2", if "Sonic Robo Blast 2.app" or "Sonic Robo Blast 2 Kart.app" is installed in "/Applications",
 2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
 
 **If you want start your own server in SRB2:**
@@ -95,7 +95,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 **If you want to connect to server or start your own server in SRB2Kart:**
 1. Enter your path to SRB2Kart executable file ("lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export SRB2KART="[path to SRB2 executable file]"` or `export SRB2="flatpak"`,
-- Note for MacOS users: SRB2Kart executable file should be in "/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart", if "Sonic Robo Blast 2 Kart.app" is installed in "/Applications".
+- Note for macOS users: SRB2Kart executable file should be in "/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart", if "Sonic Robo Blast 2 Kart.app" is installed in "/Applications".
 2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
 
 # Usage (from help text)
@@ -146,7 +146,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2="$HOME/Games/SRB2/srb2.exe",
             - export SRB2="C:\Users\user\Games\SRB2\srb2win.exe".
 
-         3. MacOS:
+         3. macOS:
             - export SRB2="/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2".
 
        SRB2Kart
@@ -160,7 +160,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2KART="$HOME/Games/SRB2Kart/srb2kart.exe",
             - export SRB2KART="C:\Users\user\Games\SRB2Kart\srb2kart.exe".
 
-         3. MacOS:
+         3. macOS:
             - export SRB2KART="/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart".
 
      - This script does not set port forwarding and open port in system's firewall for you. You need to do this manually on your router and system. For more information read the guide in: https://www.jameds.org/portforward.

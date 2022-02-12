@@ -6,12 +6,14 @@ NOTICE="\e[1;93m"
 MESSAGE="\e[1;94m"
 PROMPT="\e[1;4;97m"
 
+# Killing script's process for quiting from hosting server.
 if [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW64" ] || [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW" ]; then
     trap "kill -9 $(ps -a | gawk '/bash/ {print $1}')" 2
 else
     trap "kill -9 $(ps -a | gawk '/srb2srv/ {print $1}')" 2
 fi
 
+# Giving user choice, if there needs to be more addons added or not.
 checklist() {
     while
         clear
@@ -46,6 +48,7 @@ checklist() {
 }
 
 checkport() {
+    # Checking port entered by -p/--port option.
     printf "$NOTICE\n%s\n\e[0m" "Before running this, make sure that your server is up."
     if [ -n "$(curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/is unreachable/')" ]; then
         curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/<p class="ip">/,/<\/div>/ {split($0,a,"<"); print a[1]}' | gawk '{getline a; getline b; getline c; print "\033[7;31m"a""b" "c"\033[0m"}'
@@ -55,6 +58,7 @@ checkport() {
 }
 
 checksrb2() {
+    # Checking if valid executable was entered to SRB2 environment variable.
     if [ "$SRB2" = "flatpak" ]; then
         SRB2="flatpak"
     elif [ -z "$SRB2" ] || [ ! -f "$(printf "%s\n" "$SRB2" | gawk -F';' '{gsub(" /",";/") gsub(" \\\\",";\\\\") gsub(" -",";-");print $1}')" ]; then
@@ -74,7 +78,7 @@ EXAMPLES:
             - export SRB2=\"\$HOME/Games/SRB2/srb2.exe\",
             - export SRB2=\"C:\Users\user\Games\SRB2\srb2win.exe\".
 
-         3. MacOS:
+         3. macOS:
             - export SRB2=\"/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2\"."
         exit
     else
@@ -83,6 +87,7 @@ EXAMPLES:
 }
 
 checksrb2kart() {
+    # Checking if valid executable was entered to SRB2KART environment variable.
     if [ "$SRB2KART" = "flatpak" ]; then
         SRB2KART="flatpak"
     elif [ -z "$SRB2KART" ] || [ ! -f "$(printf "%s\n" "$SRB2KART" | gawk -F';' '{gsub(" /",";/") gsub(" \\\\",";\\\\") gsub(" -",";-");print $1}')" ]; then
@@ -99,7 +104,7 @@ EXAMPLES:
             - export SRB2KART=\"\$HOME/Games/SRB2Kart/srb2kart.exe\",
             - export SRB2KART=\"C:\Users\user\Games\SRB2Kart\srb2kart.exe\".
 
-         3. MacOS:
+         3. macOS:
             - export SRB2KART=\"/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart\"."
         exit
     else
@@ -108,6 +113,7 @@ EXAMPLES:
 }
 
 dedicated() {
+    # Hosting dedicated server for SRB2. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
     IFS=";"
     if [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW64" ] || [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW" ]; then
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
@@ -146,7 +152,9 @@ dedicated() {
                     case $choose in
                         "1")
                             printf "\n"
+                            # Unsetting DISPLAY for a purpose of suppressing any message popups.
                             unset DISPLAY
+                            # Standard room.
                             if [ "$SRB2" = "flatpak" ]; then
                                 flatpak run org.srb2.SRB2 -dedicated -room 33 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
@@ -154,6 +162,7 @@ dedicated() {
                                 $SRB2 -dedicated -room 33 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
                             fi
+                            # Restarting server loop when there is error within game.
                             while true; do
                                 sleep 5
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
@@ -179,7 +188,9 @@ dedicated() {
                             ;;
                         "2")
                             printf "\n"
+                            # Unsetting DISPLAY for a purpose of suppressing any message popups.
                             unset DISPLAY
+                            # Casual room.
                             if [ "$SRB2" = "flatpak" ]; then
                                 flatpak run org.srb2.SRB2 -dedicated -room 28 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
@@ -187,6 +198,7 @@ dedicated() {
                                 $SRB2 -dedicated -room 28 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
                             fi
+                            # Restarting server loop when there is error within game.
                             while true; do
                                 sleep 5
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
@@ -212,7 +224,9 @@ dedicated() {
                             ;;
                         "3")
                             printf "\n"
+                            # Unsetting DISPLAY for a purpose of suppressing any message popups.
                             unset DISPLAY
+                            # Custom room.
                             if [ "$SRB2" = "flatpak" ]; then
                                 flatpak run org.srb2.SRB2 -dedicated -room 38 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
@@ -220,6 +234,7 @@ dedicated() {
                                 $SRB2 -dedicated -room 38 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
                             fi
+                            # Restarting server loop when there is error within game.
                             while true; do
                                 sleep 5
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
@@ -253,7 +268,9 @@ dedicated() {
                 ;;
             "2")
                 printf "\n"
+                # Unsetting DISPLAY for a purpose of suppressing any message popups.
                 unset DISPLAY
+                # Unlisted server.
                 if [ "$SRB2" = "flatpak" ]; then
                     flatpak run org.srb2.SRB2 -dedicated -port $PORT -file $FILELIST &
                     SRB2PID="$!"
@@ -261,6 +278,7 @@ dedicated() {
                     $SRB2 -dedicated -port $PORT -file $FILELIST &
                     SRB2PID="$!"
                 fi
+                # Restarting server loop when there is error within game.
                 while true; do
                     sleep 5
                     if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
@@ -293,6 +311,7 @@ dedicated() {
 }
 
 dedicatedkart() {
+    # Hosting dedicated server for SRB2Kart. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
     IFS=";"
     if [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW64" ] || [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW" ]; then
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
@@ -325,6 +344,7 @@ dedicatedkart() {
         $SRB2KART -dedicated -port $PORT -file $FILELIST &
         SRB2PID="$!"
     fi
+    # Restarting server loop when there is error within game.
     while true; do
         sleep 5
         if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
@@ -349,6 +369,7 @@ dedicatedkart() {
 }
 
 server() {
+    # Hosting server for SRB2. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
     IFS=";"
     if [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW64" ] || [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW" ]; then
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
@@ -387,6 +408,7 @@ server() {
                     case $choose in
                         "1")
                             printf "\n"
+                            # Standard room.
                             if [ "$SRB2" = "flatpak" ]; then
                                 flatpak run org.srb2.SRB2 -server -room 33 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
@@ -394,6 +416,7 @@ server() {
                                 $SRB2 -server -room 33 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
                             fi
+                            # Restarting server loop when there is error within game.
                             while true; do
                                 sleep 5
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
@@ -419,6 +442,7 @@ server() {
                             ;;
                         "2")
                             printf "\n"
+                            # Casual room.
                             if [ "$SRB2" = "flatpak" ]; then
                                 flatpak run org.srb2.SRB2 -server -room 28 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
@@ -426,6 +450,7 @@ server() {
                                 $SRB2 -server -room 28 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
                             fi
+                            # Restarting server loop when there is error within game.
                             while true; do
                                 sleep 5
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
@@ -451,6 +476,7 @@ server() {
                             ;;
                         "3")
                             printf "\n"
+                            # Custom room.
                             if [ "$SRB2" = "flatpak" ]; then
                                 flatpak run org.srb2.SRB2 -server -room 38 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
@@ -458,6 +484,7 @@ server() {
                                 $SRB2 -server -room 38 -port $PORT -file $FILELIST &
                                 SRB2PID="$!"
                             fi
+                            # Restarting server loop when there is error within game.
                             while true; do
                                 sleep 5
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
@@ -491,6 +518,7 @@ server() {
                 ;;
             "2")
                 printf "\n"
+                # Unlisted server.
                 if [ "$SRB2" = "flatpak" ]; then
                     flatpak run org.srb2.SRB2 -server -port $PORT -file $FILELIST &
                     SRB2PID="$!"
@@ -498,6 +526,7 @@ server() {
                     $SRB2 -server -port $PORT -file $FILELIST &
                     SRB2PID="$!"
                 fi
+                # Restarting server loop when there is error within game.
                 while true; do
                     sleep 5
                     if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
@@ -530,6 +559,7 @@ server() {
 }
 
 serverkart() {
+    # Hosting server for SRB2Kart. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
     IFS=";"
     if [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW64" ] || [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW" ]; then
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
@@ -562,6 +592,7 @@ serverkart() {
         $SRB2KART -server -port $PORT -file $FILELIST &
         SRB2PID="$!"
     fi
+    # Restarting server loop when there is error within game.
     while true; do
         sleep 5
         if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
@@ -586,6 +617,7 @@ serverkart() {
 }
 
 srb2ms() {
+    # Connecting to SRB2 servers in Master Server. Keeping colored names, players, IP, gametype, etc.
     SRVCODE=$(curl -s "https://ms.srb2.org")
     SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'<|>' '/copyIP/ && !/EMPTY LAND ZONE|function/ {print $3}')
     SRVNAME=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/"servername">/ && !/>Unreachable</ {gsub("<h1 class=\"servername\">|<span style=\"color:inherit*.\"></span>|<span style=\"color:inherit*.\">|<span style=\"color:#f3a3a3;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#ff9736;\"></span><span style=\"color:#ffff0f;\"></span>|</h1>","") gsub("&amp;","\\&") gsub("^[ \t]+",""); print}' | gawk '{gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m") gsub("<span style=\"color:#c599ff;\">","\\e[0;38;2;197;153;255m") gsub("<span style=\"color:#979797;\">","\\e[0;38;2;151;151;151m") gsub("<span style=\"color:#f3a3a3;\">","\\e[0;38;2;243;163;163m") gsub("</span>","\033[0m"); print}')\n")
@@ -635,6 +667,7 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/ $/ {print $1}')")
 }
 
 srb2kartms() {
+    # Connecting to SRB2Kart servers in Master Server. Keeping colored names, players, IP, gametype, etc.
     SRVCODE=$(curl -s "https://ms.kartkrew.org/")
     SRVUNREACHIP=$(printf "%s\n" "$SRVCODE" | gawk '/Unreachable \(*.*\)/ {gsub("\\(|\\)|</td>","");printf "%s|", $2}' | gawk '{gsub(/\|$/,"");print}')
     SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'href="srb2kart://ip/|">🔗</a>' '/srb2kart:/ {print $2}' | gawk '!/'$SRVUNREACHIP'/ {print}')
@@ -732,7 +765,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2=\"\$HOME/Games/SRB2/srb2.exe\",
             - export SRB2=\"C:\Users\user\Games\SRB2\srb2win.exe\".
 
-         3. MacOS:
+         3. macOS:
             - export SRB2=\"/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2\".
 
        SRB2Kart
@@ -746,7 +779,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2KART=\"\$HOME/Games/SRB2Kart/srb2kart.exe\",
             - export SRB2KART=\"C:\Users\user\Games\SRB2Kart\srb2kart.exe\".
 
-         3. MacOS:
+         3. macOS:
             - export SRB2KART=\"/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart\".
 
      - This script does not set port forwarding and open port in system's firewall for you. You need to do this manually on your router and system. For more information read the guide in: https://www.jameds.org/portforward.
@@ -756,6 +789,7 @@ Usage: srb2srv [OPTION] <parameter>
     exit
 }
 
+# Checking --port argument, if it is entered or it is in range of 0-65535. Defaulting to 5029, if does not meat requirements.
 PORTARG=$(printf "%s\n" "$*" | gawk 'match($0, /-p [0-9][0-9]*|--port [0-9][0-9]*/) {print substr($0, RSTART, RLENGTH)}')
 if [ -n "$PORTARG" ]; then
     if ([ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /-p/) {print substr($0, RSTART, RLENGTH)}')" = "-p" ] || [ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /--port/) {print substr($0, RSTART, RLENGTH)}')" = "--port" ]) && [ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /[0-9][0-9]*/) {print substr($0, RSTART, RLENGTH)}')" -ge 0 ] && [ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /[0-9][0-9]*/) {print substr($0, RSTART, RLENGTH)}')" -le 65535 ]; then
