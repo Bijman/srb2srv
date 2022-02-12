@@ -51,9 +51,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 4. Enter `sudo make install`, which will install to "/usr/bin" or "/usr/local/bin", if path exists. Alternatively manually place script to your path, which is readable by shell (PATH environment variable), and change script's permissions to be executable: `chmod 755 [path to srb2srv script]`,
 
-5. Set other environment variables from "Configuration" section of README,
-
-6. Enter `source ~/.bash_profile` or restart terminal.
+5. Set other environment variables from "Configuration" section of README.
 
 **Windows:**
 1. Open Git Bash,
@@ -72,9 +70,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 8. In opened text editor from previous step write new path to executables with environment variable PATH like `export PATH="~/bin:$PATH"` in "~/.bash_profile",
 
-9. Set other environment variables from "Configuration" section,
-
-10. Enter `source ~/.bash_profile` or restart Git Bash.
+9. Set other environment variables from "Configuration" section of README.
 
 **MacOS:**
 1. Open terminal,
@@ -85,24 +81,22 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 4. Enter `sudo make install`, which will install to "/usr/local/bin", if path exists. Alternatively manually place script to your path, which is readable by shell (PATH environment variable), and change script's permissions to be executable: `chmod 755 [path to srb2srv script]`,
 
-5. Set other environment variables from "Configuration" section,
-
-6. Enter `source ~/.bash_profile` or restart terminal.
+5. Set other environment variables from "Configuration" section of README.
 
 # Configuration
 **If you want to connect to server in SRB2:**
-1. Enter your path to SRB2 executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2="[path to SRB2 executable file]"` or `export SRB2="flatpak"`,
+1. Enter your path to SRB2 executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export SRB2="[path to SRB2 executable file]"` or `export SRB2="flatpak"`,
 - Note for MacOS users: SRB2 executable file should be in "/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2", if "Sonic Robo Blast 2.app" or "Sonic Robo Blast 2 Kart.app" is installed in "/Applications",
-2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or restart terminal.
+2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
 
 **If you want start your own server in SRB2:**
-1. Enter your path to SRB2 executable file ("lsdl2srb2", "lsdlsrb2", "srb2" "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2="[path to SRB2 executable file]"` or `export SRB2="flatpak"`,
-2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or restart terminal.
+1. Enter your path to SRB2 executable file ("lsdl2srb2", "lsdlsrb2", "srb2" "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export SRB2="[path to SRB2 executable file]"` or `export SRB2="flatpak"`,
+2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
 
 **If you want to connect to server or start your own server in SRB2Kart:**
-1. Enter your path to SRB2Kart executable file ("lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" in user's home directory): `export SRB2KART="[path to SRB2 executable file]"` or `export SRB2="flatpak"`,
+1. Enter your path to SRB2Kart executable file ("lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export SRB2KART="[path to SRB2 executable file]"` or `export SRB2="flatpak"`,
 - Note for MacOS users: SRB2Kart executable file should be in "/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart", if "Sonic Robo Blast 2 Kart.app" is installed in "/Applications".
-2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or restart terminal.
+2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
 
 # Usage (from help text)
 ```
@@ -136,7 +130,7 @@ Usage: srb2srv [OPTION] <parameter>
             srb2srv --dedicatedkart "$HOME/addon.pk3" --port 5030
 
   NOTES:
-     Exporting SRB2/SRB2Kart executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or "flatpak" (for installed Flatpaks, Linux only) in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile") is required for script to work.
+     - Exporting SRB2/SRB2Kart executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or "flatpak" (for installed Flatpaks, Linux only) in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
@@ -166,4 +160,7 @@ Usage: srb2srv [OPTION] <parameter>
 
          3. MacOS:
             - export SRB2KART="/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart".
+
+     - This script does not set port forwarding and open port in system's firewall for you. You need to do this manually on your router and system. For more information read the guide in: https://www.jameds.org/portforward.
+     - To automate hosting server, do for example 'echo "1\n3" | srb2srv -d [path to directory of addons for dedicated server ]', which means it will make input to list dedicated server in Custom room on Master Server.
 ```
