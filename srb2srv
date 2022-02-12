@@ -71,7 +71,8 @@ EXAMPLES:
          2. Windows:
             - export SRB2=\"\$HOME/Games/SRB2/srb2win.exe\",
             - export SRB2=\"\$HOME/Games/SRB2/srb2win64.exe\",
-            - export SRB2=\"\$HOME/Games/SRB2/srb2.exe\".
+            - export SRB2=\"\$HOME/Games/SRB2/srb2.exe\",
+            - export SRB2=\"C:\Users\user\Games\SRB2\srb2win.exe\".
 
          3. MacOS:
             - export SRB2=\"/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2\"."
@@ -95,7 +96,8 @@ EXAMPLES:
             - export SRB2KART=\"flatpak\".
 
          2. Windows:
-            - export SRB2KART=\"\$HOME/Games/SRB2Kart/srb2kart.exe\".
+            - export SRB2KART=\"\$HOME/Games/SRB2Kart/srb2kart.exe\",
+            - export SRB2KART=\"C:\Users\user\Games\SRB2Kart\srb2kart.exe\".
 
          3. MacOS:
             - export SRB2KART=\"/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart\"."
@@ -714,7 +716,7 @@ Usage: srb2srv [OPTION] <parameter>
             srb2srv --dedicatedkart \"\$HOME/addon.pk3\" --port 5030
 
   NOTES:
-     - Exporting SRB2/SRB2Kart executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\") path or \"flatpak\" (for installed Flatpaks, Linux only) in \"SRB2\" or \"SRB2KART\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\", \".zshrc\") is required for script to work.
+     - Exporting SRB2/SRB2Kart executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\") path or \"flatpak\" (for installed Flatpaks, Linux only) in \"SRB2\" or \"SRB2KART\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
@@ -727,7 +729,8 @@ Usage: srb2srv [OPTION] <parameter>
          2. Windows:
             - export SRB2=\"\$HOME/Games/SRB2/srb2win.exe\",
             - export SRB2=\"\$HOME/Games/SRB2/srb2win64.exe\",
-            - export SRB2=\"\$HOME/Games/SRB2/srb2.exe\".
+            - export SRB2=\"\$HOME/Games/SRB2/srb2.exe\",
+            - export SRB2=\"C:\Users\user\Games\SRB2\srb2win.exe\".
 
          3. MacOS:
             - export SRB2=\"/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2\".
@@ -740,12 +743,15 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2KART=\"flatpak\".
 
          2. Windows:
-            - export SRB2KART=\"\$HOME/Games/SRB2Kart/srb2kart.exe\".
+            - export SRB2KART=\"\$HOME/Games/SRB2Kart/srb2kart.exe\",
+            - export SRB2KART=\"C:\Users\user\Games\SRB2Kart\srb2kart.exe\".
 
          3. MacOS:
             - export SRB2KART=\"/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart\".
 
      - This script does not set port forwarding and open port in system's firewall for you. You need to do this manually on your router and system. For more information read the guide in: https://www.jameds.org/portforward.
+     - To automate inputting in script for hosting server, do for example 'echo \"1\n3\" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
+
 "
     exit
 }

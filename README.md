@@ -141,9 +141,10 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2="flatpak".
 
          2. Windows:
-            - export SRB2="$HOME/Games/SRB2/srb2win.exe".
-            - export SRB2="$HOME/Games/SRB2/srb2win64.exe".
-            - export SRB2="$HOME/Games/SRB2/srb2.exe".
+            - export SRB2="$HOME/Games/SRB2/srb2win.exe",
+            - export SRB2="$HOME/Games/SRB2/srb2win64.exe",
+            - export SRB2="$HOME/Games/SRB2/srb2.exe",
+            - export SRB2="C:\Users\user\Games\SRB2\srb2win.exe".
 
          3. MacOS:
             - export SRB2="/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2".
@@ -156,11 +157,12 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2KART="flatpak".
 
          2. Windows:
-            - export SRB2KART="$HOME/Games/SRB2Kart/srb2kart.exe".
+            - export SRB2KART="$HOME/Games/SRB2Kart/srb2kart.exe",
+            - export SRB2KART="C:\Users\user\Games\SRB2Kart\srb2kart.exe".
 
          3. MacOS:
             - export SRB2KART="/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart".
 
      - This script does not set port forwarding and open port in system's firewall for you. You need to do this manually on your router and system. For more information read the guide in: https://www.jameds.org/portforward.
-     - To automate hosting server, do for example 'echo "1\n3" | srb2srv -d [path to directory of addons for dedicated server ]', which means it will make input to list dedicated server in Custom room on Master Server.
+     - To automate inputting in script for hosting server, do for example 'echo "1\n3" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
 ```
