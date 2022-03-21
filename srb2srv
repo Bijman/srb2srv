@@ -8,60 +8,91 @@ PROMPT="\e[1;4;97m"
 
 # Killing script's process for quiting from hosting server.
 if [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW64" ] || [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW" ]; then
+
     trap "kill -9 $(ps -a | gawk '/bash/ {print $1}')" 2
+
 else
+
     trap "kill -9 $(ps -a | gawk '/srb2srv/ {print $1}')" 2
+
 fi
 
-# Giving user choice, if there needs to be more addons added or not.
 checklist() {
+    # Giving user choice, if there needs to be more addons added or not.
     while
+
         clear
         printf "$PROMPT\n%s\n\e[0m" "Filelist:"
         printf "$NOTICE%s\n\e[0m" "$(printf "%s\n" "$FILELIST" | gawk '{gsub(";","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
         printf "$MESSAGE\n%s\n\e[0m" "Do you want to add addons? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
+
         for loop in "Yes" "No"; do printf "%s\n" "$((i += 1))) $loop"; done
+
         printf "#? "
         read -r choose
     do
+
         unset i
+
         case $choose in
+
             "1")
+
                 printf "$MESSAGE\n%s\n\e[0m" "Please enter addons' absolute path for server."
                 unset STRING
                 read -r STRING
+
                 FILELISTTMP="$(printf "%s\n" "$STRING" | gawk '{gsub("~/","'$HOME'/");print}')"
                 FILELIST="$FILELISTTMP;$FILELIST"
                 FILELIST=$(find $FILELIST -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
+
                 checklist
                 break
+
                 ;;
+
             "2")
+
                 break
+
                 ;;
+
             *)
+
                 printf "$NOTICE\n%s\n\e[0m" "No option has been chosen."
                 exit
+
                 ;;
+
         esac
+
     done
 }
 
 checkport() {
     # Checking port entered by -p/--port option.
     printf "$NOTICE\n%s\n\e[0m" "Before running this, make sure that your server is up."
+
     if [ -n "$(curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/is unreachable/')" ]; then
+
         curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/<p class="ip">/,/<\/div>/ {split($0,a,"<"); print a[1]}' | gawk '{getline a; getline b; getline c; print "\033[7;31m"a""b" "c"\033[0m"}'
+
     else
+
         curl -s "https://www.jameds.org/SRB2/port/?p=$PORT" | gawk '/<p class="ip">/,/<\/div>/ {split($0,a,"<"); print a[1]}' | gawk 'NF{getline a; getline b; print "\033[7;32m"$0" "b"\033[0m"}'
+
     fi
+
 }
 
 checksrb2() {
     # Checking if valid executable was entered to SRB2 environment variable.
     if [ "$SRB2" = "flatpak" ]; then
+
         SRB2="flatpak"
+
     elif [ -z "$SRB2" ] || [ ! -f "$(printf "%s\n" "$SRB2" | gawk -F';' '{gsub(" /",";/") gsub(" \\\\",";\\\\") gsub(" -",";-");print $1}')" ]; then
+
         printf "$FAILURE\n%s\n\e[0m" "ERROR: No executable file found in SRB2 environment variable (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\") or SRB2 environment variable is not set at all. Set valid path to executable file in SRB2 environment variable in shell configuration file (for example in \".bash_profile\" or \".bashrc\").
 
 EXAMPLES:
@@ -80,17 +111,24 @@ EXAMPLES:
 
          3. macOS:
             - export SRB2=\"/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2\"."
+
         exit
+
     else
+
         SRB2=$(printf "%s\n" "$SRB2" | gawk '{gsub(" /",";/") gsub(" \\\\",";\\\\") gsub(" -",";-");print}')
+
     fi
 }
 
 checksrb2kart() {
     # Checking if valid executable was entered to SRB2KART environment variable.
     if [ "$SRB2KART" = "flatpak" ]; then
+
         SRB2KART="flatpak"
+
     elif [ -z "$SRB2KART" ] || [ ! -f "$(printf "%s\n" "$SRB2KART" | gawk -F';' '{gsub(" /",";/") gsub(" \\\\",";\\\\") gsub(" -",";-");print $1}')" ]; then
+
         printf "$FAILURE\n%s\n\e[0m" "ERROR: No executable file found in SRB2Kart environment variable (\"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\") or SRB2Kart environment variable is not set at all. Set valid path to executable file in SRB2Kart environment variable in shell configuration file (for example in \".bash_profile\" or \".bashrc\").
 
 EXAMPLES:
@@ -106,513 +144,836 @@ EXAMPLES:
 
          3. macOS:
             - export SRB2KART=\"/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart\"."
+
         exit
+
     else
+
         SRB2KART=$(printf "%s\n" "$SRB2KART" | gawk '{gsub(" /",";/") gsub(" \\\\",";\\\\") gsub(" -",";-");print}')
+
     fi
 }
 
 dedicated() {
     # Hosting dedicated server for SRB2. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
     IFS=";"
-    if [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW64" ] || [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW" ]; then
+
+    if [ -n "$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')" ]; then
+
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
+
     else
+
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+
     fi
+
     checksrb2
+
     if ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$1" = "-d" ] || [ "$1" = "--dedicated" ]); then
+
         PATHARGS=$(printf "%s" "$*" | gawk '{gsub("-d;|--dedicated;|;-p;[0-9][0-9]*|;--port;[0-9][0-9]*|-p;[0-9][0-9]*;|--port;[0-9][0-9]*;","") gsub("~/","'$HOME'/");print}')
+
         FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
+
     elif ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$3" = "-d" ] || [ "$3" = "--dedicated" ]); then
+
         shift 3
+
         FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
+
     else
+
         checklist
+
     fi
+
     while
+
         clear
         printf "$PROMPT\n%s\n\e[0m" "Filelist:"
         printf "$NOTICE%s\n\e[0m" "$(printf "%s\n" "$FILELIST" | gawk '{gsub(";","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
         printf "$MESSAGE\n%s\n\e[0m" "Do you want to advertise/list your server to Master Server? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
+
         for loop in "Yes" "No"; do printf "%s\n" "$((i += 1))) $loop"; done
+
         printf "#? "
         read -r choose
     do
+
         unset i
         case $choose in
+
             "1")
+
                 while
+
                     printf "$MESSAGE\n%s\n\e[0m" "Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
+
                     for loop in "Standard" "Casual" "Custom"; do printf "%s\n" "$((i += 1))) $loop"; done
+
                     printf "#? "
                     read -r choose
                 do
+
                     unset i
                     case $choose in
+
                         "1")
+
                             printf "\n"
+
                             # Unsetting DISPLAY for a purpose of suppressing any message popups.
                             unset DISPLAY
+
                             # Standard room.
                             if [ "$SRB2" = "flatpak" ]; then
-                                flatpak run org.srb2.SRB2 -dedicated -room 33 -port $PORT -file $FILELIST &
+
+                                flatpak run org.srb2.SRB2 -dedicated -room 33 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             else
-                                $SRB2 -dedicated -room 33 -port $PORT -file $FILELIST &
+
+                                $SRB2 -dedicated -room 33 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             fi
+
                             # Restarting server loop when there is error within game.
                             while true; do
+
                                 sleep 5
+
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
                                     clear
                                     printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
                                     i=10
                                     while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
                                         tput cup 3 $l
                                         i=$((i - 1))
                                         printf "%s\n" "$i"
                                         sleep 1
+
                                     done
+
                                     if [ "$SRB2" = "flatpak" ]; then
-                                        flatpak run org.srb2.SRB2 -dedicated -room 33 -port $PORT -file $FILELIST &
+
+                                        flatpak run org.srb2.SRB2 -dedicated -room 33 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     else
-                                        $SRB2 -dedicated -room 33 -port $PORT -file $FILELIST &
+
+                                        $SRB2 -dedicated -room 33 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     fi
+
                                 fi
+
                             done
                             break
+
                             ;;
+
                         "2")
+
                             printf "\n"
+
                             # Unsetting DISPLAY for a purpose of suppressing any message popups.
                             unset DISPLAY
+
                             # Casual room.
                             if [ "$SRB2" = "flatpak" ]; then
-                                flatpak run org.srb2.SRB2 -dedicated -room 28 -port $PORT -file $FILELIST &
+
+                                flatpak run org.srb2.SRB2 -dedicated -room 28 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             else
-                                $SRB2 -dedicated -room 28 -port $PORT -file $FILELIST &
+
+                                $SRB2 -dedicated -room 28 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             fi
+
                             # Restarting server loop when there is error within game.
                             while true; do
+
                                 sleep 5
+
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
                                     clear
                                     printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
                                     i=10
                                     while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
                                         tput cup 3 $l
                                         i=$((i - 1))
                                         printf "%s\n" "$i"
                                         sleep 1
+
                                     done
+
                                     if [ "$SRB2" = "flatpak" ]; then
-                                        flatpak run org.srb2.SRB2 -dedicated -room 28 -port $PORT -file $FILELIST &
+
+                                        flatpak run org.srb2.SRB2 -dedicated -room 28 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     else
-                                        $SRB2 -dedicated -room 28 -port $PORT -file $FILELIST &
+
+                                        $SRB2 -dedicated -room 28 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     fi
+
                                 fi
+
                             done
                             break
+
                             ;;
+
                         "3")
+
                             printf "\n"
+
                             # Unsetting DISPLAY for a purpose of suppressing any message popups.
                             unset DISPLAY
+
                             # Custom room.
                             if [ "$SRB2" = "flatpak" ]; then
-                                flatpak run org.srb2.SRB2 -dedicated -room 38 -port $PORT -file $FILELIST &
+
+                                flatpak run org.srb2.SRB2 -dedicated -room 38 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             else
-                                $SRB2 -dedicated -room 38 -port $PORT -file $FILELIST &
+
+                                $SRB2 -dedicated -room 38 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             fi
+
                             # Restarting server loop when there is error within game.
                             while true; do
+
                                 sleep 5
+
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
                                     clear
                                     printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
                                     i=10
                                     while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
                                         tput cup 3 $l
                                         i=$((i - 1))
                                         printf "%s\n" "$i"
                                         sleep 1
+
                                     done
+
                                     if [ "$SRB2" = "flatpak" ]; then
-                                        flatpak run org.srb2.SRB2 -dedicated -room 38 -port $PORT -file $FILELIST &
+
+                                        flatpak run org.srb2.SRB2 -dedicated -room 38 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     else
-                                        $SRB2 -dedicated -room 38 -port $PORT -file $FILELIST &
+
+                                        $SRB2 -dedicated -room 38 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     fi
+
                                 fi
+
                             done
                             break
+
                             ;;
+
                         *)
+
                             printf "$NOTICE\n%s\n\e[0m" "No option has been chosen."
                             exit
+
                             ;;
+
                     esac
+
                 done
+
                 break
+
                 ;;
+
             "2")
+
                 printf "\n"
+
                 # Unsetting DISPLAY for a purpose of suppressing any message popups.
                 unset DISPLAY
+
                 # Unlisted server.
                 if [ "$SRB2" = "flatpak" ]; then
-                    flatpak run org.srb2.SRB2 -dedicated -port $PORT -file $FILELIST &
+
+                    flatpak run org.srb2.SRB2 -dedicated -port $PORT -file $FILELIST 2>&1
                     SRB2PID="$!"
+
                 else
-                    $SRB2 -dedicated -port $PORT -file $FILELIST &
+
+                    $SRB2 -dedicated -port $PORT -file $FILELIST 2>&1
                     SRB2PID="$!"
+
                 fi
+
                 # Restarting server loop when there is error within game.
                 while true; do
+
                     sleep 5
+
                     if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
                         clear
                         printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
                         i=10
                         while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
                             tput cup 3 $l
                             i=$((i - 1))
                             printf "%s\n" "$i"
                             sleep 1
+
                         done
+
                         if [ "$SRB2" = "flatpak" ]; then
-                            flatpak run org.srb2.SRB2 -dedicated -port $PORT -file $FILELIST &
+
+                            flatpak run org.srb2.SRB2 -dedicated -port $PORT -file $FILELIST 2>&1
                             SRB2PID="$!"
+
                         else
-                            $SRB2 -dedicated -port $PORT -file $FILELIST &
+
+                            $SRB2 -dedicated -port $PORT -file $FILELIST 2>&1
                             SRB2PID="$!"
+
                         fi
+
                     fi
+
                 done
                 break
+
                 ;;
+
             *)
+
                 printf "$NOTICE\n%s\n\e[0m" "No option has been chosen."
                 exit
+
                 ;;
+
         esac
+
     done
 }
 
 dedicatedkart() {
     # Hosting dedicated server for SRB2Kart. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
     IFS=";"
-    if [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW64" ] || [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW" ]; then
+
+    if [ -n "$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')" ]; then
+
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
+
     else
+
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+
     fi
+
     checksrb2kart
+
     if ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$1" = "-dk" ] || [ "$1" = "--dedicatedkart" ]); then
-        PATHARGS=$(printf "%s" "$*" | gawk '{gsub("-dk:|--dedicatedkart:|:-p:[0-9][0-9]*|:--port:[0-9][0-9]*|-p:[0-9][0-9]*:|--port:[0-9][0-9]*:","") gsub("~/","'$HOME'/");print}')
-        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
+
+        PATHARGS=$(printf "%s" "$*" | gawk '{gsub("-dk;|--dedicatedkart;|;-p;[0-9][0-9]*|;--port;[0-9][0-9]*|-p;[0-9][0-9]*;|--port;[0-9][0-9]*;","") gsub("~/","'$HOME'/");print}')
+        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
         clear
         printf "$PROMPT\n%s\n\e[0m" "Filelist:"
         printf "$NOTICE%s\n\e[0m" "$(printf "%s\n" "$FILELIST" | gawk '{gsub(";","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
+
     elif ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$3" = "-dk" ] || [ "$3" = "--dedicatedkart" ]); then
+
         shift 3
-        FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
+        FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
         clear
         printf "$PROMPT\n%s\n\e[0m" "Filelist:"
         printf "$NOTICE%s\n\e[0m" "$(printf "%s\n" "$FILELIST" | gawk '{gsub(";","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
+
     else
+
         checklist
+
     fi
+
     printf "$NOTICE\n%s\n\e[0m" "Remember to type 'advertise 1' in console to advertise to Master Server."
     sleep 1
     unset DISPLAY
+
     if [ "$SRB2KART" = "flatpak" ]; then
-        flatpak run org.srb2.SRB2Kart -dedicated -port $PORT -file $FILELIST &
+
+        flatpak run org.srb2.SRB2Kart -dedicated -port $PORT -file $FILELIST 2>&1
         SRB2PID="$!"
+
     else
-        $SRB2KART -dedicated -port $PORT -file $FILELIST &
+
+        $SRB2KART -dedicated -port $PORT -file $FILELIST 2>&1
         SRB2PID="$!"
+
     fi
+
     # Restarting server loop when there is error within game.
     while true; do
+
         sleep 5
+
         if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
             clear
             printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
             i=10
             while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
                 tput cup 3 $l
                 i=$((i - 1))
                 printf "%s\n" "$i"
                 sleep 1
+
             done
+
             if [ "$SRB2KART" = "flatpak" ]; then
-                flatpak run org.srb2.SRB2Kart -dedicated -port $PORT -file $FILELIST &
+
+                flatpak run org.srb2.SRB2Kart -dedicated -port $PORT -file $FILELIST 2>&1
                 SRB2PID="$!"
+
             else
-                $SRB2KART -dedicated -port $PORT -file $FILELIST &
+
+                $SRB2KART -dedicated -port $PORT -file $FILELIST 2>&1
                 SRB2PID="$!"
+
             fi
+
         fi
+
     done
 }
 
 server() {
     # Hosting server for SRB2. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
     IFS=";"
-    if [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW64" ] || [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW" ]; then
+
+    if [ -n "$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')" ]; then
+
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
+
     else
+
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+
     fi
+
     checksrb2
+
     if ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$1" = "-s" ] || [ "$1" = "--server" ]); then
-        PATHARGS=$(printf "%s" "$*" | gawk '{gsub("-s:|--server:|:-p:[0-9][0-9]*|:--port:[0-9][0-9]*|-p:[0-9][0-9]*:|--port:[0-9][0-9]*:","") gsub("~/","'$HOME'/");print}')
-        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
+
+        PATHARGS=$(printf "%s" "$*" | gawk '{gsub("-s;|--server;|;-p;[0-9][0-9]*|;--port;[0-9][0-9]*|-p;[0-9][0-9]*;|--port;[0-9][0-9]*;","") gsub("~/","'$HOME'/");print}')
+        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
+
     elif ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$3" = "-s" ] || [ "$3" = "--server" ]); then
+
         shift 3
-        FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
+        FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
+
     else
+
         checklist
+
     fi
+
     while
+
         clear
         printf "$PROMPT\n%s\n\e[0m" "Filelist:"
         printf "$NOTICE%s\n\e[0m" "$(printf "%s\n" "$FILELIST" | gawk '{gsub(";","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
         printf "$MESSAGE\n%s\n\e[0m" "Do you want to advertise/list your server to Master Server? Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
+
         for loop in "Yes" "No"; do printf "%s\n" "$((i += 1))) $loop"; done
+
         printf "#? "
         read -r choose
     do
+
         unset i
+
         case $choose in
+
             "1")
+
                 while
+
                     printf "$MESSAGE\n%s\n\e[0m" "Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
+
                     for loop in "Standard" "Casual" "Custom"; do printf "%s\n" "$((i += 1))) $loop"; done
+
                     printf "#? "
                     read -r choose
                 do
+
                     unset i
                     case $choose in
+
                         "1")
+
                             printf "\n"
+
                             # Standard room.
                             if [ "$SRB2" = "flatpak" ]; then
-                                flatpak run org.srb2.SRB2 -server -room 33 -port $PORT -file $FILELIST &
+
+                                flatpak run org.srb2.SRB2 -server -room 33 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             else
-                                $SRB2 -server -room 33 -port $PORT -file $FILELIST &
+
+                                $SRB2 -server -room 33 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             fi
+
                             # Restarting server loop when there is error within game.
                             while true; do
+
                                 sleep 5
+
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
                                     clear
                                     printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
                                     i=10
                                     while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
                                         tput cup 3 $l
                                         i=$((i - 1))
                                         printf "%s\n" "$i"
                                         sleep 1
+
                                     done
+
                                     if [ "$SRB2" = "flatpak" ]; then
-                                        flatpak run org.srb2.SRB2 -server -room 33 -port $PORT -file $FILELIST &
+
+                                        flatpak run org.srb2.SRB2 -server -room 33 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     else
-                                        $SRB2 -server -room 33 -port $PORT -file $FILELIST &
+
+                                        $SRB2 -server -room 33 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     fi
+
                                 fi
+
                             done
                             break
+
                             ;;
+
                         "2")
+
                             printf "\n"
+
                             # Casual room.
                             if [ "$SRB2" = "flatpak" ]; then
-                                flatpak run org.srb2.SRB2 -server -room 28 -port $PORT -file $FILELIST &
+
+                                flatpak run org.srb2.SRB2 -server -room 28 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             else
-                                $SRB2 -server -room 28 -port $PORT -file $FILELIST &
+
+                                $SRB2 -server -room 28 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             fi
+
                             # Restarting server loop when there is error within game.
                             while true; do
+
                                 sleep 5
+
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
                                     clear
                                     printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
                                     i=10
                                     while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
                                         tput cup 3 $l
                                         i=$((i - 1))
                                         printf "%s\n" "$i"
                                         sleep 1
+
                                     done
+
                                     if [ "$SRB2" = "flatpak" ]; then
-                                        flatpak run org.srb2.SRB2 -server -room 28 -port $PORT -file $FILELIST &
+
+                                        flatpak run org.srb2.SRB2 -server -room 28 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     else
-                                        $SRB2 -server -room 28 -port $PORT -file $FILELIST &
+
+                                        $SRB2 -server -room 28 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     fi
+
                                 fi
+
                             done
                             break
+
                             ;;
+
                         "3")
+
                             printf "\n"
+
                             # Custom room.
                             if [ "$SRB2" = "flatpak" ]; then
-                                flatpak run org.srb2.SRB2 -server -room 38 -port $PORT -file $FILELIST &
+
+                                flatpak run org.srb2.SRB2 -server -room 38 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             else
-                                $SRB2 -server -room 38 -port $PORT -file $FILELIST &
+
+                                $SRB2 -server -room 38 -port $PORT -file $FILELIST 2>&1
                                 SRB2PID="$!"
+
                             fi
+
                             # Restarting server loop when there is error within game.
                             while true; do
+
                                 sleep 5
+
                                 if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
                                     clear
                                     printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
                                     i=10
                                     while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
                                         tput cup 3 $l
                                         i=$((i - 1))
                                         printf "%s\n" "$i"
                                         sleep 1
+
                                     done
+
                                     if [ "$SRB2" = "flatpak" ]; then
-                                        flatpak run org.srb2.SRB2 -server -room 38 -port $PORT -file $FILELIST &
+
+                                        flatpak run org.srb2.SRB2 -server -room 38 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     else
-                                        $SRB2 -server -room 38 -port $PORT -file $FILELIST &
+
+                                        $SRB2 -server -room 38 -port $PORT -file $FILELIST 2>&1
                                         SRB2PID="$!"
+
                                     fi
+
                                 fi
+
                             done
                             break
+
                             ;;
+
                         *)
+
                             printf "$NOTICE\n%s\n\e[0m" "No option has been chosen."
                             exit
+
                             ;;
+
                     esac
+
                 done
                 break
+
                 ;;
+
             "2")
+
                 printf "\n"
+
                 # Unlisted server.
                 if [ "$SRB2" = "flatpak" ]; then
-                    flatpak run org.srb2.SRB2 -server -port $PORT -file $FILELIST &
+
+                    flatpak run org.srb2.SRB2 -server -port $PORT -file $FILELIST 2>&1
                     SRB2PID="$!"
+
                 else
-                    $SRB2 -server -port $PORT -file $FILELIST &
+
+                    $SRB2 -server -port $PORT -file $FILELIST 2>&1
                     SRB2PID="$!"
+
                 fi
+
                 # Restarting server loop when there is error within game.
                 while true; do
+
                     sleep 5
+
                     if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
                         clear
                         printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
                         i=10
                         while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
                             tput cup 3 $l
                             i=$((i - 1))
                             printf "%s\n" "$i"
                             sleep 1
+
                         done
+
                         if [ "$SRB2" = "flatpak" ]; then
-                            flatpak run org.srb2.SRB2 -server -port $PORT -file $FILELIST &
+
+                            flatpak run org.srb2.SRB2 -server -port $PORT -file $FILELIST 2>&1
                             SRB2PID="$!"
+
                         else
-                            $SRB2 -server -port $PORT -file $FILELIST &
+
+                            $SRB2 -server -port $PORT -file $FILELIST 2>&1
                             SRB2PID="$!"
+
                         fi
+
                     fi
+
                 done
                 break
+
                 ;;
+
             *)
+
                 printf "$NOTICE\n%s\n\e[0m" "No option has been chosen."
                 exit
+
                 ;;
+
         esac
+
     done
 }
 
 serverkart() {
     # Hosting server for SRB2Kart. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
     IFS=";"
-    if [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW64" ] || [ "$(printf "%s\n" "$OS" | gawk -F'_' '{print $1}')" = "MINGW" ]; then
+
+    if [ -n "$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')" ]; then
+
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
+
     else
+
         SLASHARG=$(printf "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+
     fi
+
     checksrb2kart
+
     if ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$1" = "-sk" ] || [ "$1" = "--serverkart" ]); then
-        PATHARGS=$(printf "%s" "$*" | gawk '{gsub("-sk:|--serverkart:|:-p:[0-9][0-9]*|:--port:[0-9][0-9]*|-p:[0-9][0-9]*:|--port:[0-9][0-9]*:","") gsub("~/","'$HOME'/");print}')
-        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
+
+        PATHARGS=$(printf "%s" "$*" | gawk '{gsub("-sk;|--serverkart;|;-p;[0-9][0-9]*|;--port;[0-9][0-9]*|-p;[0-9][0-9]*;|--port;[0-9][0-9]*;","") gsub("~/","'$HOME'/");print}')
+        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
         clear
         printf "$PROMPT\n%s\n\e[0m" "Filelist:"
         printf "$NOTICE%s\n\e[0m" "$(printf "%s\n" "$FILELIST" | gawk '{gsub(";","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
+
     elif ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$3" = "-sk" ] || [ "$3" = "--serverkart" ]); then
+
         shift 3
-        FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s:", $0}')
+        FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
         clear
         printf "$PROMPT\n%s\n\e[0m" "Filelist:"
         printf "$NOTICE%s\n\e[0m" "$(printf "%s\n" "$FILELIST" | gawk '{gsub(";","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
+
     else
+
         checklist
+
     fi
+
     printf "$NOTICE\n%s\n\e[0m" "Remember to type 'advertise 1' in console to advertise to Master Server."
     sleep 1
+
     if [ "$SRB2KART" = "flatpak" ]; then
-        flatpak run org.srb2.SRB2Kart -server -port $PORT -file $FILELIST &
+
+        flatpak run org.srb2.SRB2Kart -server -port $PORT -file $FILELIST 2>&1
         SRB2PID="$!"
 
     else
-        $SRB2KART -server -port $PORT -file $FILELIST &
+
+        $SRB2KART -server -port $PORT -file $FILELIST 2>&1
         SRB2PID="$!"
+
     fi
+
     # Restarting server loop when there is error within game.
     while true; do
+
         sleep 5
+
         if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
             clear
             printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
             i=10
             while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
                 tput cup 3 $l
                 i=$((i - 1))
                 printf "%s\n" "$i"
                 sleep 1
+
             done
+
             if [ "$SRB2KART" = "flatpak" ]; then
-                flatpak run org.srb2.SRB2Kart -server -port $PORT -file $FILELIST &
+
+                flatpak run org.srb2.SRB2Kart -server -port $PORT -file $FILELIST 2>&1
                 SRB2PID="$!"
+
             else
-                $SRB2KART -server -port $PORT -file $FILELIST &
+
+                $SRB2KART -server -port $PORT -file $FILELIST 2>&1
                 SRB2PID="$!"
+
             fi
+
         fi
+
     done
 }
 
@@ -638,31 +999,48 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/ $/ {print $1}')")
     count=$(printf "%s\n" "$array" | wc -l)
     n=""
     while true; do
+
         clear
         printf "$MESSAGE\n%s\n\e[0m" "Please choose server by typing number and then pressing enter. Press enter or ctrl+c to quit."
         printf "%s\n" "$arrayname" | gawk '{print NR")", $0}'
         printf "#? "
         read -r n
+
         if [ -n "$n" ] && [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
+
             OPTURL=$(printf "%s\n" "$array" | gawk 'NR=='"${n}"'')
+
             if [ "$OPTURL" = "Refresh" ]; then
+
                 exec "$0"
+
             else
+
                 IFS=";"
                 SRB2=$(printf "%s\n" "$SRB2" | gawk '{gsub(" /",";/") gsub(" -",";-");print}')
                 printf "$MESSAGE\n%s\n\e[0m" "Connecting to server $OPTURL."
                 sleep 1
+
                 if [ "$SRB2" = "flatpak" ]; then
+
                     flatpak run org.srb2.SRB2 -connect $OPTURL 2>&1 || checksrb2
+
                 else
+
                     $SRB2 -connect $OPTURL 2>&1 || checksrb2
+
                 fi
+
             fi
             break
+
         else
+
             printf "$NOTICE\n%s\n\e[0m" "No option has been chosen."
             exit
+
         fi
+
     done
 }
 
@@ -689,31 +1067,48 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/-$/ {print $1}')")
     count=$(printf "%s\n" "$array" | wc -l)
     n=""
     while true; do
+
         clear
         printf "$MESSAGE\n%s\n\e[0m" "Please choose server by typing number and then pressing enter. Press enter or ctrl+c to quit."
         printf "%s\n" "$arrayname" | gawk '{print NR")", $0}'
         printf "#? "
         read -r n
+
         if [ -n "$n" ] && [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
+
             OPTURL=$(printf "%s\n" "$array" | gawk 'NR=='"${n}"'')
+
             if [ "$OPTURL" = "Refresh" ]; then
+
                 exec "$0" --kart
+
             else
+
                 IFS=";"
                 SRB2KART=$(printf "%s\n" "$SRB2KART" | gawk '{gsub(" /",";/") gsub(" -",";-");print}')
                 printf "$MESSAGE\n%s\n\e[0m" "Connecting to server $OPTURL."
                 sleep 1
+
                 if [ "$SRB2KART" = "flatpak" ]; then
+
                     flatpak run org.srb2.SRB2Kart -connect $OPTURL 2>&1 || checksrb2kart
+
                 else
+
                     $SRB2KART -connect $OPTURL 2>&1 || checksrb2kart
+
                 fi
+
             fi
             break
+
         else
+
             printf "$NOTICE\n%s\n\e[0m" "No option has been chosen."
             exit
+
         fi
+
     done
 }
 
@@ -786,35 +1181,50 @@ Usage: srb2srv [OPTION] <parameter>
      - To automate inputting in script for hosting server, do for example 'echo \"1\n3\" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
 
 "
+
     exit
 }
 
 # Checking --port argument, if it is entered or it is in range of 0-65535. Defaulting to 5029, if does not meat requirements.
 PORTARG=$(printf "%s\n" "$*" | gawk 'match($0, /-p [0-9][0-9]*|--port [0-9][0-9]*/) {print substr($0, RSTART, RLENGTH)}')
 if [ -n "$PORTARG" ]; then
+
     if ([ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /-p/) {print substr($0, RSTART, RLENGTH)}')" = "-p" ] || [ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /--port/) {print substr($0, RSTART, RLENGTH)}')" = "--port" ]) && [ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /[0-9][0-9]*/) {print substr($0, RSTART, RLENGTH)}')" -ge 0 ] && [ "$(printf "%s\n" "$PORTARG" | gawk 'match($0, /[0-9][0-9]*/) {print substr($0, RSTART, RLENGTH)}')" -le 65535 ]; then
+
         PORT=$(printf "%s\n" "$PORTARG" | gawk 'match($0, /[0-9][0-9]*/) {print substr($0, RSTART, RLENGTH)}')
+
     fi
+
 else
+
     PORT="5029"
+
 fi
 
 case "$3" in
 
     -d | --dedicated)
+
         dedicated "$@"
+
         ;;
 
     -dk | --dedicatedkart)
+
         dedicatedkart "$@"
+
         ;;
 
     -s | --server)
+
         server "$@"
+
         ;;
 
     -sk | --serverkart)
+
         serverkart "$@"
+
         ;;
 
 esac
@@ -822,35 +1232,51 @@ esac
 case "$1" in
 
     -h | --help)
+
         usage
+
         ;;
 
     "")
+
         srb2ms
+
         ;;
 
     -c | --checkport)
+
         checkport
+
         ;;
 
     -d | --dedicated)
+
         dedicated "$@"
+
         ;;
 
     -dk | --dedicatedkart)
+
         dedicatedkart "$@"
+
         ;;
 
     -k | --kart)
+
         srb2kartms
+
         ;;
 
     -s | --server)
+
         server "$@"
+
         ;;
 
     -sk | --serverkart)
+
         serverkart "$@"
+
         ;;
 
 esac
