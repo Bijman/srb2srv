@@ -983,7 +983,7 @@ srb2ms() {
     SRVCODE=$(curl -sL "$SRB2MSURL")
 
     # Check connection to SRB2 Master Server.
-    if [ -z "$(curl -vI "$SRB2MSURL" 2>&1 | gawk '/> Host:/ {gsub("\r","");print $NF}')" ] || [ -z "$(curl -sL "$SRB2MSURL" 2>&1 | gawk 'match($0, /Players/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
+    if [ -z "$(curl -vI "$SRB2MSURL" 2>&1 | gawk '/> Host:/ {gsub("\r","");print $NF}')" ] || [ -z "$(printf "%s\n" "$SRVCODE" | gawk 'match($0, /Players/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
 
         printf "$FAILURE\n%s\n\e[0m" "ERROR: Can't connect to Master Server. Try again later or check your internet connection."
         exit
@@ -1059,7 +1059,7 @@ srb2kartms() {
     SRVCODE=$(curl -sL "$SRB2KARTMSURL")
 
     # Check connection to SRB2 Master Server.
-    if [ -z "$(curl -vI "$SRB2KARTMSURL" 2>&1 | gawk '/> Host:/ {gsub("\r","");print $NF}')" ] || [ -z "$(curl -sL "$SRB2KARTMSURL" 2>&1 | gawk 'match($0, /Players/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
+    if [ -z "$(curl -vI "$SRB2KARTMSURL" 2>&1 | gawk '/> Host:/ {gsub("\r","");print $NF}')" ] || [ -z "$(printf "%s\n" "$SRVCODE" | gawk 'match($0, /Players/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
 
         printf "$FAILURE\n%s\n\e[0m" "ERROR: Can't connect to Master Server. Try again later or check your internet connection."
         exit
