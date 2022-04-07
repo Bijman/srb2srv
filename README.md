@@ -11,11 +11,12 @@ Mainly, the script obtains information about IP, number of players, gametype, et
 - Runs on Linux, macOS and Windows (Git Bash).
 
 # Dependencies
-- GNU Coreutils,
+- Basic system utilities like GNU Coreutils, BusyBox or macOS out-of-the-box system utilities,
 - Bash or any POSIX compliant shell,
 - Findutils,
 - Curl,
-- Gawk.
+- Gawk,
+- Ncurses.
 
 Additionally, Windows users need to have installed Git Bash to run this script.
 
