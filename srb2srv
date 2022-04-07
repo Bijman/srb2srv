@@ -156,15 +156,6 @@ EXAMPLES:
     fi
 }
 
-checkms() {
-    if [ -z "$(curl -vI "$SRB2MSURL" 2>&1 | gawk '/> Host:/ {gsub("\r","");print $NF}')" ] && [ -z "$(curl -vI "$SRB2KARTMSURL" 2>&1 | gawk '/> Host:/ {gsub("\r","");print $NF}')" ]; then
-
-        printf "$FAILURE\n%s\n\e[0m" "ERROR: Can't connect to Master Server. Try again later or check your internet connection."
-        exit
-
-    fi
-}
-
 dedicated() {
     # Hosting dedicated server for SRB2. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
     IFS=";"
@@ -989,11 +980,17 @@ serverkart() {
 }
 
 srb2ms() {
+    SRVCODE=$(curl -sL "$SRB2MSURL")
+
     # Check connection to SRB2 Master Server.
-    checkms
+    if [ -z "$(curl -vI "$SRB2MSURL" 2>&1 | gawk '/> Host:/ {gsub("\r","");print $NF}')" ] || [ -z "$(curl -sL "$SRB2MSURL" 2>&1 | gawk 'match($0, /Players/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
+
+        printf "$FAILURE\n%s\n\e[0m" "ERROR: Can't connect to Master Server. Try again later or check your internet connection."
+        exit
+
+    fi
 
     # Connecting to SRB2 servers in Master Server. Keeping colored names, players, IP, gametype, etc.
-    SRVCODE=$(curl -sL "$SRB2MSURL")
     SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'<|>' '/copyIP/ && !/EMPTY LAND ZONE|function/ {print $3}')
     SRVNAME=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/"servername">/ && !/>Unreachable</ {gsub("<h1 class=\"servername\">|<span style=\"color:inherit*.\"></span>|<span style=\"color:inherit*.\">|<span style=\"color:#f3a3a3;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#ff9736;\"></span><span style=\"color:#ffff0f;\"></span>|</h1>","") gsub("&amp;","\\&") gsub("^[ \t]+",""); print}' | gawk '{gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m") gsub("<span style=\"color:#c599ff;\">","\\e[0;38;2;197;153;255m") gsub("<span style=\"color:#979797;\">","\\e[0;38;2;151;151;151m") gsub("<span style=\"color:#f3a3a3;\">","\\e[0;38;2;243;163;163m") gsub("</span>","\033[0m"); print}')\n")
     PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F'<img title="|"' '/img title="[0-9]*\/[0-9]*"/ {print $4}')
@@ -1059,11 +1056,17 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/ $/ {print $1}')")
 }
 
 srb2kartms() {
-    # Check connection to SRB2 Kart Master Server.
-    checkms
+    SRVCODE=$(curl -sL "$SRB2KARTMSURL")
+
+    # Check connection to SRB2 Master Server.
+    if [ -z "$(curl -vI "$SRB2KARTMSURL" 2>&1 | gawk '/> Host:/ {gsub("\r","");print $NF}')" ] || [ -z "$(curl -sL "$SRB2KARTMSURL" 2>&1 | gawk 'match($0, /Players/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
+
+        printf "$FAILURE\n%s\n\e[0m" "ERROR: Can't connect to Master Server. Try again later or check your internet connection."
+        exit
+
+    fi
 
     # Connecting to SRB2Kart servers in Master Server. Keeping colored names, players, IP, gametype, etc.
-    SRVCODE=$(curl -sL "$SRB2KARTMSURL")
     SRVUNREACHIP=$(printf "%s\n" "$SRVCODE" | gawk '/Unreachable \(*.*\)/ {gsub("\\(|\\)|</td>","");printf "%s|", $2}' | gawk '{gsub(/\|$/,"");print}')
     SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'href="srb2kart://ip/|">🔗</a>' '/srb2kart:/ {print $2}' | gawk '!/'$SRVUNREACHIP'/ {print}')
     SRVNAME=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/<h1 class="servername">/ && !/<h1 class="servername">Unreachable<\/h1>/ {gsub("<h1 class=\"servername\">|</h1>|<span style=\"color:inherit\">|<span style=\"color:inherit;\">","") gsub("&#x27;","\\47") gsub("&amp;","\\&") gsub("^[ \t]+","");print}' | gawk '{gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m") gsub("<span style=\"color:#c599ff;\">","\\e[0;38;2;197;153;255m") gsub("<span style=\"color:#979797;\">","\\e[0;38;2;151;151;151m") gsub("<span style=\"color:#f3a3a3;\">","\\e[0;38;2;243;163;163m") gsub("<span style=\"color:#ffc7a7;\">","\\e[0;38;2;255;199;167m") gsub("</span>","\033[0m"); print}')\n")
