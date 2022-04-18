@@ -113,6 +113,8 @@ Usage: srb2srv [OPTION] <parameter>
      -c, --checkport                        Check if SRB2/SRB2Kart server is reachable.
      -d, --dedicated      <addon-path>      Start dedicated SRB2 server.
      -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server.
+     -i, --ip             <server-ip>       Join SRB2 server from IP.
+     -ik, --ipkart        <server-ip>       Join SRB2Kart server from IP.
      -k, --kart                             Go to SRB2Kart Master Server.
      -p, --port           <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -s and -sk options.
      -s, --server         <addon-path>      Start SRB2 server and play.
@@ -133,6 +135,9 @@ Usage: srb2srv [OPTION] <parameter>
 
      5. Run SRB2Kart dedicated server with port 5030, and add path to addon or directory of addons (default port to hosting server is 5029 without --port option):
             srb2srv --dedicatedkart "$HOME/addon.pk3" --port 5030
+
+     6. Join SRB2 server:
+            srb2srv --ip 123.84.116.123:5029
 
   NOTES:
      - Exporting SRB2/SRB2Kart executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or "flatpak" (for installed Flatpaks, Linux only) in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
