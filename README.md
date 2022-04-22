@@ -174,5 +174,8 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2KART="/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart".
 
      - This script does not set port forwarding and open port in system's firewall for you. You need to do this manually on your router and system. For more information read the guide in: https://www.jameds.org/portforward.
-     - To automate inputting in script for hosting server, do for example 'echo "1\n3" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
+     - To automate inputting in script for hosting server, do for example 'echo \"1\n3\" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
+     - Full path to game's main configuration file can be set with SRB2MAINCFG variable to shell configuration file, otherwise script assumes default file, if SRB2MAINCFG is not set.
+     - There is also additional SRB2CFG variable of other configuration file, which can temporary override settings of set SRB2MAINCFG.
+
 ```
