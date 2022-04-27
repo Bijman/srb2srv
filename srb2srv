@@ -261,41 +261,45 @@ dedicated() {
 
                             SRB2PID="$!"
 
-                            # Restarting server loop when there is error within game.
-                            while true; do
+                            # Restarting server from loop when there is error within game.
+                            if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
 
-                                sleep 5
+                                while true; do
 
-                                if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+                                    sleep 5
 
-                                    clear
-                                    printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+                                    if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
-                                    i=10
-                                    while [ $i -le 10 ] && [ $i -gt 0 ]; do
+                                        clear
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
 
-                                        tput cup 4 $l
-                                        i=$((i - 1))
-                                        printf "%s\n" "$i"
-                                        sleep 1
+                                        i=10
+                                        while [ $i -le 10 ] && [ $i -gt 0 ]; do
 
-                                    done
+                                            tput cup 4 $l
+                                            i=$((i - 1))
+                                            printf "%s\n" "$i"
+                                            sleep 1
 
-                                    if [ "$SRB2" = "flatpak" ]; then
+                                        done
 
-                                        flatpak run org.srb2.SRB2 -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                        if [ "$SRB2" = "flatpak" ]; then
 
-                                    else
+                                            flatpak run org.srb2.SRB2 -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
 
-                                        $SRB2 -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                        else
+
+                                            $SRB2 -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+
+                                        fi
+
+                                        SRB2PID="$!"
 
                                     fi
 
-                                    SRB2PID="$!"
+                                done
 
-                                fi
-
-                            done
+                            fi
                             break
 
                             ;;
@@ -320,41 +324,45 @@ dedicated() {
 
                             SRB2PID="$!"
 
-                            # Restarting server loop when there is error within game.
-                            while true; do
+                            # Restarting server from loop when there is error within game.
+                            if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
 
-                                sleep 5
+                                while true; do
 
-                                if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+                                    sleep 5
 
-                                    clear
-                                    printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+                                    if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
-                                    i=10
-                                    while [ $i -le 10 ] && [ $i -gt 0 ]; do
+                                        clear
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
 
-                                        tput cup 4 $l
-                                        i=$((i - 1))
-                                        printf "%s\n" "$i"
-                                        sleep 1
+                                        i=10
+                                        while [ $i -le 10 ] && [ $i -gt 0 ]; do
 
-                                    done
+                                            tput cup 4 $l
+                                            i=$((i - 1))
+                                            printf "%s\n" "$i"
+                                            sleep 1
 
-                                    if [ "$SRB2" = "flatpak" ]; then
+                                        done
 
-                                        flatpak run org.srb2.SRB2 -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                        if [ "$SRB2" = "flatpak" ]; then
 
-                                    else
+                                            flatpak run org.srb2.SRB2 -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
 
-                                        $SRB2 -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                        else
+
+                                            $SRB2 -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+
+                                        fi
+
+                                        SRB2PID="$!"
 
                                     fi
 
-                                    SRB2PID="$!"
+                                done
 
-                                fi
-
-                            done
+                            fi
                             break
 
                             ;;
@@ -379,41 +387,45 @@ dedicated() {
 
                             SRB2PID="$!"
 
-                            # Restarting server loop when there is error within game.
-                            while true; do
+                            # Restarting server from loop when there is error within game.
+                            if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
 
-                                sleep 5
+                                while true; do
 
-                                if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+                                    sleep 5
 
-                                    clear
-                                    printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+                                    if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
-                                    i=10
-                                    while [ $i -le 10 ] && [ $i -gt 0 ]; do
+                                        clear
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
 
-                                        tput cup 4 $l
-                                        i=$((i - 1))
-                                        printf "%s\n" "$i"
-                                        sleep 1
+                                        i=10
+                                        while [ $i -le 10 ] && [ $i -gt 0 ]; do
 
-                                    done
+                                            tput cup 4 $l
+                                            i=$((i - 1))
+                                            printf "%s\n" "$i"
+                                            sleep 1
 
-                                    if [ "$SRB2" = "flatpak" ]; then
+                                        done
 
-                                        flatpak run org.srb2.SRB2 -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                        if [ "$SRB2" = "flatpak" ]; then
 
-                                    else
+                                            flatpak run org.srb2.SRB2 -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
 
-                                        $SRB2 -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                        else
+
+                                            $SRB2 -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+
+                                        fi
+
+                                        SRB2PID="$!"
 
                                     fi
 
-                                    SRB2PID="$!"
+                                done
 
-                                fi
-
-                            done
+                            fi
                             break
 
                             ;;
@@ -428,7 +440,6 @@ dedicated() {
                     esac
 
                 done
-
                 break
 
                 ;;
@@ -453,41 +464,45 @@ dedicated() {
 
                 SRB2PID="$!"
 
-                # Restarting server loop when there is error within game.
-                while true; do
+                # Restarting server from loop when there is error within game.
+                if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
 
-                    sleep 5
+                    while true; do
 
-                    if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+                        sleep 5
 
-                        clear
-                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+                        if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
-                        i=10
-                        while [ $i -le 10 ] && [ $i -gt 0 ]; do
+                            clear
+                            printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
 
-                            tput cup 4 $l
-                            i=$((i - 1))
-                            printf "%s\n" "$i"
-                            sleep 1
+                            i=10
+                            while [ $i -le 10 ] && [ $i -gt 0 ]; do
 
-                        done
+                                tput cup 4 $l
+                                i=$((i - 1))
+                                printf "%s\n" "$i"
+                                sleep 1
 
-                        if [ "$SRB2" = "flatpak" ]; then
+                            done
 
-                            flatpak run org.srb2.SRB2 -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+                            if [ "$SRB2" = "flatpak" ]; then
 
-                        else
+                                flatpak run org.srb2.SRB2 -dedicated "$@" -port $PORT -file $FILELIST 2>&1
 
-                            $SRB2 -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+                            else
+
+                                $SRB2 -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+
+                            fi
+
+                            SRB2PID="$!"
 
                         fi
 
-                        SRB2PID="$!"
+                    done
 
-                    fi
-
-                done
+                fi
                 break
 
                 ;;
@@ -579,41 +594,45 @@ dedicatedkart() {
 
     SRB2PID="$!"
 
-    # Restarting server loop when there is error within game.
-    while true; do
+    # Restarting server from loop when there is error within game.
+    if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
 
-        sleep 5
+        while true; do
 
-        if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+            sleep 5
 
-            clear
-            printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+            if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
-            i=10
-            while [ $i -le 10 ] && [ $i -gt 0 ]; do
+                clear
+                printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
 
-                tput cup 4 $l
-                i=$((i - 1))
-                printf "%s\n" "$i"
-                sleep 1
+                i=10
+                while [ $i -le 10 ] && [ $i -gt 0 ]; do
 
-            done
+                    tput cup 4 $l
+                    i=$((i - 1))
+                    printf "%s\n" "$i"
+                    sleep 1
 
-            if [ "$SRB2KART" = "flatpak" ]; then
+                done
 
-                flatpak run org.srb2.SRB2Kart -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+                if [ "$SRB2KART" = "flatpak" ]; then
 
-            else
+                    flatpak run org.srb2.SRB2Kart -dedicated "$@" -port $PORT -file $FILELIST 2>&1
 
-                $SRB2KART -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+                else
+
+                    $SRB2KART -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+
+                fi
+
+                SRB2PID="$!"
 
             fi
 
-            SRB2PID="$!"
+        done
 
-        fi
-
-    done
+    fi
 }
 
 ip() {
@@ -755,41 +774,45 @@ server() {
 
                             SRB2PID="$!"
 
-                            # Restarting server loop when there is error within game.
-                            while true; do
+                            # Restarting server from loop when there is error within game.
+                            if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
 
-                                sleep 5
+                                while true; do
 
-                                if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+                                    sleep 5
 
-                                    clear
-                                    printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+                                    if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
-                                    i=10
-                                    while [ $i -le 10 ] && [ $i -gt 0 ]; do
+                                        clear
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
 
-                                        tput cup 4 $l
-                                        i=$((i - 1))
-                                        printf "%s\n" "$i"
-                                        sleep 1
+                                        i=10
+                                        while [ $i -le 10 ] && [ $i -gt 0 ]; do
 
-                                    done
+                                            tput cup 4 $l
+                                            i=$((i - 1))
+                                            printf "%s\n" "$i"
+                                            sleep 1
 
-                                    if [ "$SRB2" = "flatpak" ]; then
+                                        done
 
-                                        flatpak run org.srb2.SRB2 -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                        if [ "$SRB2" = "flatpak" ]; then
 
-                                    else
+                                            flatpak run org.srb2.SRB2 -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
 
-                                        $SRB2 -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                        else
+
+                                            $SRB2 -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+
+                                        fi
+
+                                        SRB2PID="$!"
 
                                     fi
 
-                                    SRB2PID="$!"
+                                done
 
-                                fi
-
-                            done
+                            fi
                             break
 
                             ;;
@@ -811,41 +834,45 @@ server() {
 
                             SRB2PID="$!"
 
-                            # Restarting server loop when there is error within game.
-                            while true; do
+                            # Restarting server from loop when there is error within game.
+                            if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
 
-                                sleep 5
+                                while true; do
 
-                                if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+                                    sleep 5
 
-                                    clear
-                                    printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+                                    if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
-                                    i=10
-                                    while [ $i -le 10 ] && [ $i -gt 0 ]; do
+                                        clear
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
 
-                                        tput cup 4 $l
-                                        i=$((i - 1))
-                                        printf "%s\n" "$i"
-                                        sleep 1
+                                        i=10
+                                        while [ $i -le 10 ] && [ $i -gt 0 ]; do
 
-                                    done
+                                            tput cup 4 $l
+                                            i=$((i - 1))
+                                            printf "%s\n" "$i"
+                                            sleep 1
 
-                                    if [ "$SRB2" = "flatpak" ]; then
+                                        done
 
-                                        flatpak run org.srb2.SRB2 -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                        if [ "$SRB2" = "flatpak" ]; then
 
-                                    else
+                                            flatpak run org.srb2.SRB2 -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
 
-                                        $SRB2 -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                        else
+
+                                            $SRB2 -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+
+                                        fi
+
+                                        SRB2PID="$!"
 
                                     fi
 
-                                    SRB2PID="$!"
+                                done
 
-                                fi
-
-                            done
+                            fi
                             break
 
                             ;;
@@ -867,41 +894,45 @@ server() {
 
                             SRB2PID="$!"
 
-                            # Restarting server loop when there is error within game.
-                            while true; do
+                            # Restarting server from loop when there is error within game.
+                            if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
 
-                                sleep 5
+                                while true; do
 
-                                if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+                                    sleep 5
 
-                                    clear
-                                    printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+                                    if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
-                                    i=10
-                                    while [ $i -le 10 ] && [ $i -gt 0 ]; do
+                                        clear
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
 
-                                        tput cup 4 $l
-                                        i=$((i - 1))
-                                        printf "%s\n" "$i"
-                                        sleep 1
+                                        i=10
+                                        while [ $i -le 10 ] && [ $i -gt 0 ]; do
 
-                                    done
+                                            tput cup 4 $l
+                                            i=$((i - 1))
+                                            printf "%s\n" "$i"
+                                            sleep 1
 
-                                    if [ "$SRB2" = "flatpak" ]; then
+                                        done
 
-                                        flatpak run org.srb2.SRB2 -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                        if [ "$SRB2" = "flatpak" ]; then
 
-                                    else
+                                            flatpak run org.srb2.SRB2 -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
 
-                                        $SRB2 -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                        else
+
+                                            $SRB2 -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+
+                                        fi
+
+                                        SRB2PID="$!"
 
                                     fi
 
-                                    SRB2PID="$!"
+                                done
 
-                                fi
-
-                            done
+                            fi
                             break
 
                             ;;
@@ -937,41 +968,45 @@ server() {
 
                 SRB2PID="$!"
 
-                # Restarting server loop when there is error within game.
-                while true; do
+                # Restarting server from loop when there is error within game.
+                if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
 
-                    sleep 5
+                    while true; do
 
-                    if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+                        sleep 5
 
-                        clear
-                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+                        if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
-                        i=10
-                        while [ $i -le 10 ] && [ $i -gt 0 ]; do
+                            clear
+                            printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
 
-                            tput cup 4 $l
-                            i=$((i - 1))
-                            printf "%s\n" "$i"
-                            sleep 1
+                            i=10
+                            while [ $i -le 10 ] && [ $i -gt 0 ]; do
 
-                        done
+                                tput cup 4 $l
+                                i=$((i - 1))
+                                printf "%s\n" "$i"
+                                sleep 1
 
-                        if [ "$SRB2" = "flatpak" ]; then
+                            done
 
-                            flatpak run org.srb2.SRB2 -server "$@" -port $PORT -file $FILELIST 2>&1
+                            if [ "$SRB2" = "flatpak" ]; then
 
-                        else
+                                flatpak run org.srb2.SRB2 -server "$@" -port $PORT -file $FILELIST 2>&1
 
-                            $SRB2 -server "$@" -port $PORT -file $FILELIST 2>&1
+                            else
+
+                                $SRB2 -server "$@" -port $PORT -file $FILELIST 2>&1
+
+                            fi
+
+                            SRB2PID="$!"
 
                         fi
 
-                        SRB2PID="$!"
+                    done
 
-                    fi
-
-                done
+                fi
                 break
 
                 ;;
@@ -1062,41 +1097,45 @@ serverkart() {
 
     SRB2PID="$!"
 
-    # Restarting server loop when there is error within game.
-    while true; do
+    # Restarting server from loop when there is error within game.
+    if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
 
-        sleep 5
+        while true; do
 
-        if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+            sleep 5
 
-            clear
-            printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+            if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
-            i=10
-            while [ $i -le 10 ] && [ $i -gt 0 ]; do
+                clear
+                printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
 
-                tput cup 4 $l
-                i=$((i - 1))
-                printf "%s\n" "$i"
-                sleep 1
+                i=10
+                while [ $i -le 10 ] && [ $i -gt 0 ]; do
 
-            done
+                    tput cup 4 $l
+                    i=$((i - 1))
+                    printf "%s\n" "$i"
+                    sleep 1
 
-            if [ "$SRB2KART" = "flatpak" ]; then
+                done
 
-                flatpak run org.srb2.SRB2Kart -server "$@" -port $PORT -file $FILELIST 2>&1
+                if [ "$SRB2KART" = "flatpak" ]; then
 
-            else
+                    flatpak run org.srb2.SRB2Kart -server "$@" -port $PORT -file $FILELIST 2>&1
 
-                $SRB2KART -server "$@" -port $PORT -file $FILELIST 2>&1
+                else
+
+                    $SRB2KART -server "$@" -port $PORT -file $FILELIST 2>&1
+
+                fi
+
+                SRB2PID="$!"
 
             fi
 
-            SRB2PID="$!"
+        done
 
-        fi
-
-    done
+    fi
 }
 
 srb2ms() {
@@ -1328,6 +1367,7 @@ Usage: srb2srv [OPTION] <parameter>
      - To automate inputting in script for hosting server, do for example 'echo \"1\n3\" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
      - Full path to game's main configuration file can be set with SRB2MAINCFG or SRB2KARTMAINCFG variable to shell configuration file, otherwise script assumes default file, if SRB2MAINCFG or SRB2KARTMAINCFG is not set.
       - There is also additional SRB2CFG and SRB2KARTCFG variables of other configuration files, which can temporary override settings of set SRB2MAINCFG and SRB2KARTMAINCFG.
+      - To turn off automatic restart of server after error, set environment variable \"export NOSRB2SRVLOOP=1\".
 "
 
     exit
