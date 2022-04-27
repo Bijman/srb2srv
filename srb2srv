@@ -271,7 +271,7 @@ dedicated() {
                                     if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
                                         clear
-                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
 
                                         i=10
                                         while [ $i -le 10 ] && [ $i -gt 0 ]; do
@@ -334,7 +334,7 @@ dedicated() {
                                     if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
                                         clear
-                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
 
                                         i=10
                                         while [ $i -le 10 ] && [ $i -gt 0 ]; do
@@ -397,7 +397,7 @@ dedicated() {
                                     if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
                                         clear
-                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
 
                                         i=10
                                         while [ $i -le 10 ] && [ $i -gt 0 ]; do
@@ -474,7 +474,7 @@ dedicated() {
                         if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
                             clear
-                            printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
+                            printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
 
                             i=10
                             while [ $i -le 10 ] && [ $i -gt 0 ]; do
@@ -604,7 +604,7 @@ dedicatedkart() {
             if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
                 clear
-                printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
+                printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
 
                 i=10
                 while [ $i -le 10 ] && [ $i -gt 0 ]; do
@@ -784,7 +784,7 @@ server() {
                                     if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
                                         clear
-                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
 
                                         i=10
                                         while [ $i -le 10 ] && [ $i -gt 0 ]; do
@@ -844,7 +844,7 @@ server() {
                                     if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
                                         clear
-                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
 
                                         i=10
                                         while [ $i -le 10 ] && [ $i -gt 0 ]; do
@@ -904,7 +904,7 @@ server() {
                                     if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
                                         clear
-                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
+                                        printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
 
                                         i=10
                                         while [ $i -le 10 ] && [ $i -gt 0 ]; do
@@ -978,7 +978,7 @@ server() {
                         if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
                             clear
-                            printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
+                            printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
 
                             i=10
                             while [ $i -le 10 ] && [ $i -gt 0 ]; do
@@ -1107,7 +1107,7 @@ serverkart() {
             if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
 
                 clear
-                printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 5 seconds. Press ctrl+c to quit."
+                printf "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
 
                 i=10
                 while [ $i -le 10 ] && [ $i -gt 0 ]; do
