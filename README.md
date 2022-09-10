@@ -23,15 +23,29 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 # Dependencies Installation
 **Linux:** 
 1. In terminal enter this following commands:
-- Debian/Ubuntu/Debian based/Ubuntu based: `sudo apt install make git coreutils findutils bash ncurses-bin curl gawk`,
-- Arch/Arch based: `sudo pacman -S --needed make coreutils findutils bash ncurses curl gawk`,
-- Gentoo/Gentoo based: `sudo emerge -av make coreutils findutils bash ncurses curl gawk`,
-- Fedora/Fedora based: `sudo dnf install make git coreutils findutils bash ncurses curl gawk`,
-- OpenSUSE/OpenSUSE based: `sudo zypper in make git coreutils findutils bash ncurses curl gawk`,
-- Void/Void based: `sudo xbps-install -S make git coreutils findutils bash ncurses curl gawk`,
-- Alpine/Alpine based: `sudo apk add make git coreutils findutils bash ncurses curl gawk`,
-- Solus/Solus based: `sudo eopkg it make git coreutils findutils bash ncurses curl gawk`,
-- NixOS/NixOS based: `sudo nix-env -i gnumake git coreutils findutils bash ncurses curl gawk` or set those packages in "environment.systemPackages = with pkgs;" in "/etc/nixos/configuration.nix", and then enter `sudo nixos-rebuild switch`.
+- Debian/Ubuntu/Debian based/Ubuntu based: `sudo apt install make git coreutils findutils ncurses-bin curl gawk`,
+
+- Arch/Arch based: `sudo pacman -S --needed make coreutils findutils ncurses curl gawk`,
+
+- Gentoo/Gentoo based: `sudo emerge -av make coreutils findutils ncurses curl gawk`,
+
+- Fedora/Fedora based: `sudo dnf install make git coreutils findutils ncurses curl gawk`,
+
+- Fedora Silverblue/Kinoite: `rpm-ostree install -A --idempotent make git coreutils findutils ncurses curl gawk`,
+
+- OpenSUSE/OpenSUSE based: `sudo zypper in make git coreutils findutils ncurses curl gawk`,
+
+- Void/Void based: `sudo xbps-install -S make git coreutils findutils ncurses curl gawk`,
+
+- Alpine/Alpine based: `sudo apk add make git coreutils findutils ncurses curl gawk`,
+
+- Solus/Solus based: `sudo eopkg it make git coreutils findutils ncurses curl gawk`,
+
+- NixOS/NixOS based: `sudo nix-env -i gnumake git coreutils findutils ncurses curl gawk` or `sudo nix profile install nixpkgs#gnumake nixpkgs#git nixpkgs#coreutils nixpkgs#findutils nixpkgs#ncurses nixpkgs#curl nixpkgs#gawk --extra-experimental-features nix-command --extra-experimental-features flakes` or set those packages in "environment.systemPackages = with pkgs;" in "/etc/nixos/configuration.nix", and then enter `sudo nixos-rebuild switch`.
+
+- Immutable systems like Steam Deck's SteamOS need rootless method of getting dependencies to avoid issues with wiping out installed packages after system's update or not to be able to write to certain path, like "/usr/local":
+	- [Homebrew](https://brew.sh/): `brew install make git coreutils findutils ncurses curl gawk`,
+	- [Nix Portable](https://github.com/DavHau/nix-portable): `nix-env -i gnumake git which coreutils findutils ncurses curl gawk` or `nix profile install nixpkgs#gnumake nixpkgs#git nixpkgs#which nixpkgs#coreutils nixpkgs#findutils nixpkgs#ncurses nixpkgs#curl nixpkgs#gawk --extra-experimental-features nix-command --extra-experimental-features flakes`.
 
 **Windows:**
 1. Installing Git Bash:
@@ -54,7 +68,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 3. Go to downloaded directory: `cd srb2srv`,
 
-4. Enter `sudo make install`, which will install to "/usr/bin" or "/usr/local/bin", if path exists. Alternatively manually place script to your path, which is readable by shell (PATH environment variable), and change script's permissions to be executable: `chmod 755 [path to srb2srv script]`,
+4. Enter `sudo make install`, which will install to "/usr/local/bin". You can specify your path with variable PREFIX, for example `make install PREFIX=$HOME/.local`, which will copy script to "$HOME/.local/bin". Alternatively manually place script to your path, which is readable by shell (PATH environment variable), and change script's permissions to be executable: `chmod 755 [path to srb2srv script]`,
 
 5. Set other environment variables from "Configuration" section of README.
 
@@ -84,7 +98,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 3. Go to downloaded directory: `cd srb2srv`,
 
-4. Enter `sudo make install`, which will install to "/usr/local/bin", if path exists. Alternatively manually place script to your path, which is readable by shell (PATH environment variable), and change script's permissions to be executable: `chmod 755 [path to srb2srv script]`,
+4. Enter `sudo make install`, which will install to "/usr/local/bin". You can specify your path with variable PREFIX, for example `make install PREFIX=$HOME/.local`, which will copy script to "$HOME/.local/bin". Alternatively manually place script to your path, which is readable by shell (PATH environment variable), and change script's permissions to be executable: `chmod 755 [path to srb2srv script]`,
 
 5. Set other environment variables from "Configuration" section of README.
 
