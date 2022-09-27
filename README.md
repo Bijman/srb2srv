@@ -31,7 +31,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 - Fedora/Fedora based: `sudo dnf install make git coreutils findutils ncurses curl gawk`,
 
-- Fedora Silverblue/Kinoite: `rpm-ostree install -A --idempotent make git coreutils findutils ncurses curl gawk`,
+- Fedora Silverblue/Kinoite: `rpm-ostree install -A --allow-inactive make git coreutils findutils ncurses curl gawk`,
 
 - OpenSUSE/OpenSUSE based: `sudo zypper in make git coreutils findutils ncurses curl gawk`,
 
@@ -41,11 +41,11 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 - Solus/Solus based: `sudo eopkg it make git coreutils findutils ncurses curl gawk`,
 
-- NixOS/NixOS based: `sudo nix-env -i gnumake git coreutils findutils ncurses curl gawk` or `sudo nix profile install nixpkgs#gnumake nixpkgs#git nixpkgs#coreutils nixpkgs#findutils nixpkgs#ncurses nixpkgs#curl nixpkgs#gawk --extra-experimental-features nix-command --extra-experimental-features flakes` or set those packages in "environment.systemPackages = with pkgs;" in "/etc/nixos/configuration.nix", and then enter `sudo nixos-rebuild switch`.
+- NixOS/NixOS based: `sudo nix-env -i gnumake git coreutils findutils ncurses curl gawk` or `sudo nix profile install nixpkgs#gnumake nixpkgs#git nixpkgs#coreutils nixpkgs#findutils nixpkgs#ncurses nixpkgs#curl nixpkgs#gawk --extra-experimental-features 'nix-command flakes'` or set those packages in "environment.systemPackages = with pkgs;" in "/etc/nixos/configuration.nix", and then enter `sudo nixos-rebuild switch`.
 
 - Immutable systems like Steam Deck's SteamOS need rootless method of getting dependencies to avoid issues with wiping out installed packages after system's update or not to be able to write to certain path, like "/usr/local":
 	- [Homebrew](https://brew.sh/): `brew install make git coreutils findutils ncurses curl gawk`,
-	- [Nix Portable](https://github.com/DavHau/nix-portable): `nix-env -i gnumake git which coreutils findutils ncurses curl gawk` or `nix profile install nixpkgs#gnumake nixpkgs#git nixpkgs#which nixpkgs#coreutils nixpkgs#findutils nixpkgs#ncurses nixpkgs#curl nixpkgs#gawk --extra-experimental-features nix-command --extra-experimental-features flakes`.
+	- [Nix Portable](https://github.com/DavHau/nix-portable): `nix-env -i gnumake git which coreutils findutils ncurses curl gawk` or `nix profile install nixpkgs#gnumake nixpkgs#git nixpkgs#which nixpkgs#coreutils nixpkgs#findutils nixpkgs#ncurses nixpkgs#curl nixpkgs#gawk --extra-experimental-features 'nix-command flakes'`.
 
 **Windows:**
 1. Installing Git Bash:
@@ -113,7 +113,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
 
 **If you want to connect to server or start your own server in SRB2Kart:**
-1. Enter your path to SRB2Kart executable file ("lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export SRB2KART="[path to SRB2 executable file]"` or `export SRB2="flatpak"`,
+1. Enter your path to SRB2Kart executable file ("lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export SRB2KART="[path to SRB2 Kart executable file]"` or `export SRB2="flatpak"`,
 - Note for macOS users: SRB2Kart executable file should be in "/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart", if "Sonic Robo Blast 2 Kart.app" is installed in "/Applications".
 2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
 
@@ -188,8 +188,64 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2KART="/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart".
 
      - This script does not set port forwarding and open port in system's firewall for you. You need to do this manually on your router and system. For more information read the guide in: https://www.jameds.org/portforward.
-     - To automate inputting in script for hosting server, do for example 'echo \"1\n3\" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
+
+     - To automate inputting in script for hosting server, do for example 'echo "1\n3" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
+
      - Full path to game's main configuration file can be set with SRB2MAINCFG or SRB2KARTMAINCFG variable to shell configuration file, otherwise script assumes default file, if SRB2MAINCFG or SRB2KARTMAINCFG is not set.
+
      - There is also additional SRB2CFG and SRB2KARTCFG variables of other configuration files, which can temporary override settings of set SRB2MAINCFG and SRB2KARTMAINCFG.
-     - To turn off automatic restart of server after error, set environment variable \"export NOSRB2SRVLOOP=1\".
+
+     - To turn off automatic restart of server after error, set environment variable "export NOSRB2SRVLOOP=1".
+
+     - Other environment variables to use. To activate them with value "1", do for example "export SRB2SRVDEBUG=1":
+
+         - SRB2SRVDEBUG - Getting verbose output from script. Useful for reporting issues in https://github.com/bijman/srb2srv/issues.
 ```
+
+# Notes
+     - Exporting SRB2/SRB2Kart executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or "flatpak" (for installed Flatpaks, Linux only) in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
+     Here are a few examples:
+       SRB2
+         1. Linux:
+            - export SRB2="$HOME/Games/SRB2/lsdl2srb2",
+            - export SRB2="$HOME/Games/SRB2/lsdlsrb2",
+            - export SRB2="$HOME/Games/SRB2/srb2",
+            - export SRB2="/usr/bin/srb2",
+            - export SRB2="flatpak".
+
+         2. Windows:
+            - export SRB2="$HOME/Games/SRB2/srb2win.exe",
+            - export SRB2="$HOME/Games/SRB2/srb2win64.exe",
+            - export SRB2="$HOME/Games/SRB2/srb2.exe",
+            - export SRB2="C:\Users\user\Games\SRB2\srb2win.exe".
+
+         3. macOS:
+            - export SRB2="/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2".
+
+       SRB2Kart
+         1. Linux:
+            - export SRB2KART="$HOME/Games/SRB2Kart/lsdl2srb2kart",
+            - export SRB2KART="$HOME/Games/SRB2Kart/srb2kart",
+            - export SRB2KART="/usr/bin/srb2kart",
+            - export SRB2KART="flatpak".
+
+         2. Windows:
+            - export SRB2KART="$HOME/Games/SRB2Kart/srb2kart.exe",
+            - export SRB2KART="C:\Users\user\Games\SRB2Kart\srb2kart.exe".
+
+         3. macOS:
+            - export SRB2KART="/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart".
+
+     - This script does not set port forwarding and open port in system's firewall for you. You need to do this manually on your router and system. For more information read the guide in: https://www.jameds.org/portforward.
+
+     - To automate inputting in script for hosting server, do for example 'echo "1\n3" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
+
+     - Full path to game's main configuration file can be set with SRB2MAINCFG or SRB2KARTMAINCFG variable to shell configuration file, otherwise script assumes default file, if SRB2MAINCFG or SRB2KARTMAINCFG is not set.
+
+     - There is also additional SRB2CFG and SRB2KARTCFG variables of other configuration files, which can temporary override settings of set SRB2MAINCFG and SRB2KARTMAINCFG.
+
+     - To turn off automatic restart of server after error, set environment variable "export NOSRB2SRVLOOP=1".
+
+     - Other environment variables to use. To activate them with value "1", do for example "export SRB2SRVDEBUG=1":
+
+         - SRB2SRVDEBUG - Getting verbose output from script. Useful for reporting issues in https://github.com/bijman/srb2srv/issues.
