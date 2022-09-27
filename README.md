@@ -113,7 +113,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
 
 **If you want to connect to server or start your own server in SRB2Kart:**
-1. Enter your path to SRB2Kart executable file ("lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export SRB2KART="[path to SRB2 Kart executable file]"` or `export SRB2="flatpak"`,
+1. Enter your path to SRB2Kart executable file ("lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") or just type "flatpak" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export SRB2KART="[path to SRB2Kart executable file]"` or `export SRB2KART="flatpak"`,
 - Note for macOS users: SRB2Kart executable file should be in "/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart", if "Sonic Robo Blast 2 Kart.app" is installed in "/Applications".
 2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
 
