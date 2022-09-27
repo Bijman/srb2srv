@@ -1391,9 +1391,10 @@ Usage: srb2srv [OPTION] <parameter>
      - Full path to game's main configuration file can be set with SRB2MAINCFG or SRB2KARTMAINCFG variable to shell configuration file, otherwise script assumes default file, if SRB2MAINCFG or SRB2KARTMAINCFG is not set.
 
      - There is also additional SRB2CFG and SRB2KARTCFG variables of other configuration files, which can temporary override settings of set SRB2MAINCFG and SRB2KARTMAINCFG.
-      1. To turn off automatic restart of server after error, set environment variable \"export NOSRB2SRVLOOP=1\".
 
-      2. Other environment variables to use. To activate them with value \"1\", do for example \"export SRB2SRVDEBUG=1\":
+     - To turn off automatic restart of server after error, set environment variable \"export NOSRB2SRVLOOP=1\".
+
+     - Other environment variables to use. To activate them with value \"1\", do for example \"export SRB2SRVDEBUG=1\":
 
           - SRB2SRVDEBUG - Getting verbose output from script. Useful for reporting issues in https://github.com/bijman/srb2srv/issues.
 "
