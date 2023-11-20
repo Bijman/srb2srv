@@ -1174,7 +1174,7 @@ srb2ms() {
     # Connecting to SRB2 servers in Master Server. Keeping colored names, players, IP, gametype, etc.
     SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'<|>' '/copyIP/ && !/EMPTY LAND ZONE|function/ {print $3}')
     SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/"servername">/ && !/>Unreachable</ {gsub("<h1 class=\"servername\">|<span style=\"color:inherit*.\"></span>|<span style=\"color:inherit*.\">|<span style=\"color:#f3a3a3;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#ff9736;\"></span><span style=\"color:#ffff0f;\"></span>|</h1>","") gsub("&amp;","\\&") gsub("^[ \t]+",""); print}' | gawk '{gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m") gsub("<span style=\"color:#c599ff;\">","\\e[0;38;2;197;153;255m") gsub("<span style=\"color:#979797;\">","\\e[0;38;2;151;151;151m") gsub("<span style=\"color:#f3a3a3;\">","\\e[0;38;2;243;163;163m") gsub("</span>","\033[0m"); print}')\n")
-    SRVNAMENOCOLOR=$(printf "%s\n" "$SRVNAMECOLOR" | gawk '{gsub(/\033\[[0-9;]*m/, "")}1')
+    SRVNAMENOCOLOR=$(printf "%s\n" "$SRVNAMECOLOR" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1')
     PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F'<img title="|"' '/img title="[0-9]*\/[0-9]*"/ {print $4}')
     GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F'<div class="gametype">|</div>' '/<div class="gametype">.*.<\/div>/ {gsub("&amp;","\\&"); print $2}')
     MAP=$(printf "%s\n" "$SRVCODE" | gawk -F'<strong>|</strong>' '/Playing on/ && !/EMPTY LAND ZONE/ {print $2}')
@@ -1240,20 +1240,20 @@ for (i = 1; i in l; i++) {print l[i],lc[i],c[i],rc[i],r[i]}}' | gawk '!/ $/ {pri
         fi
 
         ROOM=1
-        SRVAPIIP=$(curl -s "https://mb.srb2.org/MS/0/rooms/$1/servers" | gawk '!/^33$|^28$|^38$/ && /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");gsub(":"," ");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1":"$2"|"}' | gawk '{gsub("\\|$","");print}')
+        SRVAPIIP=$(curl -s "https://mb.srb2.org/MS/0/rooms/$1/servers" | gawk '!/^33$|^28$|^38$/ && /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub(":"," ");print}')"'/ {printf $1":"$2"|"}' | gawk '{gsub("\\|$","");print}')
         array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
         arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /\033\[1;34mFilter\033\[0m|\033\[1;34mRefresh\033\[0m/ {print}')
 
     # Filtering list of SRB2 servers.
     elif ([ "$1" = "-f" ] || [ "$1" = "--filter" ]) && [ -z "$SRVAPIIP" ]; then
 
-        SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '/'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
+        SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
         array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
         arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
 
-    elif ([ "$1" = "-f" ] || [ "$1" = "--filter" ]) && [ -n "$SRVAPIIP" ]; then
+    elif [ -n "$SRVAPIIP" ]; then
 
-        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '/'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
+        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
         array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
         arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
 
@@ -1277,7 +1277,7 @@ for (i = 1; i in l; i++) {print l[i],lc[i],c[i],rc[i],r[i]}}' | gawk '!/ $/ {pri
 
                 $PRINTF "$MESSAGE\n%s\n\e[0m" "Please enter text to filter. Press ctrl+c to quit."
                 read -r SRVAPIIP
-                SRVAPIIP=$(printf "$arraytmp" | gawk '/'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}') exec "$0"
+                STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP=$(printf "$arraytmp" | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}') exec "$0"
 
             elif [ "$OPTURL" = "Refresh" ]; then
 
@@ -1329,7 +1329,7 @@ srb2kartms() {
     SRVUNREACHIP=$(printf "%s\n" "$SRVCODE" | gawk '/Unreachable \(*.*\)/ {gsub("\\(|\\)|</td>","");printf "%s|", $2}' | gawk '{gsub(/\|$/,"");print}')
     SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'href="srb2kart://ip/|">🔗</a>' '/srb2kart:/ {print $2}' | gawk '!/'$SRVUNREACHIP'/ {print}')
     SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/<h1 class="servername">/ && !/<h1 class="servername">Unreachable<\/h1>/ {gsub("<h1 class=\"servername\">|</h1>|<span style=\"color:inherit\">|<span style=\"color:inherit;\">","") gsub("&#x27;","\\47") gsub("&amp;","\\&") gsub("^[ \t]+","");print}' | gawk '{gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m") gsub("<span style=\"color:#c599ff;\">","\\e[0;38;2;197;153;255m") gsub("<span style=\"color:#979797;\">","\\e[0;38;2;151;151;151m") gsub("<span style=\"color:#f3a3a3;\">","\\e[0;38;2;243;163;163m") gsub("<span style=\"color:#ffc7a7;\">","\\e[0;38;2;255;199;167m") gsub("</span>","\033[0m"); print}')\n")
-    SRVNAMENOCOLOR=$(printf "%s\n" "$SRVNAMECOLOR" | gawk '{gsub(/\033\[[0-9;]*m/, "")}1')
+    SRVNAMENOCOLOR=$(printf "%s\n" "$SRVNAMECOLOR" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1')
     PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk '/- [0-9]* \// && !/\(None\)/ {getline t;print $3,$4,$5,t}' | gawk NF'{(gsub(" |players<br>|-","") gsub("/"," / "));print}')
     GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk '/- [0-9]* \// && !/\(None\)/ {print $1}')
     KARTSPEED=$(printf "%s\n" "$SRVCODE" | gawk '/- [0-9]* \// && !/\(None\)/ {gsub("\\(|\\)","");print $2}')
@@ -1356,13 +1356,13 @@ for (i = 1; i in l; i++) {print l[i],lc[i],c[i],rc[i],r[i],fr[i]}}' | gawk '!/-$
     # Filtering list of SRB2Kart servers.
     if ([ "$1" = "-fk" ] || [ "$1" = "--filterkart" ]) && [ -z "$SRVAPIIP" ]; then
 
-        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '/'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
+        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
         array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
         arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
 
     elif [ -n "$SRVAPIIP" ]; then
 
-        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '/'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
+        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
         array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
         arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
 
@@ -1386,7 +1386,7 @@ for (i = 1; i in l; i++) {print l[i],lc[i],c[i],rc[i],r[i],fr[i]}}' | gawk '!/-$
 
                 $PRINTF "$MESSAGE\n%s\n\e[0m" "Please enter text to filter. Press ctrl+c to quit."
                 read -r SRVAPIIP
-                SRVAPIIP=$(printf "$arraytmp" | gawk '/'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}') exec "$0" --kart
+                SRVAPIIP=$(printf "$arraytmp" | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}') exec "$0" --kart
 
             elif [ "$OPTURL" = "Refresh" ]; then
 
