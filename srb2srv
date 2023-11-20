@@ -109,9 +109,9 @@ checkport() {
 
 checksrb2() {
     # Checking if valid executable was entered to SRB2 environment variable.
-    if [ "$SRB2" = "flatpak" ]; then
+    if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-        SRB2="flatpak"
+        SRB2="$SRB2"
 
     elif [ -z "$SRB2" ] || [ ! -f "$($PRINTF "%s\n" "$SRB2" | gawk -F';' '{gsub(" /",";/") gsub(" \\\\",";\\\\") gsub(" -",";-");print $1}')" ]; then
 
@@ -145,9 +145,9 @@ EXAMPLES:
 
 checksrb2kart() {
     # Checking if valid executable was entered to SRB2KART environment variable.
-    if [ "$SRB2KART" = "flatpak" ]; then
+    if [ "$($PRINTF "%s\n" "$SRB2KART" | gawk '{print $1}')" = "flatpak" ]; then
 
-        SRB2KART="flatpak"
+        SRB2KART="$SRB2KART"
 
     elif [ -z "$SRB2KART" ] || [ ! -f "$($PRINTF "%s\n" "$SRB2KART" | gawk -F';' '{gsub(" /",";/") gsub(" \\\\",";\\\\") gsub(" -",";-");print $1}')" ]; then
 
@@ -270,9 +270,9 @@ dedicated() {
                             unset DISPLAY
 
                             # Standard room.
-                            if [ "$SRB2" = "flatpak" ]; then
+                            if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run org.srb2.SRB2 -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
 
                             else
 
@@ -304,9 +304,9 @@ dedicated() {
 
                                         done
 
-                                        if [ "$SRB2" = "flatpak" ]; then
+                                        if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run org.srb2.SRB2 -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
@@ -333,9 +333,9 @@ dedicated() {
                             unset DISPLAY
 
                             # Casual room.
-                            if [ "$SRB2" = "flatpak" ]; then
+                            if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run org.srb2.SRB2 -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
 
                             else
 
@@ -367,9 +367,9 @@ dedicated() {
 
                                         done
 
-                                        if [ "$SRB2" = "flatpak" ]; then
+                                        if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run org.srb2.SRB2 -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
@@ -396,9 +396,9 @@ dedicated() {
                             unset DISPLAY
 
                             # Custom room.
-                            if [ "$SRB2" = "flatpak" ]; then
+                            if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run org.srb2.SRB2 -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
 
                             else
 
@@ -430,9 +430,9 @@ dedicated() {
 
                                         done
 
-                                        if [ "$SRB2" = "flatpak" ]; then
+                                        if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run org.srb2.SRB2 -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
@@ -473,9 +473,9 @@ dedicated() {
                 unset DISPLAY
 
                 # Unlisted server.
-                if [ "$SRB2" = "flatpak" ]; then
+                if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                    flatpak run org.srb2.SRB2 -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+                    flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -port $PORT -file $FILELIST 2>&1
 
                 else
 
@@ -507,9 +507,9 @@ dedicated() {
 
                             done
 
-                            if [ "$SRB2" = "flatpak" ]; then
+                            if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run org.srb2.SRB2 -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -port $PORT -file $FILELIST 2>&1
 
                             else
 
@@ -603,9 +603,9 @@ dedicatedkart() {
     sleep 1
     unset DISPLAY
 
-    if [ "$SRB2KART" = "flatpak" ]; then
+    if [ "$($PRINTF "%s\n" "$SRB2KART" | gawk '{print $1}')" = "flatpak" ]; then
 
-        flatpak run org.srb2.SRB2Kart -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+        flatpak run $($PRINTF "%s\n" "$SRB2KART" | gawk '{print $NF}') -dedicated "$@" -port $PORT -file $FILELIST 2>&1
 
     else
 
@@ -637,9 +637,9 @@ dedicatedkart() {
 
                 done
 
-                if [ "$SRB2KART" = "flatpak" ]; then
+                if [ "$($PRINTF "%s\n" "$SRB2KART" | gawk '{print $1}')" = "flatpak" ]; then
 
-                    flatpak run org.srb2.SRB2Kart -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+                    flatpak run $($PRINTF "%s\n" "$SRB2KART" | gawk '{print $NF}') -dedicated "$@" -port $PORT -file $FILELIST 2>&1
 
                 else
 
@@ -664,9 +664,9 @@ ip() {
     $PRINTF "$MESSAGE\n%s\n\e[0m" "Connecting to server $2."
     sleep 1
 
-    if [ "$SRB2" = "flatpak" ]; then
+    if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-        flatpak run org.srb2.SRB2 -connect $2 2>&1 || checksrb2
+        flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -connect $2 2>&1 || checksrb2
 
     else
 
@@ -683,9 +683,9 @@ ipkart() {
     $PRINTF "$MESSAGE\n%s\n\e[0m" "Connecting to server $2."
     sleep 1
 
-    if [ "$SRB2KART" = "flatpak" ]; then
+    if [ "$($PRINTF "%s\n" "$SRB2KART" | gawk '{print $1}')" = "flatpak" ]; then
 
-        flatpak run org.srb2.SRB2Kart -connect $2 2>&1 || checksrb2kart
+        flatpak run $($PRINTF "%s\n" "$SRB2KART" | gawk '{print $NF}') -connect $2 2>&1 || checksrb2kart
 
     else
 
@@ -783,9 +783,9 @@ server() {
                             $PRINTF "\n"
 
                             # Standard room.
-                            if [ "$SRB2" = "flatpak" ]; then
+                            if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run org.srb2.SRB2 -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
 
                             else
 
@@ -817,9 +817,9 @@ server() {
 
                                         done
 
-                                        if [ "$SRB2" = "flatpak" ]; then
+                                        if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run org.srb2.SRB2 -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
@@ -843,9 +843,9 @@ server() {
                             $PRINTF "\n"
 
                             # Casual room.
-                            if [ "$SRB2" = "flatpak" ]; then
+                            if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run org.srb2.SRB2 -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
 
                             else
 
@@ -877,9 +877,9 @@ server() {
 
                                         done
 
-                                        if [ "$SRB2" = "flatpak" ]; then
+                                        if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run org.srb2.SRB2 -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
@@ -903,9 +903,9 @@ server() {
                             $PRINTF "\n"
 
                             # Custom room.
-                            if [ "$SRB2" = "flatpak" ]; then
+                            if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run org.srb2.SRB2 -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
 
                             else
 
@@ -937,9 +937,9 @@ server() {
 
                                         done
 
-                                        if [ "$SRB2" = "flatpak" ]; then
+                                        if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run org.srb2.SRB2 -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
@@ -977,9 +977,9 @@ server() {
                 $PRINTF "\n"
 
                 # Unlisted server.
-                if [ "$SRB2" = "flatpak" ]; then
+                if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                    flatpak run org.srb2.SRB2 -server "$@" -port $PORT -file $FILELIST 2>&1
+                    flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -port $PORT -file $FILELIST 2>&1
 
                 else
 
@@ -1011,9 +1011,9 @@ server() {
 
                             done
 
-                            if [ "$SRB2" = "flatpak" ]; then
+                            if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run org.srb2.SRB2 -server "$@" -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -port $PORT -file $FILELIST 2>&1
 
                             else
 
@@ -1106,9 +1106,9 @@ serverkart() {
     $PRINTF "$NOTICE\n%s\n\e[0m" "Remember to type 'advertise 1' in console to advertise to Master Server."
     sleep 1
 
-    if [ "$SRB2KART" = "flatpak" ]; then
+    if [ "$($PRINTF "%s\n" "$SRB2KART" | gawk '{print $1}')" = "flatpak" ]; then
 
-        flatpak run org.srb2.SRB2Kart -server "$@" -port $PORT -file $FILELIST 2>&1
+        flatpak run $($PRINTF "%s\n" "$SRB2KART" | gawk '{print $NF}') -server "$@" -port $PORT -file $FILELIST 2>&1
 
     else
 
@@ -1140,9 +1140,9 @@ serverkart() {
 
                 done
 
-                if [ "$SRB2KART" = "flatpak" ]; then
+                if [ "$($PRINTF "%s\n" "$SRB2KART" | gawk '{print $1}')" = "flatpak" ]; then
 
-                    flatpak run org.srb2.SRB2Kart -server "$@" -port $PORT -file $FILELIST 2>&1
+                    flatpak run $($PRINTF "%s\n" "$SRB2KART" | gawk '{print $NF}') -server "$@" -port $PORT -file $FILELIST 2>&1
 
                 else
 
@@ -1173,21 +1173,92 @@ srb2ms() {
 
     # Connecting to SRB2 servers in Master Server. Keeping colored names, players, IP, gametype, etc.
     SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'<|>' '/copyIP/ && !/EMPTY LAND ZONE|function/ {print $3}')
-    SRVNAME=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/"servername">/ && !/>Unreachable</ {gsub("<h1 class=\"servername\">|<span style=\"color:inherit*.\"></span>|<span style=\"color:inherit*.\">|<span style=\"color:#f3a3a3;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#ff9736;\"></span><span style=\"color:#ffff0f;\"></span>|</h1>","") gsub("&amp;","\\&") gsub("^[ \t]+",""); print}' | gawk '{gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m") gsub("<span style=\"color:#c599ff;\">","\\e[0;38;2;197;153;255m") gsub("<span style=\"color:#979797;\">","\\e[0;38;2;151;151;151m") gsub("<span style=\"color:#f3a3a3;\">","\\e[0;38;2;243;163;163m") gsub("</span>","\033[0m"); print}')\n")
+    SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/"servername">/ && !/>Unreachable</ {gsub("<h1 class=\"servername\">|<span style=\"color:inherit*.\"></span>|<span style=\"color:inherit*.\">|<span style=\"color:#f3a3a3;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#ff9736;\"></span><span style=\"color:#ffff0f;\"></span>|</h1>","") gsub("&amp;","\\&") gsub("^[ \t]+",""); print}' | gawk '{gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m") gsub("<span style=\"color:#c599ff;\">","\\e[0;38;2;197;153;255m") gsub("<span style=\"color:#979797;\">","\\e[0;38;2;151;151;151m") gsub("<span style=\"color:#f3a3a3;\">","\\e[0;38;2;243;163;163m") gsub("</span>","\033[0m"); print}')\n")
+    SRVNAMENOCOLOR=$(printf "%s\n" "$SRVNAMECOLOR" | gawk '{gsub(/\033\[[0-9;]*m/, "")}1')
     PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F'<img title="|"' '/img title="[0-9]*\/[0-9]*"/ {print $4}')
     GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F'<div class="gametype">|</div>' '/<div class="gametype">.*.<\/div>/ {gsub("&amp;","\\&"); print $2}')
     MAP=$(printf "%s\n" "$SRVCODE" | gawk -F'<strong>|</strong>' '/Playing on/ && !/EMPTY LAND ZONE/ {print $2}')
-    arrayname=$(printf "%s\n\033[1;34mRefresh\033[0m" "$(gawk -v left="$SRVNAME" -v leftcenter="$SRVIP" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" 'BEGIN{
+    arraynametmp=$(printf "%s\n\033[1;34mFilter\033[0m\n\033[1;34mRefresh\033[0m" "$(gawk -v left="$SRVNAMECOLOR" -v leftcenter="$SRVIP" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" 'BEGIN{
 split(left,l,/\n/)
 split(leftcenter,lc,/\n/)
 split(center,c,/\n/)
 split(rightcenter,rc,/\n/)
 split(right,r,/\n/)
 for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mMap: "r[i]"\033[0m"}}')")
-    array=$(printf "%s\nRefresh" "$(gawk -v left="$SRVIP" -v right="$GAMETYPE" 'BEGIN{
+    arraytmp=$(printf "%s\nFilter\nRefresh" "$(gawk -v left="$SRVIP" -v leftcenter="$SRVNAMENOCOLOR" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" 'BEGIN{
 split(left,l,/\n/)
+split(leftcenter,lc,/\n/)
+split(center,c,/\n/)
+split(rightcenter,rc,/\n/)
 split(right,r,/\n/)
-for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/ $/ {print $1}')")
+for (i = 1; i in l; i++) {print l[i],lc[i],c[i],rc[i],r[i]}}' | gawk '!/ $/ {print}')")
+    array="$arraytmp"
+    arrayname="$arraynametmp"
+
+    # Room selected.
+    if ([ "$1" = "-r" ] || [ "$1" = "--room" ]) && [ -z "$ROOM" ]; then
+
+        if [ "$2" = "standard" ]; then
+
+            STANDARD="1"
+            set -- 33
+
+        elif [ "$2" = "casual" ]; then
+
+            CASUAL="1"
+            set -- 28
+
+        elif [ "$2" = "custom" ]; then
+
+            CUSTOM="1"
+            set -- 38
+
+        fi
+
+        ROOM=1
+        SRVAPIIP=$(curl -s "https://mb.srb2.org/MS/0/rooms/$1/servers" | gawk '!/^33$|^28$|^38$/ {printf $1":"$2"|"}' | gawk '{gsub("\\|$","");print}')
+        array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
+        arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /\033\[1;34mFilter\033\[0m|\033\[1;34mRefresh\033\[0m/ {print}')
+
+    elif [ "$ROOM" = "1" ]; then
+
+        if [ "$STANDARD" = "1" ]; then
+
+            unset CASUAL CUSTOM
+            set -- 33
+
+        elif [ "$CASUAL" = "1" ]; then
+
+            unset STANDARD CUSTOM
+            set -- 28
+
+        elif [ "$CUSTOM" = "1" ]; then
+
+            unset STANDARD CASUAL
+            set -- 38
+
+        fi
+
+        ROOM=1
+        SRVAPIIP=$(curl -s "https://mb.srb2.org/MS/0/rooms/$1/servers" | gawk '!/^33$|^28$|^38$/ && /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");gsub(":"," ");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1":"$2"|"}' | gawk '{gsub("\\|$","");print}')
+        array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
+        arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /\033\[1;34mFilter\033\[0m|\033\[1;34mRefresh\033\[0m/ {print}')
+
+    # Filtering list of SRB2 servers.
+    elif ([ "$1" = "-f" ] || [ "$1" = "--filter" ]) && [ -z "$SRVAPIIP" ]; then
+
+        SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '/'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
+        array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
+        arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
+
+    elif ([ "$1" = "-f" ] || [ "$1" = "--filter" ]) && [ -n "$SRVAPIIP" ]; then
+
+        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '/'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
+        array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
+        arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
+
+    fi
+
     count=$(printf "%s\n" "$array" | wc -l)
     n=""
     while true; do
@@ -1200,11 +1271,17 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/ $/ {print $1}')")
 
         if [ -n "$n" ] && [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
 
-            OPTURL=$($PRINTF "%s\n" "$array" | gawk 'NR=='"${n}"'')
+            OPTURL=$($PRINTF "%s\n" "$array" | gawk 'NR=='"${n}"' {print $1}')
 
-            if [ "$OPTURL" = "Refresh" ]; then
+            if [ "$OPTURL" = "Filter" ]; then
 
-                exec "$0"
+                $PRINTF "$MESSAGE\n%s\n\e[0m" "Please enter text to filter. Press ctrl+c to quit."
+                read -r SRVAPIIP
+                SRVAPIIP=$(printf "$arraytmp" | gawk '/'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}') exec "$0"
+
+            elif [ "$OPTURL" = "Refresh" ]; then
+
+                STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP="" exec "$0"
 
             else
 
@@ -1213,9 +1290,9 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/ $/ {print $1}')")
                 $PRINTF "$MESSAGE\n%s\n\e[0m" "Connecting to server $OPTURL."
                 sleep 1
 
-                if [ "$SRB2" = "flatpak" ]; then
+                if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                    flatpak run org.srb2.SRB2 -connect $OPTURL 2>&1 || checksrb2
+                    flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -connect $OPTURL 2>&1 || checksrb2
 
                 else
 
@@ -1251,21 +1328,46 @@ srb2kartms() {
     # Connecting to SRB2Kart servers in Master Server. Keeping colored names, players, IP, gametype, etc.
     SRVUNREACHIP=$(printf "%s\n" "$SRVCODE" | gawk '/Unreachable \(*.*\)/ {gsub("\\(|\\)|</td>","");printf "%s|", $2}' | gawk '{gsub(/\|$/,"");print}')
     SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'href="srb2kart://ip/|">🔗</a>' '/srb2kart:/ {print $2}' | gawk '!/'$SRVUNREACHIP'/ {print}')
-    SRVNAME=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/<h1 class="servername">/ && !/<h1 class="servername">Unreachable<\/h1>/ {gsub("<h1 class=\"servername\">|</h1>|<span style=\"color:inherit\">|<span style=\"color:inherit;\">","") gsub("&#x27;","\\47") gsub("&amp;","\\&") gsub("^[ \t]+","");print}' | gawk '{gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m") gsub("<span style=\"color:#c599ff;\">","\\e[0;38;2;197;153;255m") gsub("<span style=\"color:#979797;\">","\\e[0;38;2;151;151;151m") gsub("<span style=\"color:#f3a3a3;\">","\\e[0;38;2;243;163;163m") gsub("<span style=\"color:#ffc7a7;\">","\\e[0;38;2;255;199;167m") gsub("</span>","\033[0m"); print}')\n")
+    SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/<h1 class="servername">/ && !/<h1 class="servername">Unreachable<\/h1>/ {gsub("<h1 class=\"servername\">|</h1>|<span style=\"color:inherit\">|<span style=\"color:inherit;\">","") gsub("&#x27;","\\47") gsub("&amp;","\\&") gsub("^[ \t]+","");print}' | gawk '{gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m") gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m") gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m") gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m") gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m") gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m") gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m") gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m") gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m") gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m") gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m") gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m") gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m") gsub("<span style=\"color:#c599ff;\">","\\e[0;38;2;197;153;255m") gsub("<span style=\"color:#979797;\">","\\e[0;38;2;151;151;151m") gsub("<span style=\"color:#f3a3a3;\">","\\e[0;38;2;243;163;163m") gsub("<span style=\"color:#ffc7a7;\">","\\e[0;38;2;255;199;167m") gsub("</span>","\033[0m"); print}')\n")
+    SRVNAMENOCOLOR=$(printf "%s\n" "$SRVNAMECOLOR" | gawk '{gsub(/\033\[[0-9;]*m/, "")}1')
     PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk '/- [0-9]* \// && !/\(None\)/ {getline t;print $3,$4,$5,t}' | gawk NF'{(gsub(" |players<br>|-","") gsub("/"," / "));print}')
     GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk '/- [0-9]* \// && !/\(None\)/ {print $1}')
     KARTSPEED=$(printf "%s\n" "$SRVCODE" | gawk '/- [0-9]* \// && !/\(None\)/ {gsub("\\(|\\)","");print $2}')
-    arrayname=$(printf "%s\n\033[1;34mRefresh\033[0m" "$(gawk -v left="$SRVNAME" -v leftcenter="$SRVIP" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" 'BEGIN{
+    MAP=$(printf "%s\n" "$SRVCODE" | gawk -F'<strong>|</strong>' '/Playing on/ && !/EMPTY LAND ZONE/ {print $2}')
+    arraynametmp=$(printf "%s\n\033[1;34mFilter\033[0m\n\033[1;34mRefresh\033[0m" "$(gawk -v left="$SRVNAMECOLOR" -v leftcenter="$SRVIP" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" -v furtherright="$MAP" 'BEGIN{
 split(left,l,/\n/)
 split(leftcenter,lc,/\n/)
 split(center,c,/\n/)
 split(rightcenter,rc,/\n/)
 split(right,r,/\n/)
-for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[0m\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mKartspeed: "r[i]"\033[0m"}}')")
-    array=$(printf "%s\nRefresh" "$(gawk -v left="$SRVIP" -v right="$SRVNAME" 'BEGIN{
+split(furtherright,fr,/\n/)
+for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mKartspeed: "r[i]"\033[0m" " - " "\033[37mMap: "fr[i]"\033[0m"}}')")
+    arraytmp=$(printf "%s\nFilter\nRefresh" "$(gawk -v left="$SRVIP" -v leftcenter="$SRVNAMENOCOLOR" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" -v furtherright="$MAP" 'BEGIN{
 split(left,l,/\n/)
+split(leftcenter,lc,/\n/)
+split(center,c,/\n/)
+split(rightcenter,rc,/\n/)
 split(right,r,/\n/)
-for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/-$/ {print $1}')")
+split(furtherright,fr,/\n/)
+for (i = 1; i in l; i++) {print l[i],lc[i],c[i],rc[i],r[i],fr[i]}}' | gawk '!/-$/ {print}')")
+    array="$arraytmp"
+    arrayname="$arraynametmp"
+
+    # Filtering list of SRB2Kart servers.
+    if ([ "$1" = "-fk" ] || [ "$1" = "--filterkart" ]) && [ -z "$SRVAPIIP" ]; then
+
+        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '/'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
+        array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
+        arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
+
+    elif [ -n "$SRVAPIIP" ]; then
+
+        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '/'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}')
+        array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
+        arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
+
+    fi
+
     count=$(printf "%s\n" "$array" | wc -l)
     n=""
     while true; do
@@ -1278,11 +1380,17 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/-$/ {print $1}')")
 
         if [ -n "$n" ] && [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
 
-            OPTURL=$($PRINTF "%s\n" "$array" | gawk 'NR=='"${n}"'')
+            OPTURL=$($PRINTF "%s\n" "$array" | gawk 'NR=='"${n}"' {print $1}')
 
-            if [ "$OPTURL" = "Refresh" ]; then
+            if [ "$OPTURL" = "Filter" ]; then
 
-                exec "$0" --kart
+                $PRINTF "$MESSAGE\n%s\n\e[0m" "Please enter text to filter. Press ctrl+c to quit."
+                read -r SRVAPIIP
+                SRVAPIIP=$(printf "$arraytmp" | gawk '/'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/");gsub("*","\\*");gsub("\\[","\\[");gsub("\\]","\\]");gsub("\\(","\\(");gsub("\\)","\\)");printf $1"|"}' | gawk '{gsub("\\|$","");print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$","");print}') exec "$0" --kart
+
+            elif [ "$OPTURL" = "Refresh" ]; then
+
+                SRVAPIIP="" exec "$0" --kart
 
             else
 
@@ -1291,9 +1399,9 @@ for (i = 1; i in l; i++) {print l[i],r[i]}}' | gawk '!/-$/ {print $1}')")
                 $PRINTF "$MESSAGE\n%s\n\e[0m" "Connecting to server $OPTURL."
                 sleep 1
 
-                if [ "$SRB2KART" = "flatpak" ]; then
+                if [ "$($PRINTF "%s\n" "$SRB2KART" | gawk '{print $1}')" = "flatpak" ]; then
 
-                    flatpak run org.srb2.SRB2Kart -connect $OPTURL 2>&1 || checksrb2kart
+                    flatpak run $($PRINTF "%s\n" "$SRB2KART" | gawk '{print $NF}') -connect $OPTURL 2>&1 || checksrb2kart
 
                 else
 
@@ -1324,10 +1432,13 @@ Usage: srb2srv [OPTION] <parameter>
      -c, --checkport                        Check if SRB2/SRB2Kart server is reachable.
      -d, --dedicated      <addon-path>      Start dedicated SRB2 server.
      -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server.
+     -f, --filter         <filter-query>    Filter list of SRB2 servers by query like server name, IP, gametype or map.
+     -fk, --filterkart    <filter-query>    Filter list of SRB2Kart servers by query like server name, IP, gametype or kartspeed.
      -i, --ip             <server-ip>       Join SRB2 server from IP.
      -ik, --ipkart        <server-ip>       Join SRB2Kart server from IP.
      -k, --kart                             Go to SRB2Kart Master Server.
      -p, --port           <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -s and -sk options.
+     -r, --room           <room-name>       Go to SRB2 Master Server room. Available parameters: \"standard\", \"casual\" and \"custom\".
      -s, --server         <addon-path>      Start SRB2 server and play.
      -sk, --serverkart    <addon-path>      Start SRB2Kart server and play.
 
@@ -1350,8 +1461,17 @@ Usage: srb2srv [OPTION] <parameter>
      6. Join SRB2 server:
             srb2srv --ip 123.84.116.123:5029
 
+     7. Go to SRB2 Master Server room. Available parameters: \"standard\", \"casual\" and \"custom\":
+            srb2srv --room standard
+
+     8. Filter by server name:
+           srb2srv --filter \"The Gaming Den - Vanilla\"
+
+     9. Filter SRB2Kart by kartspeed:
+            srb2srv --filterkart \"Normal\"
+
   NOTES:
-     - Exporting SRB2/SRB2Kart executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\") path or \"flatpak\" (for installed Flatpaks, Linux only) in \"SRB2\" or \"SRB2KART\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
+     - Exporting SRB2/SRB2Kart executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\") path or \"flatpak [SRB2/SRB2Kart Flatpak Application ID]\" (for installed Flatpaks, Linux only) in \"SRB2\" or \"SRB2KART\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
@@ -1359,7 +1479,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2=\"\$HOME/Games/SRB2/lsdlsrb2\",
             - export SRB2=\"\$HOME/Games/SRB2/srb2\",
             - export SRB2=\"/usr/bin/srb2\",
-            - export SRB2=\"flatpak\".
+            - export SRB2=\"flatpak org.srb2.SRB2\".
 
          2. Windows:
             - export SRB2=\"\$HOME/Games/SRB2/srb2win.exe\",
@@ -1375,7 +1495,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2KART=\"\$HOME/Games/SRB2Kart/lsdl2srb2kart\",
             - export SRB2KART=\"\$HOME/Games/SRB2Kart/srb2kart\",
             - export SRB2KART=\"/usr/bin/srb2kart\",
-            - export SRB2KART=\"flatpak\".
+            - export SRB2KART=\"flatpak org.srb2.SRB2Kart\".
 
          2. Windows:
             - export SRB2KART=\"\$HOME/Games/SRB2Kart/srb2kart.exe\",
@@ -1398,7 +1518,6 @@ Usage: srb2srv [OPTION] <parameter>
 
           - SRB2SRVDEBUG - Getting verbose output from script. Useful for reporting issues in https://github.com/bijman/srb2srv/issues.
 "
-
     exit
 }
 
@@ -1478,6 +1597,18 @@ case "$1" in
 
         ;;
 
+    -f | --filter)
+
+        srb2ms "$@"
+
+        ;;
+
+    -fk | --filterkart)
+
+        srb2kartms "$@"
+
+        ;;
+
     -i | --ip)
 
         ip "$@"
@@ -1493,6 +1624,12 @@ case "$1" in
     -k | --kart)
 
         srb2kartms
+
+        ;;
+
+    -r | --room)
+
+        srb2ms "$@"
 
         ;;
 

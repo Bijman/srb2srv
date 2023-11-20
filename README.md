@@ -14,6 +14,7 @@ Mainly, the script obtains information about IP, number of players, gametype, et
 - Basic system utilities like GNU Coreutils, BusyBox or macOS out-of-the-box system utilities,
 - Bash or any POSIX compliant shell,
 - Findutils,
+- Which,
 - Curl,
 - Gawk,
 - Ncurses.
@@ -22,30 +23,34 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 # Dependencies Installation
 **Linux:** 
-1. In terminal enter this following commands:
-- Debian/Ubuntu/Debian based/Ubuntu based: `sudo apt install make git coreutils findutils ncurses-bin curl gawk`,
+1. In terminal enter this following command:
+- Debian/Ubuntu/Debian based/Ubuntu based: `sudo apt install make git debianutils coreutils findutils ncurses-bin curl gawk`,
 
-- Arch/Arch based: `sudo pacman -S --needed make coreutils findutils ncurses curl gawk`,
+- Arch/Arch based: `sudo pacman -S --needed make git which coreutils findutils ncurses curl gawk`,
 
-- Gentoo/Gentoo based: `sudo emerge -av make coreutils findutils ncurses curl gawk`,
+- Gentoo/Gentoo based: `sudo emerge -av dev-vcs/git sys-apps/which sys-apps/coreutils sys-apps/findutils sys-libs/ncurses net-misc/curl sys-apps/gawk`,
 
-- Fedora/Fedora based: `sudo dnf install make git coreutils findutils ncurses curl gawk`,
+- Fedora/Fedora based: `sudo dnf install make git which coreutils findutils ncurses curl gawk`,
 
-- Fedora Silverblue/Kinoite: `rpm-ostree install -A --allow-inactive make git coreutils findutils ncurses curl gawk`,
+- Fedora Silverblue/Fedora Kinoite/Fedora Onyx/Fedora Sericea: `rpm-ostree install -A --allow-inactive make git which coreutils findutils ncurses curl gawk`,
 
-- OpenSUSE/OpenSUSE based: `sudo zypper in make git coreutils findutils ncurses curl gawk`,
+- RHEL/RHEL based: `sudo dnf install make git which coreutils findutils ncurses curl gawk`,
 
-- Void/Void based: `sudo xbps-install -S make git coreutils findutils ncurses curl gawk`,
+- openSUSE Leap/openSUSE Tumbleweed/openSUSE Leap based/openSUSE Tumbleweed based: `sudo zypper in make git which coreutils findutils ncurses curl gawk`,
 
-- Alpine/Alpine based: `sudo apk add make git coreutils findutils ncurses curl gawk`,
+- openSUSE MicroOS/openSUSE MicroOS based: `sudo transactional-update pkg in make git which coreutils findutils ncurses curl gawk`,
 
-- Solus/Solus based: `sudo eopkg it make git coreutils findutils ncurses curl gawk`,
+- Void/Void based: `sudo xbps-install -S make git which coreutils findutils ncurses curl gawk`,
 
-- NixOS/NixOS based: `sudo nix-env -i gnumake git coreutils findutils ncurses curl gawk` or `sudo nix profile install nixpkgs#gnumake nixpkgs#git nixpkgs#coreutils nixpkgs#findutils nixpkgs#ncurses nixpkgs#curl nixpkgs#gawk --extra-experimental-features 'nix-command flakes'` or set those packages in "environment.systemPackages = with pkgs;" in "/etc/nixos/configuration.nix", and then enter `sudo nixos-rebuild switch`.
+- Alpine/Alpine based: `sudo apk add make git which coreutils findutils ncurses curl gawk`,
+
+- Solus/Solus based: `sudo eopkg it make git which coreutils findutils ncurses curl gawk`,
+
+- NixOS/NixOS based: `sudo nix profile install nixpkgs#gnumake nixpkgs#git nixpkgs#which nixpkgs#coreutils nixpkgs#findutils nixpkgs#ncurses nixpkgs#curl nixpkgs#gawk --extra-experimental-features 'nix-command flakes'` or set those packages in "environment.systemPackages = with pkgs;" in "/etc/nixos/configuration.nix", and then enter `sudo nixos-rebuild switch`.
 
 - Immutable systems like Steam Deck's SteamOS need rootless method of getting dependencies to avoid issues with wiping out installed packages after system's update or not to be able to write to certain path, like "/usr/local":
 	- [Homebrew](https://brew.sh/): `brew install make git coreutils findutils ncurses curl gawk`,
-	- [Nix Portable](https://github.com/DavHau/nix-portable): `nix-env -i gnumake git which coreutils findutils ncurses curl gawk` or `nix profile install nixpkgs#gnumake nixpkgs#git nixpkgs#which nixpkgs#coreutils nixpkgs#findutils nixpkgs#ncurses nixpkgs#curl nixpkgs#gawk --extra-experimental-features 'nix-command flakes'`.
+	- [Nix Portable](https://github.com/DavHau/nix-portable): `nix profile install nixpkgs#gnumake nixpkgs#git nixpkgs#which nixpkgs#coreutils nixpkgs#findutils nixpkgs#ncurses nixpkgs#curl nixpkgs#gawk --extra-experimental-features 'nix-command flakes'`.
 
 **Windows:**
 1. Installing Git Bash:
@@ -89,7 +94,9 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 8. In opened text editor from previous step write new path to executables with environment variable PATH like `export PATH="~/bin:$PATH"` in "~/.bash_profile",
 
-9. Set other environment variables from "Configuration" section of README.
+9. Enter `source ~/.bash_profile` or restart Git Bash.
+
+10. Set other environment variables from "Configuration" section of README.
 
 **macOS:**
 1. Open terminal,
@@ -127,10 +134,13 @@ Usage: srb2srv [OPTION] <parameter>
      -c, --checkport                        Check if SRB2/SRB2Kart server is reachable.
      -d, --dedicated      <addon-path>      Start dedicated SRB2 server.
      -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server.
+     -f, --filter         <filter-query>    Filter list of SRB2 servers by query like server name, IP, gametype or map.
+     -fk, --filterkart    <filter-query>    Filter list of SRB2Kart servers by query like server name, IP, gametype, kartspeed or map.
      -i, --ip             <server-ip>       Join SRB2 server from IP.
      -ik, --ipkart        <server-ip>       Join SRB2Kart server from IP.
      -k, --kart                             Go to SRB2Kart Master Server.
      -p, --port           <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -s and -sk options.
+     -r, --room           <room-name>       Go to SRB2 Master Server room. Available parameters: "standard", "casual" and "custom".
      -s, --server         <addon-path>      Start SRB2 server and play.
      -sk, --serverkart    <addon-path>      Start SRB2Kart server and play.
 
@@ -153,8 +163,17 @@ Usage: srb2srv [OPTION] <parameter>
      6. Join SRB2 server:
             srb2srv --ip 123.84.116.123:5029
 
+     7. Go to SRB2 Master Server room. Available parameters: "standard", "casual" and "custom":
+            srb2srv --room standard 
+
+     8. Filter list of SRB2 servers by server name:
+            srb2srv --filter "The Gaming Den - Vanilla"
+
+     9. Filter list of SRB2Kart servers by kartspeed:
+            srb2srv --filterkart "Normal"
+
   NOTES:
-     - Exporting SRB2/SRB2Kart executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or "flatpak" (for installed Flatpaks, Linux only) in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
+     - Exporting SRB2/SRB2Kart executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or "flatpak [SRB2/SRB2Kart Flatpak Application ID]" (for installed Flatpaks, Linux only) in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
@@ -162,7 +181,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2="$HOME/Games/SRB2/lsdlsrb2",
             - export SRB2="$HOME/Games/SRB2/srb2",
             - export SRB2="/usr/bin/srb2",
-            - export SRB2="flatpak".
+            - export SRB2="flatpak org.srb2.SRB2".
 
          2. Windows:
             - export SRB2="$HOME/Games/SRB2/srb2win.exe",
@@ -178,7 +197,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2KART="$HOME/Games/SRB2Kart/lsdl2srb2kart",
             - export SRB2KART="$HOME/Games/SRB2Kart/srb2kart",
             - export SRB2KART="/usr/bin/srb2kart",
-            - export SRB2KART="flatpak".
+            - export SRB2KART="flatpak org.srb2.SRB2Kart".
 
          2. Windows:
             - export SRB2KART="$HOME/Games/SRB2Kart/srb2kart.exe",
@@ -203,7 +222,7 @@ Usage: srb2srv [OPTION] <parameter>
 ```
 
 # Notes
-     - Exporting SRB2/SRB2Kart executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or "flatpak" (for installed Flatpaks, Linux only) in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
+     - Exporting SRB2/SRB2Kart executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or "flatpak [SRB2/SRB2Kart Flatpak Application ID]" (for installed Flatpaks, Linux only) in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
@@ -211,7 +230,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2="$HOME/Games/SRB2/lsdlsrb2",
             - export SRB2="$HOME/Games/SRB2/srb2",
             - export SRB2="/usr/bin/srb2",
-            - export SRB2="flatpak".
+            - export SRB2="flatpak org.srb2.SRB2".
 
          2. Windows:
             - export SRB2="$HOME/Games/SRB2/srb2win.exe",
@@ -227,7 +246,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2KART="$HOME/Games/SRB2Kart/lsdl2srb2kart",
             - export SRB2KART="$HOME/Games/SRB2Kart/srb2kart",
             - export SRB2KART="/usr/bin/srb2kart",
-            - export SRB2KART="flatpak".
+            - export SRB2KART="flatpak org.srb2.SRB2Kart".
 
          2. Windows:
             - export SRB2KART="$HOME/Games/SRB2Kart/srb2kart.exe",
