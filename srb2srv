@@ -23,7 +23,8 @@ fi
 
 OS="$(uname)"
 SRB2MSURL="https://ms.srb2.org"
-SRB2KARTMSURL="https://ms.kartkrew.org"
+SRB2KARTMSURL="https://ms.kartkrew.org:8860"
+RINGRACERSMSURL="https://ms.kartkrew.org/list.json"
 FAILURE="\e[1;91m"
 NOTICE="\e[1;93m"
 MESSAGE="\e[1;94m"
@@ -122,8 +123,8 @@ EXAMPLES:
             - export SRB2=\"\$HOME/Games/SRB2/lsdl2srb2\",
             - export SRB2=\"\$HOME/Games/SRB2/lsdlsrb2\",
             - export SRB2=\"\$HOME/Games/SRB2/srb2\",
-            - export SRB2=\"/usr/bin/srb2\",
-            - export SRB2=\"flatpak\".
+            - export SRB2=\"/usr/local/bin/srb2\",
+            - export SRB2=\"flatpak org.srb2.SRB2\".
 
          2. Windows:
             - export SRB2=\"\$HOME/Games/SRB2/srb2win.exe\",
@@ -157,8 +158,8 @@ EXAMPLES:
          1. Linux:
             - export SRB2KART=\"\$HOME/Games/SRB2Kart/lsdl2srb2kart\",
             - export SRB2KART=\"\$HOME/Games/SRB2Kart/srb2kart\",
-            - export SRB2KART=\"/usr/bin/srb2kart\",
-            - export SRB2KART=\"flatpak\".
+            - export SRB2KART=\"/usr/local/bin/srb2kart\",
+            - export SRB2KART=\"flatpak org.srb2.SRB2Kart\".
 
          2. Windows:
             - export SRB2KART=\"\$HOME/Games/SRB2Kart/srb2kart.exe\",
@@ -172,6 +173,39 @@ EXAMPLES:
     else
 
         SRB2KART=$($PRINTF "%s\n" "$SRB2KART" | gawk '{gsub(" /",";/"); gsub(" \\\\",";\\\\"); gsub(" -",";-"); print}')
+
+    fi
+}
+
+checkringracers() {
+    # Checking if valid executable was entered to Ring Racers environment variable.
+    if [ "$($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $1}')" = "flatpak" ]; then
+
+        RINGRACERS="$RINGRACERS"
+
+    elif [ -z "$RINGRACERS" ] || [ ! -f "$($PRINTF "%s\n" "$RINGRACERS" | gawk -F';' '{gsub(" /",";/"); gsub(" \\\\",";\\\\"); gsub(" -",";-"); print $1}')" ]; then
+
+        $PRINTF "$FAILURE\n%s\n\e[0m" "ERROR: No executable file found in Ring Racers environment variable (\"ringracers\", \"ringracers.exe\", \"Ring Racers\") environment variable is not set at all. Set valid path to executable file in Ring Racers environment variable in shell configuration file (for example in \".bash_profile\" or \".bashrc\").
+
+EXAMPLES:
+         1. Linux:
+            - export RINGRACERS=\"\$HOME/Games/RingRacers/ringracers\",
+            - export RINGRACERS=\"\$HOME/Games/RingRacers/ringracers\",
+            - export RINGRACERS=\"/usr/local/bin/ringracers\",
+            - export RINGRACERS=\"flatpak org.kartkrew.RingRacers\".
+
+         2. Windows:
+            - export RINGRACERS=\"\$HOME/Games/RingRacers/ringracers.exe\",
+            - export RINGRACERS=\"C:\Users\user\Games\RingRacers\ringracers.exe\".
+
+         3. macOS:
+            - export RINGRACERS=\"/Applications/Ring Racers.app/Contents/MacOS/Ring Racers\"."
+
+        exit
+
+    else
+
+        RINGRACERS=$($PRINTF "%s\n" "$RINGRACERS" | gawk '{gsub(" /",";/"); gsub(" \\\\",";\\\\"); gsub(" -",";-"); print}')
 
     fi
 }
@@ -656,6 +690,122 @@ dedicatedkart() {
     fi
 }
 
+dedicatedringracers() {
+    # Hosting dedicated server for Ring Racers. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
+    IFS=";"
+
+    if [ -n "$($PRINTF "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')" ]; then
+
+        SLASHARG=$($PRINTF "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
+
+    else
+
+        SLASHARG=$($PRINTF "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+
+    fi
+
+    checkringracers
+
+    if ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$1" = "-dr" ] || [ "$1" = "--dedicatedringracers" ]); then
+
+        PATHARGS=$($PRINTF "%s" "$*" | gawk '{gsub("-dr;|--dedicatedringracers;|;-p;[0-9][0-9]*|;--port;[0-9][0-9]*|-p;[0-9][0-9]*;|--port;[0-9][0-9]*;",""); gsub("~/","'$HOME'/"); print}')
+        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
+        clear
+        $PRINTF "$PROMPT\n%s\n\e[0m" "Filelist:"
+        $PRINTF "$NOTICE%s\n\e[0m" "$($PRINTF "%s\n" "$FILELIST" | gawk '{gsub(";","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
+
+    elif ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$3" = "-dr" ] || [ "$3" = "--dedicatedringracers" ]); then
+
+        shift 3
+        FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
+        clear
+        $PRINTF "$PROMPT\n%s\n\e[0m" "Filelist:"
+        $PRINTF "$NOTICE%s\n\e[0m" "$($PRINTF "%s\n" "$FILELIST" | gawk '{gsub(";","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
+
+    else
+
+        checklist
+
+    fi
+
+    # Setting config file for server.
+    if [ -n "$RINGRACERSCFG" ] && [ -s "$RINGRACERSCFG" ]; then
+
+        TEMPFILE=$(mktemp)
+        {
+            cat "$RINGRACERSMAINCFG"
+            $PRINTF "\n"
+            cat "$RINGRACERSCFG"
+        } > "$TEMPFILE"
+        set -- -config "$TEMPFILE"
+
+    elif [ -n "$RINGRACERSMAINCFG" ] && [ -s "$RINGRACERSMAINCFG" ]; then
+
+        set -- -config "$RINGRACERSMAINCFG"
+
+    else
+
+        set --
+
+    fi
+
+    $PRINTF "$NOTICE\n%s\n\e[0m" "Remember to type 'advertise 1' in console to advertise to Master Server."
+    sleep 1
+    unset DISPLAY
+
+    if [ "$($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $1}')" = "flatpak" ]; then
+
+        flatpak run $($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $NF}') -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+
+    else
+
+        $RINGRACERS -noexchndl -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+
+    fi
+
+    SRB2PID="$!"
+
+    # Restarting server from loop when there is error within game.
+    if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
+
+        while true; do
+
+            sleep 5
+
+            if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
+                clear
+                $PRINTF "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
+                i=10
+                while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
+                    tput cup 4 $l
+                    i=$((i - 1))
+                    $PRINTF "%s\n" "$i"
+                    sleep 1
+
+                done
+
+                if [ "$($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $1}')" = "flatpak" ]; then
+
+                    flatpak run $($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $NF}') -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+
+                else
+
+                    $RINGRACERS -noexchndl -dedicated "$@" -port $PORT -file $FILELIST 2>&1
+
+                fi
+
+                SRB2PID="$!"
+
+            fi
+
+        done
+
+    fi
+}
+
 ip() {
     IFS=";"
     SRB2=$($PRINTF "%s\n" "$SRB2" | gawk '{gsub(" /",";/"); gsub(" -",";-"); print}')
@@ -690,6 +840,25 @@ ipkart() {
     else
 
         $SRB2KART -connect $2 2>&1 || checksrb2kart
+
+    fi
+}
+
+ipringracers() {
+    IFS=";"
+    RINGRACERS=$($PRINTF "%s\n" "$RINGRACERS" | gawk '{gsub(" /",";/"); gsub(" -",";-"); print}')
+
+    checkringracers
+    $PRINTF "$MESSAGE\n%s\n\e[0m" "Connecting to server $2."
+    sleep 1
+
+    if [ "$($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $1}')" = "flatpak" ]; then
+
+        flatpak run $($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $NF}') -connect $2 2>&1 || checkringracers
+
+    else
+
+        $RINGRACERS -noexchndl -connect $2 2>&1 || checkringracers
 
     fi
 }
@@ -1159,6 +1328,121 @@ serverkart() {
     fi
 }
 
+serverringracers() {
+    # Hosting server for Ring Racers. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
+    IFS=";"
+
+    if [ -n "$($PRINTF "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')" ]; then
+
+        SLASHARG=$($PRINTF "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
+
+    else
+
+        SLASHARG=$($PRINTF "%s\n" "$*" | gawk 'match($0, /\//) {print substr($0, RSTART, RLENGTH)}')
+
+    fi
+
+    checkringracers
+
+    if ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$1" = "-sr" ] || [ "$1" = "--serverringracers" ]); then
+
+        PATHARGS=$($PRINTF "%s" "$*" | gawk '{gsub("-sr;|--serverringracers;|;-p;[0-9][0-9]*|;--port;[0-9][0-9]*|-p;[0-9][0-9]*;|--port;[0-9][0-9]*;",""); gsub("~/","'$HOME'/"); print}')
+        FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
+        clear
+        $PRINTF "$PROMPT\n%s\n\e[0m" "Filelist:"
+        $PRINTF "$NOTICE%s\n\e[0m" "$($PRINTF "%s\n" "$FILELIST" | gawk '{gsub(";","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
+
+    elif ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$3" = "-sr" ] || [ "$3" = "--serverringracers" ]); then
+
+        shift 3
+        FILELIST=$(find "$@" -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
+        clear
+        $PRINTF "$PROMPT\n%s\n\e[0m" "Filelist:"
+        $PRINTF "$NOTICE%s\n\e[0m" "$($PRINTF "%s\n" "$FILELIST" | gawk '{gsub(";","\n"); print}' | gawk -F'/' '{print $NF}' | gawk '!a[$0]++')"
+
+    else
+
+        checklist
+
+    fi
+
+    # Setting config file for server.
+    if [ -n "$RINGRACERSCFG" ] && [ -s "$RINGRACERSCFG" ]; then
+
+        TEMPFILE=$(mktemp)
+        {
+            cat "$RINGRACERSMAINCFG"
+            $PRINTF "\n"
+            cat "$RINGRACERSCFG"
+        } > "$TEMPFILE"
+        set -- -config "$TEMPFILE"
+
+    elif [ -n "$RINGRACERSMAINCFG" ] && [ -s "$RINGRACERSMAINCFG" ]; then
+
+        set -- -config "$RINGRACERSMAINCFG"
+
+    else
+
+        set --
+
+    fi
+
+    $PRINTF "$NOTICE\n%s\n\e[0m" "Remember to type 'advertise 1' in console to advertise to Master Server."
+    sleep 1
+
+    if [ "$($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $1}')" = "flatpak" ]; then
+
+        flatpak run $($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $NF}') -server "$@" -port $PORT -file $FILELIST 2>&1
+
+    else
+
+        $RINGRACERS -noexchndl -server "$@" -port $PORT -file $FILELIST 2>&1
+
+    fi
+
+    SRB2PID="$!"
+
+    # Restarting server from loop when there is error within game.
+    if [ -z "$NOSRB2SRVLOOP" ] || [ "$NOSRB2SRVLOOP" = 0 ]; then
+
+        while true; do
+
+            sleep 5
+
+            if [ "$(ps -a | gawk '/'$SRB2PID'/ {print $1}')" != "$!" ]; then
+
+                clear
+                $PRINTF "$FAILURE\n%s\n\e[0m" "Something went wrong with server. Check latest-log.txt and .rpt file for errors, if you are on Windows, otherwise it is crash-log.txt on other systems. Server will restart in 10 seconds. Press ctrl+c to quit."
+
+                i=10
+                while [ $i -le 10 ] && [ $i -gt 0 ]; do
+
+                    tput cup 4 $l
+                    i=$((i - 1))
+                    $PRINTF "%s\n" "$i"
+                    sleep 1
+
+                done
+
+                if [ "$($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $1}')" = "flatpak" ]; then
+
+                    flatpak run $($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $NF}') -server "$@" -port $PORT -file $FILELIST 2>&1
+
+                else
+
+                    $RINGRACERS -noexchndl -server "$@" -port $PORT -file $FILELIST 2>&1
+
+                fi
+
+                SRB2PID="$!"
+
+            fi
+
+        done
+
+    fi
+}
+
 srb2ms() {
     SRVCODE=$(curl -sL "$SRB2MSURL" | gawk '{gsub("&#x27;|&#39;","\\47"); gsub("&amp;","\\&"); print}')
 
@@ -1422,34 +1706,206 @@ for (i = 1; i in l; i++) {print l[i],lc[i],c[i],rc[i],r[i],fr[i]}}' | gawk '!/-$
     done
 }
 
+ringracersms() {
+    SRVCODE=$(curl -sL "$RINGRACERSMSURL" | gawk '{gsub("\",","\",\n"); print}')
+
+    # Check connection to SRB2 Master Server.
+    if [ -z "$(printf "%s\n" "$SRVCODE" | gawk 'match($0, /num_humans/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
+
+        clear
+        $PRINTF "$FAILURE\n%s\n\e[0m" "ERROR: Can't connect to Master Server. Try again later or check your internet connection."
+        exit
+
+    fi
+
+    # Connecting to Ring Racers servers in Master Server. Keeping colored names, players, IP, gametype, etc.
+    SRVUNREACHIP=$(printf "%s\n" "$SRVCODE" | gawk -F'\\["|",' '/"error":"unreachable"/ {print p2} {p2=p1; p1=$2}')
+    SRVIP=$(printf "%s\n" "$SRVCODE" | gawk '!/'$SRVUNREACHIP'/ {print}' | gawk -F'\\["|",' '/"address":/ {print $2}')
+    SRVPORT=$(printf "%s\n" "$SRVCODE" | gawk '!/'$SRVUNREACHIP'/ {print}' | gawk -F'\\],"' '/"address":/ {getline; print $1}')
+#    SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk -F':"|"' '/"server_name":/ {print $10}' | gawk '{gsub("\\^2","\\e[0;38;2;255;255;15m"); gsub("\\^3","\\e[0;38;2;105;224;70m"); gsub("\\^4","\\e[0;38;2;115;115;255m"); gsub("\\^5","\\e[0;38;2;255;63;63m"); gsub("\\^7","\\e[0;38;2;255;151;54m"); gsub("\\^6","\\e[0;38;2;167;167;167m"); gsub("\\^8","\\e[0;38;2;85;200;255m"); gsub("\\^C","\\e[0;38;2;196;196;225m"); gsub("\\^1","\\e[0;38;2;223;0;223m"); gsub("@","\\e[0;38;2;191;123;75m"); gsub("\\^A","\\e[0;38;2;215;187;67m"); gsub("\\^B","\\e[0;38;2;199;228;148m"); gsub("\\^9","\\e[0;38;2;207;127;207m"); gsub("@","\\e[0;38;2;197;153;255m"); gsub("@","\\e[0;38;2;151;151;151m"); gsub("\\^D","\\e[0;38;2;243;163;163m"); gsub("@","\\e[0;38;2;255;199;167m"); gsub("</span>","\033[0m"); gsub("\\^0","\\e[0m"); print}')\n")
+    SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk -F':"|"' '/"server_name":/ {print $10}' | gawk '{gsub("\\^2","\\e[0;38;2;255;255;15m"); gsub("\\^3","\\e[0;38;2;105;224;70m"); gsub("\\^4","\\e[0;38;2;115;115;255m"); gsub("\\^5","\\e[0;38;2;255;63;63m"); gsub("\\^7","\\e[0;38;2;255;151;54m"); gsub("\\^6","\\e[0;38;2;167;167;167m"); gsub("\\^8","\\e[0;38;2;85;200;255m"); gsub("\\^C","\\e[0;38;2;196;196;225m"); gsub("\\^1","\\e[0;38;2;223;0;223m"); gsub("\\^A","\\e[0;38;2;215;187;67m"); gsub("\\^B","\\e[0;38;2;199;228;148m"); gsub("\\^9","\\e[0;38;2;207;127;207m"); gsub("\\^D","\\e[0;38;2;243;163;163m"); gsub("</span>","\033[0m"); gsub("\\^0","\\e[0m"); print}')\n")
+    SRVNAMENOCOLOR=$(printf "%s\n" "$SRVNAMECOLOR" | gawk '{gsub("\\^0",""); print}')
+    PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F',' '/"num_humans":/ {gsub("\"num_humans\":",""); gsub(",\"max_connections\":"," / "); print $1}')
+    GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"gametype":/ {gsub("\"|,",""); print $2}')
+    KARTSPEED=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"speed":/ {gsub("\"|,",""); print $NF}')
+    MAP=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"map_title":/ && !/EMPTY LAND ZONE/ {gsub("\"|,",""); print $2}')
+
+    arraynametmp=$(printf "%s\n" "$(gawk -v furtherleft="$SRVNAMECOLOR" -v left="$SRVIP" -v leftcenter="$SRVPORT" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" -v furtherright="$MAP" 'BEGIN{
+split(furtherleft,fl,/\n/)
+split(left,l,/\n/)
+split(leftcenter,lc,/\n/)
+split(center,c,/\n/)
+split(rightcenter,rc,/\n/)
+split(right,r,/\n/)
+split(furtherright,fr,/\n/)
+for (i = 1; i in l; i++) {print fl[i]"\033[0m" " - " "\033[2mIP: "l[i]":"lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mKartspeed: "r[i]"\033[0m" " - " "\033[37mMap: "fr[i]"\033[0m"}}')")
+
+    arraynametmp=$(printf "%s$(printf "%s\n" "$arraynametmp" | gawk -F ' - ' '
+{
+    split($3, players, " ");
+    playerCount = players[2];
+    servers[NR] = $0;
+    playerCounts[NR] = playerCount;
+}
+END {
+    n = asort(playerCounts, sortedPlayerCounts);
+    for (i = n; i >= 1; i--) {
+        for (j in servers) {
+            split(servers[j], parts, " - ");
+            split(parts[3], players, " ");
+            if (players[2] == sortedPlayerCounts[i]) {
+                print servers[j];
+                delete servers[j];
+                break;
+            }
+        }
+    }
+}')\n\033[1;34mFilter\033[0m\n\033[1;34mRefresh\033[0m")
+
+    arraytmp=$(printf "%s\nFilter\nRefresh" "$(gawk -v furtherleft="$SRVIP" -v left="$SRVPORT" -v leftcenter="$SRVNAMENOCOLOR" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" -v furtherright="$MAP" 'BEGIN{
+split(furtherleft,fl,/\n/)
+split(left,l,/\n/)
+split(leftcenter,lc,/\n/)
+split(center,c,/\n/)
+split(rightcenter,rc,/\n/)
+split(right,r,/\n/)
+split(furtherright,fr,/\n/)
+for (i = 1; i in l; i++) {print fl[i]":"l[i],lc[i],c[i],rc[i],r[i],fr[i]}}' | gawk '!/-$/ {print}')")
+
+    arraytmp=$(printf "%s$(printf "%s\n" "$arraytmp" | gawk '
+{
+    # Find the pattern matching "number / number"
+    match($0, /([0-9]+) \/ ([0-9]+)/, players);
+    playerCount = players[1];  # Extract the first number from the match
+
+    # Store the line and the player count
+    lines[NR] = $0;
+    playerCounts[NR] = playerCount;
+}
+
+END {
+    # Sort the player counts
+    n = asort(playerCounts, sortedPlayerCounts);
+
+    # Print the lines in the order of sorted player counts (reverse order)
+    for (i = n; i >= 1; i--) {
+        for (j in lines) {
+            # Find the player count again to match with sorted counts
+            match(lines[j], /([0-9]+) \/ ([0-9]+)/, players);
+            if (players[1] == sortedPlayerCounts[i]) {
+                print lines[j];
+                delete lines[j];
+                break;
+            }
+        }
+    }
+}')")
+
+    array="$arraytmp"
+    arrayname="$arraynametmp"
+
+    # Filtering list of Ring Racers servers.
+    if ([ "$1" = "-fr" ] || [ "$1" = "--filterringracers" ]) && [ -z "$SRVAPIIP" ]; then
+
+        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
+        array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
+        arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
+
+    elif [ -n "$SRVAPIIP" ]; then
+
+        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); printf $1"|"}' | gawk '{gsub("\\|$",""); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
+        array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
+        arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
+
+    fi
+
+    count=$(printf "%s\n" "$array" | wc -l)
+    n=""
+    while true; do
+
+        clear
+        $PRINTF "$MESSAGE\n%s\n\e[0m" "Please choose server by typing number and then pressing enter. Press enter or ctrl+c to quit."
+        $PRINTF "%s\n" "$arrayname" | gawk '{print NR")", $0}'
+        $PRINTF "#? "
+        read -r n
+
+        if [ -n "$n" ] && [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
+
+            OPTURL=$($PRINTF "%s\n" "$array" | gawk 'NR=='"${n}"' {print $1}')
+
+            if [ "$OPTURL" = "Filter" ]; then
+
+                $PRINTF "$MESSAGE\n%s\n\e[0m" "Please enter text to filter. Press ctrl+c to quit."
+                read -r SRVAPIIP
+                SRVAPIIP=$(printf "$arraytmp" | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); printf $1"|"}' | gawk '{gsub("\\|$",""); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0" --ringracers
+
+            elif [ "$OPTURL" = "Refresh" ]; then
+
+                SRVAPIIP="" exec "$0" --ringracers
+
+            else
+
+                IFS=";"
+                RINGRACERS=$($PRINTF "%s\n" "$RINGRACERS" | gawk '{gsub(" /",";/"); gsub(" -",";-"); print}')
+                $PRINTF "$MESSAGE\n%s\n\e[0m" "Connecting to server $OPTURL."
+                sleep 1
+
+                if [ "$($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $1}')" = "flatpak" ]; then
+
+                    flatpak run $($PRINTF "%s\n" "$RINGRACERS" | gawk '{print $NF}') -connect $OPTURL 2>&1 || checkringracers
+
+                else
+
+                    $RINGRACERS -noexchndl -connect $OPTURL 2>&1 || checkringracers
+
+                fi
+
+            fi
+            break
+
+        else
+
+            $PRINTF "$NOTICE\n%s\n\e[0m" "No option has been chosen."
+            exit
+
+        fi
+
+    done
+}
+
 usage() {
     $PRINTF "%s\n" "
-CLI for server related tools of SRB2/SRB2Kart.
+CLI for server related tools of SRB2/SRB2Kart/Ring Racers.
 
 Usage: srb2srv [OPTION] <parameter>
   OPTIONS:
-     -h, --help                             Show this help text.
-     -c, --checkport                        Check if SRB2/SRB2Kart server is reachable.
-     -d, --dedicated      <addon-path>      Start dedicated SRB2 server.
-     -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server.
-     -f, --filter         <filter-query>    Filter list of SRB2 servers by query like server name, IP, gametype or map.
-     -fk, --filterkart    <filter-query>    Filter list of SRB2Kart servers by query like server name, IP, gametype or kartspeed.
-     -i, --ip             <server-ip>       Join SRB2 server from IP.
-     -ik, --ipkart        <server-ip>       Join SRB2Kart server from IP.
-     -k, --kart                             Go to SRB2Kart Master Server.
-     -p, --port           <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -s and -sk options.
-     -r, --room           <room-name>       Go to SRB2 Master Server room. Available parameters: \"standard\", \"casual\" and \"custom\".
-     -s, --server         <addon-path>      Start SRB2 server and play.
-     -sk, --serverkart    <addon-path>      Start SRB2Kart server and play.
+     -h, --help                                   Show this help text.
+     -c, --checkport                              Check if SRB2/SRB2Kart/Ring Racers server is reachable.
+     -d, --dedicated            <addon-path>      Start dedicated SRB2 server.
+     -dk, --dedicatedkart       <addon-path>      Start dedicated SRB2Kart server.
+     -dr, --dedicatedringracers <addon-path>      Start dedicated Ring Racers server.
+     -f, --filter               <filter-query>    Filter list of SRB2 servers by query like server name, IP, gametype or map.
+     -fk, --filterkart          <filter-query>    Filter list of SRB2Kart servers by query like server name, IP, gametype or kartspeed.
+     -fr, --filterringracers    <filter-query>    Filter list of Ring Racers servers by query like server name, IP, gametype or kartspeed.
+     -i, --ip                   <server-ip>       Join SRB2 server from IP.
+     -ik, --ipkart              <server-ip>       Join SRB2Kart server from IP.
+     -ir, --ipringracers        <server-ip>       Join Ring Racers server from IP.
+     -k, --kart                                   Go to SRB2Kart Master Server.
+     -kr, --ringracers                            Go to Ring Racers Master Server.
+     -p, --port                 <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -dr, -s, -sk and -sr options.
+     -r, --room                 <room-name>       Go to SRB2 Master Server room. Available parameters: \"standard\", \"casual\" and \"custom\".
+     -s, --server               <addon-path>      Start SRB2 server and play.
+     -sk, --serverkart          <addon-path>      Start SRB2Kart server and play.
+     -sr, --serverringracers    <addon-path>      Start Ring Racers server and play.
 
   EXAMPLES:
      1. Go to SRB2 Master Server and connect to selected server from list:
             srb2srv
 
-     2. Go to SRB2Kart Master Server and connect to selected server from list:
-            srb2srv --kart
+     2. Go to Ring Racers Master Server and connect to selected server from list:
+            srb2srv --ringracers
 
-     3. Check if port 5030 for SRB2/SRB2Kart server is opened (default port to be checked is 5029 without --port option):
+     3. Check if port 5030 for SRB2/SRB2Kart/Ring Racers server is opened (default port to be checked is 5029 without --port option):
             srb2srv --checkport --port 5030
 
      4. Run SRB2 server and add path to addon or directory of addons (default port to hosting server is 5029):
@@ -1464,21 +1920,21 @@ Usage: srb2srv [OPTION] <parameter>
      7. Go to SRB2 Master Server room. Available parameters: \"standard\", \"casual\" and \"custom\":
             srb2srv --room standard
 
-     8. Filter by server name:
+     8. Filter list of SRB2 servers by server name:
            srb2srv --filter \"The Gaming Den - Vanilla\"
 
-     9. Filter SRB2Kart by kartspeed:
+     9. Filter list of SRB2Kart servers by kartspeed:
             srb2srv --filterkart \"Normal\"
 
   NOTES:
-     - Exporting SRB2/SRB2Kart executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\") path or \"flatpak [SRB2/SRB2Kart Flatpak Application ID]\" (for installed Flatpaks, Linux only) in \"SRB2\" or \"SRB2KART\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
+     - Exporting SRB2/SRB2Kart/Ring Racers executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\", \"ringracers\", \"ringracers.exe\", \"Ring Racers\") path or \"flatpak [SRB2/SRB2Kart/Ring Racers Flatpak Application ID]\" (for installed Flatpaks, Linux only) in \"SRB2\", \"SRB2KART\" or \"RINGRACERS\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
             - export SRB2=\"\$HOME/Games/SRB2/lsdl2srb2\",
             - export SRB2=\"\$HOME/Games/SRB2/lsdlsrb2\",
             - export SRB2=\"\$HOME/Games/SRB2/srb2\",
-            - export SRB2=\"/usr/bin/srb2\",
+            - export SRB2=\"/usr/local/bin/srb2\",
             - export SRB2=\"flatpak org.srb2.SRB2\".
 
          2. Windows:
@@ -1494,7 +1950,7 @@ Usage: srb2srv [OPTION] <parameter>
          1. Linux:
             - export SRB2KART=\"\$HOME/Games/SRB2Kart/lsdl2srb2kart\",
             - export SRB2KART=\"\$HOME/Games/SRB2Kart/srb2kart\",
-            - export SRB2KART=\"/usr/bin/srb2kart\",
+            - export SRB2KART=\"/usr/local/bin/srb2kart\",
             - export SRB2KART=\"flatpak org.srb2.SRB2Kart\".
 
          2. Windows:
@@ -1504,13 +1960,27 @@ Usage: srb2srv [OPTION] <parameter>
          3. macOS:
             - export SRB2KART=\"/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart\".
 
+       RING RACERS
+         1. Linux:
+            - export RINGRACERS=\"\$HOME/Games/RingRacers/ringracers\",
+            - export RINGRACERS=\"\$HOME/Games/RingRacers/ringracers\",
+            - export RINGRACERS=\"/usr/local/bin/ringracers\",
+            - export RINGRACERS=\"flatpak org.kartkrew.RingRacers\".
+
+         2. Windows:
+            - export RINGRACERS=\"\$HOME/Games/RingRacers/ringracers.exe\",
+            - export RINGRACERS=\"C:\Users\user\Games\RingRacers\ringracers.exe\".
+
+         3. macOS:
+            - export RINGRACERS=\"/Applications/Ring Racers.app/Contents/MacOS/Ring Racers\".
+
      - This script does not set port forwarding and open port in system's firewall for you. You need to do this manually on your router and system. For more information read the guide in: https://www.jameds.org/portforward.
 
      - To automate inputting in script for hosting server, do for example 'echo \"1\n3\" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
 
-     - Full path to game's main configuration file can be set with SRB2MAINCFG or SRB2KARTMAINCFG variable to shell configuration file, otherwise script assumes default file, if SRB2MAINCFG or SRB2KARTMAINCFG is not set.
+     - Full path to game's main configuration file can be set with SRB2MAINCFG, SRB2KARTMAINCFG or RINGRACERSMAINCFG variable to shell configuration file, otherwise script assumes default file, if SRB2MAINCFG, SRB2KARTMAINCFG or RINGRACERSMAINCFG is not set.
 
-     - There is also additional SRB2CFG and SRB2KARTCFG variables of other configuration files, which can temporary override settings of set SRB2MAINCFG and SRB2KARTMAINCFG.
+     - There is also additional SRB2CFG, SRB2KARTCFG and RINGRACERSCFG variables of other configuration files, which can temporary override settings of set SRB2MAINCFG, SRB2KARTMAINCFG and RINGRACERSCFG.
 
      - To turn off automatic restart of server after error, set environment variable \"export NOSRB2SRVLOOP=1\".
 
@@ -1551,6 +2021,12 @@ case "$3" in
 
         ;;
 
+    -dr | --dedicatedringracers)
+
+        dedicatedringracers "$@"
+
+        ;;
+
     -s | --server)
 
         server "$@"
@@ -1560,6 +2036,12 @@ case "$3" in
     -sk | --serverkart)
 
         serverkart "$@"
+
+        ;;
+
+    -sr | --serverringracers)
+
+        serverringracers "$@"
 
         ;;
 
@@ -1597,6 +2079,12 @@ case "$1" in
 
         ;;
 
+    -dr | --dedicatedringracers)
+
+        dedicatedringracers "$@"
+
+        ;;
+
     -f | --filter)
 
         srb2ms "$@"
@@ -1606,6 +2094,12 @@ case "$1" in
     -fk | --filterkart)
 
         srb2kartms "$@"
+
+        ;;
+
+    -fr | --filterringracers)
+
+        ringracersms "$@"
 
         ;;
 
@@ -1621,9 +2115,21 @@ case "$1" in
 
         ;;
 
+    -ir | --ipringracers)
+
+        ipringracers "$@"
+
+        ;;
+
     -k | --kart)
 
         srb2kartms
+
+        ;;
+
+    -kr | --ringracers)
+
+        ringracersms
 
         ;;
 
@@ -1642,6 +2148,12 @@ case "$1" in
     -sk | --serverkart)
 
         serverkart "$@"
+
+        ;;
+
+    -sr | --serverringracers)
+
+        serverringracers "$@"
 
         ;;
 

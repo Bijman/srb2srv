@@ -1,11 +1,11 @@
-This shell script has number of uses related to SRB2/SRB2Kart server.
+This shell script has number of uses related to SRB2/SRB2Kart/Ring Racers server.
 
-Mainly, the script obtains information about IP, number of players, gametype, etc. from https://ms.srb2.org and https://ms.kartkrew.org, which allows user to connect directly to selected server from SRB2/SRB2Kart Master Server list.
+Mainly, the script obtains information about IP, number of players, gametype, etc. from https://ms.srb2.org and https://ms.kartkrew.org, which allows user to connect directly to selected server from SRB2/SRB2Kart/Ring Racers Master Server list.
 
 ![srb2srv](https://user-images.githubusercontent.com/16626326/134928198-1b1b3837-1da0-4f97-bb23-e533d4da3487.gif)
 
 # Features
-- Connecting directly to selected server's IP from SRB2/SRB2Kart Master Server,
+- Connecting directly to selected server's IP from SRB2/SRB2Kart/Ring Racers Master Server,
 - Starting server and playing, or just creating dedicated one,
 - Checking if server is reachable (using [jameds.org's Port Checker](https://www.jameds.org/SRB2/port)),
 - Runs on Linux, macOS and Windows (Git Bash).
@@ -110,13 +110,9 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 5. Set other environment variables from "Configuration" section of README.
 
 # Configuration
-**If you want to connect to server in SRB2:**
+**If you want to connect to server or start your own server in SRB2:**
 1. Enter your path to SRB2 executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2") or just type "flatpak org.srb2.SRB2" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export SRB2="[path to SRB2 executable file]"` or `export SRB2="flatpak org.srb2.SRB2"`,
 - Note for macOS users: SRB2 executable file should be in "/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2", if "Sonic Robo Blast 2.app" or "Sonic Robo Blast 2 Kart.app" is installed in "/Applications",
-2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
-
-**If you want start your own server in SRB2:**
-1. Enter your path to SRB2 executable file ("lsdl2srb2", "lsdlsrb2", "srb2" "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2") or just type "flatpak org.srb2.SRB2" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export SRB2="[path to SRB2 executable file]"` or `export SRB2="flatpak org.srb2.SRB2"`,
 2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
 
 **If you want to connect to server or start your own server in SRB2Kart:**
@@ -124,34 +120,44 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 - Note for macOS users: SRB2Kart executable file should be in "/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart", if "Sonic Robo Blast 2 Kart.app" is installed in "/Applications".
 2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
 
+**If you want to connect to server or start your own server in Ring Racers:**
+1. Enter your path to Ring Racers executable file ("ringracers", "ringracers.exe", "Ring Racers") or just type "flatpak org.kartkrew.RingRacers" (for installed Flatpaks, Linux only) in shell configuration file (for example ".bash_profile" or ".bashrc" or ".zshrc" in user's home directory): `export RINGRACERS="[path to Ring Racers executable file]"` or `export RINGRACERS="flatpak org.kartkrew.RingRacers"`,
+- Note for macOS users: Ring Racers executable file should be in "/Applications/Ring Racers.app/Contents/MacOS/Ring Racers", if "Ring Racers.app" is installed in "/Applications".
+2. Enter `source ~/.bash_profile` or `source ~/.bashrc` or `source ~/.zshrc` or restart terminal/Git Bash.
+
 # Usage (from help text)
 ```
-CLI for server related tools of SRB2/SRB2Kart.
+CLI for server related tools of SRB2/SRB2Kart/Ring Racers.
 
 Usage: srb2srv [OPTION] <parameter>
   OPTIONS:
-     -h, --help                             Show this help text.
-     -c, --checkport                        Check if SRB2/SRB2Kart server is reachable.
-     -d, --dedicated      <addon-path>      Start dedicated SRB2 server.
-     -dk, --dedicatedkart <addon-path>      Start dedicated SRB2Kart server.
-     -f, --filter         <filter-query>    Filter list of SRB2 servers by query like server name, IP, gametype or map.
-     -fk, --filterkart    <filter-query>    Filter list of SRB2Kart servers by query like server name, IP, gametype, kartspeed or map.
-     -i, --ip             <server-ip>       Join SRB2 server from IP.
-     -ik, --ipkart        <server-ip>       Join SRB2Kart server from IP.
-     -k, --kart                             Go to SRB2Kart Master Server.
-     -p, --port           <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -s and -sk options.
-     -r, --room           <room-name>       Go to SRB2 Master Server room. Available parameters: "standard", "casual" and "custom".
-     -s, --server         <addon-path>      Start SRB2 server and play.
-     -sk, --serverkart    <addon-path>      Start SRB2Kart server and play.
+     -h, --help                                   Show this help text.
+     -c, --checkport                              Check if SRB2/SRB2Kart/Ring Racers server is reachable.
+     -d, --dedicated            <addon-path>      Start dedicated SRB2 server.
+     -dk, --dedicatedkart       <addon-path>      Start dedicated SRB2Kart server.
+     -dr, --dedicatedringracers <addon-path>      Start dedicated Ring Racers server.
+     -f, --filter               <filter-query>    Filter list of SRB2 servers by query like server name, IP, gametype or map.
+     -fk, --filterkart          <filter-query>    Filter list of SRB2Kart servers by query like server name, IP, gametype or kartspeed.
+     -fr, --filterringracers    <filter-query>    Filter list of Ring Racers servers by query like server name, IP, gametype or kartspeed.
+     -i, --ip                   <server-ip>       Join SRB2 server from IP.
+     -ik, --ipkart              <server-ip>       Join SRB2Kart server from IP.
+     -ir, --ipringracers        <server-ip>       Join Ring Racers server from IP.
+     -k, --kart                                   Go to SRB2Kart Master Server.
+     -kr, --ringracers                            Go to Ring Racers Master Server.
+     -p, --port                 <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -dr, -s, -sk and -sr options.
+     -r, --room                 <room-name>       Go to SRB2 Master Server room. Available parameters: "standard", "casual" and "custom".
+     -s, --server               <addon-path>      Start SRB2 server and play.
+     -sk, --serverkart          <addon-path>      Start SRB2Kart server and play.
+     -sr, --serverringracers    <addon-path>      Start Ring Racers server and play.
 
   EXAMPLES:
      1. Go to SRB2 Master Server and connect to selected server from list:
             srb2srv
 
-     2. Go to SRB2Kart Master Server and connect to selected server from list:
-            srb2srv --kart
+     2. Go to Ring Racers Master Server and connect to selected server from list:
+            srb2srv --ringracers
 
-     3. Check if port for SRB2/SRB2Kart server is opened (default port to be checked is 5029 without --port option):
+     3. Check if port for SRB2/SRB2Kart/Ring Racers server is opened (default port to be checked is 5029 without --port option):
             srb2srv --checkport --port 5030
 
      4. Run SRB2 server and add path to addon or directory of addons (default port to hosting server is 5029):
@@ -173,14 +179,14 @@ Usage: srb2srv [OPTION] <parameter>
             srb2srv --filterkart "Normal"
 
   NOTES:
-     - Exporting SRB2/SRB2Kart executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or "flatpak [SRB2/SRB2Kart Flatpak Application ID]" (for installed Flatpaks, Linux only) in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
+     - Exporting SRB2/SRB2Kart/Ring Racers executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart", "ringracers", "ringracers.exe", "Ring Racers") path or "flatpak [SRB2/SRB2Kart/Ring Racers Flatpak Application ID]" (for installed Flatpaks, Linux only) in "SRB2", "SRB2KART" or "RINGRACERS" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
             - export SRB2="$HOME/Games/SRB2/lsdl2srb2",
             - export SRB2="$HOME/Games/SRB2/lsdlsrb2",
             - export SRB2="$HOME/Games/SRB2/srb2",
-            - export SRB2="/usr/bin/srb2",
+            - export SRB2="/usr/local/bin/srb2",
             - export SRB2="flatpak org.srb2.SRB2".
 
          2. Windows:
@@ -196,7 +202,7 @@ Usage: srb2srv [OPTION] <parameter>
          1. Linux:
             - export SRB2KART="$HOME/Games/SRB2Kart/lsdl2srb2kart",
             - export SRB2KART="$HOME/Games/SRB2Kart/srb2kart",
-            - export SRB2KART="/usr/bin/srb2kart",
+            - export SRB2KART="/usr/local/bin/srb2kart",
             - export SRB2KART="flatpak org.srb2.SRB2Kart".
 
          2. Windows:
@@ -206,13 +212,27 @@ Usage: srb2srv [OPTION] <parameter>
          3. macOS:
             - export SRB2KART="/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart".
 
+       RING RACERS
+         1. Linux:
+            - export RINGRACERS="$HOME/Games/RingRacers/ringracers",
+            - export RINGRACERS="$HOME/Games/RingRacers/ringracers",
+            - export RINGRACERS="/usr/local/bin/ringracers",
+            - export RINGRACERS="flatpak org.kartkrew.RingRacers".
+
+         2. Windows:
+            - export RINGRACERS="$HOME/Games/RingRacers/ringracers.exe",
+            - export RINGRACERS="C:\Users\user\Games\RingRacers\ringracers.exe".
+
+         3. macOS:
+            - export RINGRACERS="/Applications/Ring Racers.app/Contents/MacOS/Ring Racers".
+
      - This script does not set port forwarding and open port in system's firewall for you. You need to do this manually on your router and system. For more information read the guide in: https://www.jameds.org/portforward.
 
      - To automate inputting in script for hosting server, do for example 'echo "1\n3" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
 
-     - Full path to game's main configuration file can be set with SRB2MAINCFG or SRB2KARTMAINCFG variable to shell configuration file, otherwise script assumes default file, if SRB2MAINCFG or SRB2KARTMAINCFG is not set.
+     - Full path to game's main configuration file can be set with SRB2MAINCFG, SRB2KARTMAINCFG or RINGRACERSMAINCFG variable to shell configuration file, otherwise script assumes default file, if SRB2MAINCFG, SRB2KARTMAINCFG or RINGRACERSMAINCFG is not set.
 
-     - There is also additional SRB2CFG and SRB2KARTCFG variables of other configuration files, which can temporary override settings of set SRB2MAINCFG and SRB2KARTMAINCFG.
+     - There is also additional SRB2CFG, SRB2KARTCFG and RINGRACERSCFG variables of other configuration files, which can temporary override settings of set SRB2MAINCFG, SRB2KARTMAINCFG and RINGRACERSCFG.
 
      - To turn off automatic restart of server after error, set environment variable "export NOSRB2SRVLOOP=1".
 
@@ -222,7 +242,7 @@ Usage: srb2srv [OPTION] <parameter>
 ```
 
 # Notes
-     - Exporting SRB2/SRB2Kart executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart") path or "flatpak [SRB2/SRB2Kart Flatpak Application ID]" (for installed Flatpaks, Linux only) in "SRB2" or "SRB2KART" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
+     - Exporting SRB2/SRB2Kart/Ring Racers executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart", "ringracers", "ringracers.exe", "Ring Racers") path or "flatpak [SRB2/SRB2Kart/Ring Racers Flatpak Application ID]" (for installed Flatpaks, Linux only) in "SRB2", "SRB2KART" or "RINGRACERS" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
@@ -255,13 +275,27 @@ Usage: srb2srv [OPTION] <parameter>
          3. macOS:
             - export SRB2KART="/Applications/Sonic Robo Blast 2 Kart.app/Contents/MacOS/Sonic Robo Blast 2 Kart".
 
+       RING RACERS
+         1. Linux:
+            - export RINGRACERS="$HOME/Games/RingRacers/ringracers",
+            - export RINGRACERS="$HOME/Games/RingRacers/ringracers",
+            - export RINGRACERS="/usr/local/bin/ringracers",
+            - export RINGRACERS="flatpak org.kartkrew.RingRacers".
+
+         2. Windows:
+            - export RINGRACERS="$HOME/Games/RingRacers/ringracers.exe",
+            - export RINGRACERS="C:\Users\user\Games\RingRacers\ringracers.exe".
+
+         3. macOS:
+            - export RINGRACERS="/Applications/Ring Racers.app/Contents/MacOS/Ring Racers".
+
      - This script does not set port forwarding and open port in system's firewall for you. You need to do this manually on your router and system. For more information read the guide in: https://www.jameds.org/portforward.
 
      - To automate inputting in script for hosting server, do for example 'echo "1\n3" | srb2srv -d [path to directory of addons for dedicated server]', which means it will make input to list dedicated server in Custom room on Master Server.
 
-     - Full path to game's main configuration file can be set with SRB2MAINCFG or SRB2KARTMAINCFG variable to shell configuration file, otherwise script assumes default file, if SRB2MAINCFG or SRB2KARTMAINCFG is not set.
+     - Full path to game's main configuration file can be set with SRB2MAINCFG, SRB2KARTMAINCFG or RINGRACERSMAINCFG variable to shell configuration file, otherwise script assumes default file, if SRB2MAINCFG, SRB2KARTMAINCFG or RINGRACERSMAINCFG is not set.
 
-     - There is also additional SRB2CFG and SRB2KARTCFG variables of other configuration files, which can temporary override settings of set SRB2MAINCFG and SRB2KARTMAINCFG.
+     - There is also additional SRB2CFG, SRB2KARTCFG and RINGRACERSCFG variables of other configuration files, which can temporary override settings of set SRB2MAINCFG, SRB2KARTMAINCFG and RINGRACERSCFG.
 
      - To turn off automatic restart of server after error, set environment variable "export NOSRB2SRVLOOP=1".
 
