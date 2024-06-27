@@ -22,7 +22,7 @@ else
 fi
 
 OS="$(uname)"
-SRB2MSURL="https://ms.srb2.org"
+SRB2MSURL="https://ms.srb2.org/list.json"
 SRB2KARTMSURL="https://ms.kartkrew.org:8860"
 RINGRACERSMSURL="https://ms.kartkrew.org/list.json"
 FAILURE="\e[1;91m"
@@ -1444,10 +1444,10 @@ serverringracers() {
 }
 
 srb2ms() {
-    SRVCODE=$(curl -sL "$SRB2MSURL" | gawk '{gsub("&#x27;|&#39;","\\47"); gsub("&amp;","\\&"); print}')
+    SRVCODE=$(curl -sL "$SRB2MSURL" | gawk -v RS='address"' '{gsub("^:","address:"); print}' | gawk '!/error/ && /address:/ {gsub(",\"players\":\\[\\]",""); print}')
 
     # Check connection to SRB2 Master Server.
-    if [ -z "$(printf "%s\n" "$SRVCODE" | gawk 'match($0, /Players/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
+    if [ -z "$(printf "%s\n" "$SRVCODE" | gawk 'match($0, /num_humans/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
 
         clear
         $PRINTF "$FAILURE\n%s\n\e[0m" "ERROR: Can't connect to Master Server. Try again later or check your internet connection."
@@ -1456,26 +1456,81 @@ srb2ms() {
     fi
 
     # Connecting to SRB2 servers in Master Server. Keeping colored names, players, IP, gametype, etc.
-    SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'<|>' '/copyIP/ && !/EMPTY LAND ZONE|function/ {print $3}')
-    SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/"servername">/ && !/>Unreachable</ {gsub("<h1 class=\"servername\">|<span style=\"color:inherit*.\"></span>|<span style=\"color:inherit*.\">|<span style=\"color:#f3a3a3;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#69e046;\"></span><span style=\"color:#ff9736;\"></span><span style=\"color:#ffff0f;\"></span>|</h1>",""); gsub("^[ \t]+",""); print}' | gawk '{gsub("<span style=\"color:#ffff0f;\">","\\e[0;38;2;255;255;15m"); gsub("<span style=\"color:#69e046;\">","\\e[0;38;2;105;224;70m"); gsub("<span style=\"color:#7373ff;\">","\\e[0;38;2;115;115;255m"); gsub("<span style=\"color:#ff3f3f;\">","\\e[0;38;2;255;63;63m"); gsub("<span style=\"color:#ff9736;\">","\\e[0;38;2;255;151;54m"); gsub("<span style=\"color:#a7a7a7;\">","\\e[0;38;2;167;167;167m"); gsub("<span style=\"color:#55c8ff;\">","\\e[0;38;2;85;200;255m"); gsub("<span style=\"color:#c4c4e1;\">","\\e[0;38;2;196;196;225m"); gsub("<span style=\"color:#df00df;\">","\\e[0;38;2;223;0;223m"); gsub("<span style=\"color:#bf7b4b;\">","\\e[0;38;2;191;123;75m"); gsub("<span style=\"color:#d7bb43;\">","\\e[0;38;2;215;187;67m"); gsub("<span style=\"color:#c7e494;\">","\\e[0;38;2;199;228;148m"); gsub("<span style=\"color:#cf7fcf;\">","\\e[0;38;2;207;127;207m"); gsub("<span style=\"color:#c599ff;\">","\\e[0;38;2;197;153;255m"); gsub("<span style=\"color:#979797;\">","\\e[0;38;2;151;151;151m"); gsub("<span style=\"color:#f3a3a3;\">","\\e[0;38;2;243;163;163m"); gsub("</span>","\033[0m"); print}')\n")
-    SRVNAMENOCOLOR=$(printf "%s\n" "$SRVNAMECOLOR" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1')
-    PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F'<img title="|"' '/img title="[0-9]*\/[0-9]*"/ {print $4}')
-    GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F'<div class="gametype">|</div>' '/<div class="gametype">.*.<\/div>/ {print $2}')
-    MAP=$(printf "%s\n" "$SRVCODE" | gawk -F'<strong>|</strong>' '/Playing on/ && !/EMPTY LAND ZONE/ {print $2}')
-    arraynametmp=$(printf "%s\n\033[1;34mFilter\033[0m\n\033[1;34mRefresh\033[0m" "$(gawk -v left="$SRVNAMECOLOR" -v leftcenter="$SRVIP" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" 'BEGIN{
+    SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F',|"' '{print $2}')
+    SRVPORT=$(printf "%s\n" "$SRVCODE" | gawk -F',|]' '{print $2}')
+    SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk -F',' '!/error/ && /address:/ {gsub("\"server_name\":\"|\"",""); print $12}' | gawk '{gsub("\\^2","\\e[0;38;2;255;255;15m"); gsub("\\^3","\\e[0;38;2;105;224;70m"); gsub("\\^4","\\e[0;38;2;115;115;255m"); gsub("\\^5","\\e[0;38;2;255;63;63m"); gsub("\\^7","\\e[0;38;2;255;151;54m"); gsub("\\^6","\\e[0;38;2;167;167;167m"); gsub("\\^8","\\e[0;38;2;85;200;255m"); gsub("\\^C","\\e[0;38;2;196;196;225m"); gsub("\\^1","\\e[0;38;2;223;0;223m"); gsub("\\^A","\\e[0;38;2;215;187;67m"); gsub("\\^B","\\e[0;38;2;199;228;148m"); gsub("\\^9","\\e[0;38;2;207;127;207m"); gsub("\\^D","\\e[0;38;2;243;163;163m"); gsub("</span>","\033[0m"); gsub("\\^0","\\e[0m"); print}')\n")
+    PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F'"num_humans":|,"max_connections":|,"joinable_state":' '{print $2 " / "$3}')
+    GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F'"gametype":"|","modified":' '{print $2}')
+    MAP=$(printf "%s\n" "$SRVCODE" | gawk -F',"map_title":"|","players":|","num_bots":' '{print $2}')
+    MODIFIED=$(printf "%s\n" "$SRVCODE" | gawk -F'"modified":|,"cheats":' '{print $2}')
+    arraynametmp=$(printf "%s\n" "$(gawk -v furtherleft="$SRVNAMECOLOR" -v left="$SRVIP" -v leftcenter="$SRVPORT" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" -v furtherright="$MODIFIED" 'BEGIN{
+split(furtherleft,fl,/\n/)
 split(left,l,/\n/)
 split(leftcenter,lc,/\n/)
 split(center,c,/\n/)
 split(rightcenter,rc,/\n/)
 split(right,r,/\n/)
-for (i = 1; i in l; i++) {print l[i] " - " "\033[2mIP: "lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mMap: "r[i]"\033[0m"}}')")
-    arraytmp=$(printf "%s\nFilter\nRefresh" "$(gawk -v left="$SRVIP" -v leftcenter="$SRVNAMENOCOLOR" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" 'BEGIN{
+split(furtherright,fr,/\n/)
+for (i = 1; i in l; i++) {print fl[i]"\033[0m" " - " "\033[2mIP: "l[i]":"lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mMap: "r[i]"\033[0m" " - " "\033[37mModified: "fr[i]"\033[0m"}}')")
+    arraynametmp=$(printf "%s$(printf "%s\n" "$arraynametmp" | gawk -F ' - ' '
+{
+    split($3, players, " ");
+    playerCount = players[2];
+    servers[NR] = $0;
+    playerCounts[NR] = playerCount;
+}
+END {
+    n = asort(playerCounts, sortedPlayerCounts);
+    for (i = n; i >= 1; i--) {
+        for (j in servers) {
+            split(servers[j], parts, " - ");
+            split(parts[3], players, " ");
+            if (players[2] == sortedPlayerCounts[i]) {
+                print servers[j];
+                delete servers[j];
+                break;
+            }
+        }
+    }
+}')\n\033[1;34mFilter\033[0m\n\033[1;34mRefresh\033[0m")
+    arraytmp=$(printf "%s\nFilter\nRefresh" "$(gawk -v furtherleft="$SRVIP" -v left="$SRVPORT" -v leftcenter="$SRVNAMENOCOLOR" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" -v furtherright="$MODIFIED" 'BEGIN{
+split(furtherleft,fl,/\n/)
 split(left,l,/\n/)
 split(leftcenter,lc,/\n/)
 split(center,c,/\n/)
 split(rightcenter,rc,/\n/)
 split(right,r,/\n/)
-for (i = 1; i in l; i++) {print l[i],lc[i],c[i],rc[i],r[i]}}' | gawk '!/ $/ {print}')")
+split(furtherright,fr,/\n/)
+for (i = 1; i in l; i++) {print fl[i]":"l[i],lc[i],c[i],rc[i],r[i],fr[i]}}')")
+    arraytmp=$(printf "%s$(printf "%s\n" "$arraytmp" | gawk '
+{
+    # Find the pattern matching "number / number"
+    match($0, /([0-9]+) \/ ([0-9]+)/, players);
+    playerCount = players[1];  # Extract the first number from the match
+
+    # Store the line and the player count
+    lines[NR] = $0;
+    playerCounts[NR] = playerCount;
+}
+
+END {
+    # Sort the player counts
+    n = asort(playerCounts, sortedPlayerCounts);
+
+    # Print the lines in the order of sorted player counts (reverse order)
+    for (i = n; i >= 1; i--) {
+        for (j in lines) {
+            # Find the player count again to match with sorted counts
+            match(lines[j], /([0-9]+) \/ ([0-9]+)/, players);
+            if (players[1] == sortedPlayerCounts[i]) {
+                print lines[j];
+                delete lines[j];
+                break;
+            }
+        }
+    }
+}')")
+
     array="$arraytmp"
     arrayname="$arraynametmp"
 
@@ -1749,8 +1804,8 @@ ringracersms() {
     GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"gametype":/ {gsub("\"|,",""); print $2}')
     KARTSPEED=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"speed":/ {gsub("\"|,",""); print $NF}')
     MAP=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"map_title":/ && !/EMPTY LAND ZONE/ {gsub("\"|,",""); print $2}')
-
-    arraynametmp=$(printf "%s\n" "$(gawk -v furtherleft="$SRVNAMECOLOR" -v left="$SRVIP" -v leftcenter="$SRVPORT" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" -v furtherright="$MAP" 'BEGIN{
+    MODIFIED=$(printf "%s\n" "$SRVCODE" | gawk -F':|,"' '/"modified":/ {print $2}')
+    arraynametmp=$(printf "%s\n" "$(gawk -v furtherleft="$SRVNAMECOLOR" -v left="$SRVIP" -v leftcenter="$SRVPORT" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" -v furtherright="$MAP" -v muchfurtherright="$MODIFIED" 'BEGIN{
 split(furtherleft,fl,/\n/)
 split(left,l,/\n/)
 split(leftcenter,lc,/\n/)
@@ -1758,8 +1813,8 @@ split(center,c,/\n/)
 split(rightcenter,rc,/\n/)
 split(right,r,/\n/)
 split(furtherright,fr,/\n/)
-for (i = 1; i in l; i++) {print fl[i]"\033[0m" " - " "\033[2mIP: "l[i]":"lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mKartspeed: "r[i]"\033[0m" " - " "\033[37mMap: "fr[i]"\033[0m"}}')")
-
+split(muchfurtherright,mfr,/\n/)
+for (i = 1; i in l; i++) {print fl[i]"\033[0m" " - " "\033[2mIP: "l[i]":"lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mKartspeed: "r[i]"\033[0m" " - " "\033[37mMap: "fr[i]"\033[0m" " - " "\033[37mModified: "mfr[i]"\033[0m"}}')")
     arraynametmp=$(printf "%s$(printf "%s\n" "$arraynametmp" | gawk -F ' - ' '
 {
     split($3, players, " ");
@@ -1781,8 +1836,7 @@ END {
         }
     }
 }')\n\033[1;34mFilter\033[0m\n\033[1;34mRefresh\033[0m")
-
-    arraytmp=$(printf "%s\nFilter\nRefresh" "$(gawk -v furtherleft="$SRVIP" -v left="$SRVPORT" -v leftcenter="$SRVNAMENOCOLOR" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" -v furtherright="$MAP" 'BEGIN{
+    arraytmp=$(printf "%s\nFilter\nRefresh" "$(gawk -v furtherleft="$SRVIP" -v left="$SRVPORT" -v leftcenter="$SRVNAMENOCOLOR" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" -v furtherright="$MAP" -v muchfurtherright="$MODIFIED" 'BEGIN{
 split(furtherleft,fl,/\n/)
 split(left,l,/\n/)
 split(leftcenter,lc,/\n/)
@@ -1790,8 +1844,8 @@ split(center,c,/\n/)
 split(rightcenter,rc,/\n/)
 split(right,r,/\n/)
 split(furtherright,fr,/\n/)
-for (i = 1; i in l; i++) {print fl[i]":"l[i],lc[i],c[i],rc[i],r[i],fr[i]}}' | gawk '!/-$/ {print}')")
-
+split(muchfurtherright,mfr,/\n/)
+for (i = 1; i in l; i++) {print fl[i]":"l[i],lc[i],c[i],rc[i],r[i],fr[i],mfr[i]}}' | gawk '!/-$/ {print}')")
     arraytmp=$(printf "%s$(printf "%s\n" "$arraytmp" | gawk '
 {
     # Find the pattern matching "number / number"
