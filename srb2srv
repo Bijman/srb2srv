@@ -1493,7 +1493,7 @@ END {
         }
     }
 }')\n\033[1;34mFilter\033[0m\n\033[1;34mRefresh\033[0m")
-    arraytmp=$(printf "%s\nFilter\nRefresh" "$(gawk -v furtherleft="$SRVIP" -v left="$SRVPORT" -v leftcenter="$SRVNAMENOCOLOR" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" -v furtherright="$MODIFIED" 'BEGIN{
+    arraytmp=$(printf "%s\nFilter\nRefresh" "$(gawk -v furtherleft="$SRVIP" -v left="$SRVPORT" -v leftcenter="$SRVNAMECOLOR" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" -v furtherright="$MODIFIED" 'BEGIN{
 split(furtherleft,fl,/\n/)
 split(left,l,/\n/)
 split(leftcenter,lc,/\n/)
