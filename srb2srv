@@ -1444,7 +1444,7 @@ serverringracers() {
 }
 
 srb2ms() {
-    SRVCODE=$(curl -sL "$SRB2MSURL" | gawk -v RS='address"' '{gsub("^:","address:"); print}' | gawk '!/error/ && /address:/ {gsub(",\"players\":\\[\\]",""); print}')
+    SRVCODE=$(curl -sL "$SRB2MSURL" | gawk -v RS='address"' '{gsub("^:","address:"); print}' | gawk '!/error/ && /address:/ {gsub(",\"players\":\\[\\]",""); gsub("-","–"); print}')
 
     # Check connection to SRB2 Master Server.
     if [ -z "$(printf "%s\n" "$SRVCODE" | gawk 'match($0, /num_humans/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
@@ -1592,7 +1592,7 @@ END {
 
     elif [ -n "$SRVAPIIP" ]; then
 
-        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); printf $1"|"}' | gawk '{gsub("\\|$",""); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
+        SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
         array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
         arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
 
@@ -1616,7 +1616,7 @@ END {
 
                 $PRINTF "$MESSAGE\n%s\n\e[0m" "Please enter text to filter. Press ctrl+c to quit."
                 read -r SRVAPIIP
-                STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP=$(printf "$arraytmp" | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); printf $1"|"}' | gawk '{gsub("\\|$",""); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0"
+                STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0"
 
             elif [ "$OPTURL" = "Refresh" ]; then
 
@@ -1653,7 +1653,7 @@ END {
 }
 
 srb2kartms() {
-    SRVCODE=$(curl -sL "$SRB2KARTMSURL" | gawk '{gsub("&#x27;|&#39;","\\47"); gsub("&amp;","\\&"); print}')
+    SRVCODE=$(curl -sL "$SRB2KARTMSURL" | gawk '{gsub("&#x27;|&#39;","\\47"); gsub("&amp;","\\&"); gsub("&gt;",">"); gsub("-","–"); print}')
 
     # Check connection to SRB2 Master Server.
     if [ -z "$(printf "%s\n" "$SRVCODE" | gawk 'match($0, /Players/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
@@ -1705,13 +1705,13 @@ for (i = 1; i in l; i++) {print l[i],lc[i],c[i],rc[i],r[i],fr[i]}}' | gawk '!/-$
     # Filtering list of SRB2Kart servers.
     if ([ "$1" = "-fk" ] || [ "$1" = "--filterkart" ]) && [ -z "$SRVAPIIP" ]; then
 
-        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
+        SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
         array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
         arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
 
     elif [ -n "$SRVAPIIP" ]; then
 
-        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); printf $1"|"}' | gawk '{gsub("\\|$",""); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
+        SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
         array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
         arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
 
@@ -1735,7 +1735,7 @@ for (i = 1; i in l; i++) {print l[i],lc[i],c[i],rc[i],r[i],fr[i]}}' | gawk '!/-$
 
                 $PRINTF "$MESSAGE\n%s\n\e[0m" "Please enter text to filter. Press ctrl+c to quit."
                 read -r SRVAPIIP
-                SRVAPIIP=$(printf "$arraytmp" | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); printf $1"|"}' | gawk '{gsub("\\|$",""); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0" --kart
+                SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0" --kart
 
             elif [ "$OPTURL" = "Refresh" ]; then
 
@@ -1772,7 +1772,7 @@ for (i = 1; i in l; i++) {print l[i],lc[i],c[i],rc[i],r[i],fr[i]}}' | gawk '!/-$
 }
 
 ringracersms() {
-    SRVCODE=$(curl -sL "$RINGRACERSMSURL" | gawk '{gsub("\",","\",\n"); print}')
+    SRVCODE=$(curl -sL "$RINGRACERSMSURL" | gawk '{gsub("\",","\",\n"); gsub("-","–"); print}')
 
     # Check connection to SRB2 Master Server.
     if [ -z "$(printf "%s\n" "$SRVCODE" | gawk 'match($0, /num_humans/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
@@ -1784,7 +1784,7 @@ ringracersms() {
     fi
 
     # Connecting to Ring Racers servers in Master Server. Keeping colored names, players, IP, gametype, etc.
-    SRVUNREACHIP=$(printf "%s|" $(printf "%s\n" "$SRVCODE" | gawk -F'\\["|",' '/"error":"unreachable"/ {print p2} {p2=p1; p1=$2}') | gawk '{gsub("\\|$",""); print}')
+    SRVUNREACHIP=$(printf "%s|" $(printf "%s\n" "$SRVCODE" | gawk -F'\\["|",' '/"error":"unreachable"/ || /"error":"server error"/ {print p2} {p2=p1; p1=$2}') | gawk '{gsub("\\|$",""); print}')
 
     if [ -n "$SRVUNREACHIP" ]; then
 
@@ -1803,7 +1803,7 @@ ringracersms() {
     PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F',' '/"num_humans":/ {gsub("\"num_humans\":",""); gsub(",\"max_connections\":"," / "); print $1}')
     GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"gametype":/ {gsub("\"|,",""); print $2}')
     KARTSPEED=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"speed":/ {gsub("\"|,",""); print $NF}')
-    MAP=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"map_title":/ && !/EMPTY LAND ZONE/ {gsub("\"|,",""); print $2}')
+    MAP=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"map_title":/ {gsub("\"|,",""); print $2}')
     MODIFIED=$(printf "%s\n" "$SRVCODE" | gawk -F':|,"' '/"modified":/ {print $2}')
     arraynametmp=$(printf "%s\n" "$(gawk -v furtherleft="$SRVNAMECOLOR" -v left="$SRVIP" -v leftcenter="$SRVPORT" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" -v furtherright="$MAP" -v muchfurtherright="$MODIFIED" 'BEGIN{
 split(furtherleft,fl,/\n/)
@@ -1881,13 +1881,13 @@ END {
     # Filtering list of Ring Racers servers.
     if ([ "$1" = "-fr" ] || [ "$1" = "--filterringracers" ]) && [ -z "$SRVAPIIP" ]; then
 
-        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
+        SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
         array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
         arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
 
     elif [ -n "$SRVAPIIP" ]; then
 
-        SRVAPIIP=$(printf "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); printf $1"|"}' | gawk '{gsub("\\|$",""); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
+        SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
         array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
         arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
 
@@ -1911,7 +1911,7 @@ END {
 
                 $PRINTF "$MESSAGE\n%s\n\e[0m" "Please enter text to filter. Press ctrl+c to quit."
                 read -r SRVAPIIP
-                SRVAPIIP=$(printf "$arraytmp" | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); printf $1"|"}' | gawk '{gsub("\\|$",""); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0" --ringracers
+                SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0" --ringracers
 
             elif [ "$OPTURL" = "Refresh" ]; then
 
