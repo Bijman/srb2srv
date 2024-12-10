@@ -74,28 +74,18 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 4. Enter `sudo make install`, which will install to "/usr/local/bin". You can specify your path with variable PREFIX, for example `make install PREFIX=$HOME/.local`, which will copy script to "$HOME/.local/bin". Alternatively manually place script to your path, which is readable by shell (PATH environment variable), and change script's permissions to be executable: `chmod 755 [path to srb2srv script]`,
 
-5. Set other environment variables from "Configuration" section of README.
+5. Set environment variables from "Configuration" section of README.
 
 **Windows:**
 1. Open Git Bash,
 
-2. Go to your user directory (usually "C:/Users/[your username]"): `cd ~`,
+2. Enter `git clone https://github.com/Bijman/srb2srv`,
 
-3. Enter `git clone https://github.com/Bijman/srb2srv`,
+3. Go to downloaded directory: `cd srb2srv`,
 
-4. Create directory "bin" with command: `mkdir ~/bin`,
+4. Enter `install -Dm755 srb2srv -t /usr/local/bin`,
 
-5. Copy script to "~/bin": `cp ~/srb2srv/srb2srv ~/bin`,
-
-6. Change script's permissions to be executable: `chmod 755 ~/bin/srb2srv`,
-
-7. Open text editor for "~/.bash_profile": `nano ~/.bash_profile`,
-
-8. In opened text editor from previous step write new path to executables with environment variable PATH like `export PATH="~/bin:$PATH"` in "~/.bash_profile",
-
-9. Enter `source ~/.bash_profile` or restart Git Bash.
-
-10. Set other environment variables from "Configuration" section of README.
+5. Set environment variables from "Configuration" section of README.
 
 **macOS:**
 1. Open terminal,
@@ -106,7 +96,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 4. Enter `sudo make install`, which will install to "/usr/local/bin". You can specify your path with variable PREFIX, for example `make install PREFIX=$HOME/.local`, which will copy script to "$HOME/.local/bin". Alternatively manually place script to your path, which is readable by shell (PATH environment variable), and change script's permissions to be executable: `chmod 755 [path to srb2srv script]`,
 
-5. Set other environment variables from "Configuration" section of README.
+5. Set environment variables from "Configuration" section of README.
 
 # Configuration
 **If you want to connect to server or start your own server in SRB2:**
