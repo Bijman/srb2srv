@@ -1653,7 +1653,7 @@ END {
 }
 
 srb2kartms() {
-    SRVCODE=$(curl -sL "$SRB2KARTMSURL" | gawk '{gsub("&#x27;|&#39;","\\47"); gsub("&amp;","\\&"); gsub("&gt;",">"); gsub("-","–"); print}')
+    SRVCODE=$(curl -sL "$SRB2KARTMSURL" | gawk '{gsub("&#x27;|&#39;","\\47"); gsub("&amp;","\\&"); gsub("&gt;",">"); print}')
 
     # Check connection to SRB2 Master Server.
     if [ -z "$(printf "%s\n" "$SRVCODE" | gawk 'match($0, /Players/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
