@@ -207,7 +207,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2CLASSIC="C:\Users\user\Games\SRB2CLASSIC\srb2win64.exe".
 
          3. macOS:
-            - export SRB2CLASSIC="/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic"."
+            - export SRB2CLASSIC="/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic".
 
        SRB2 Legacy
          1. Linux:
@@ -221,7 +221,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2LEGACY="C:\Users\user\Games\SRB2LEGACY\srb2legacywin64.exe".
 
          3. macOS:
-            - export SRB2LEGACY="/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy"."
+            - export SRB2LEGACY="/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy".
 
        SRB2Kart
          1. Linux:
@@ -298,7 +298,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2CLASSIC="C:\Users\user\Games\SRB2CLASSIC\srb2win64.exe".
 
          3. macOS:
-            - export SRB2CLASSIC="/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic"."
+            - export SRB2CLASSIC="/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic".
 
        SRB2 Legacy
          1. Linux:
@@ -312,7 +312,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2LEGACY="C:\Users\user\Games\SRB2LEGACY\srb2legacywin64.exe".
 
          3. macOS:
-            - export SRB2LEGACY="/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy"."
+            - export SRB2LEGACY="/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy".
 
        SRB2Kart
          1. Linux:
