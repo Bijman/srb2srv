@@ -1890,11 +1890,11 @@ for (i = 1; i in l; i++) {print fl[i]":"l[i],lc[i],c[i],rc[i],r[i],fr[i]}}')")
 
                 if [ "$CLASSIC" = "1" ]; then
 
-                    STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0" --classic
+                    SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0" --classic
 
                 elif [ "$LEGACY" = "1" ]; then
 
-                    STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0" --legacy
+                    SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0" --legacy
 
                 fi
 
@@ -1902,11 +1902,11 @@ for (i = 1; i in l; i++) {print fl[i]":"l[i],lc[i],c[i],rc[i],r[i],fr[i]}}')")
 
                 if [ "$CLASSIC" = "1" ]; then
 
-                    STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP="" exec "$0" --classic
+                    SRVAPIIP="" exec "$0" --classic
 
                 elif [ "$LEGACY" = "1" ]; then
 
-                    STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP="" exec "$0" --legacy
+                    SRVAPIIP="" exec "$0" --legacy
 
                 fi
 
