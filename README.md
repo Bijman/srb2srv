@@ -197,13 +197,13 @@ Usage: srb2srv [OPTION] <parameter>
 
        SRB2Classic
          1. Linux:
-            - export SRB2CLASSIC="\$HOME/Games/SRB2CLASSIC/lsdl2srb2",
+            - export SRB2CLASSIC="$HOME/Games/SRB2CLASSIC/lsdl2srb2",
             - export SRB2CLASSIC="/usr/local/bin/srb2classic",
             - export SRB2CLASSIC="flatpak org.srb2.srb2-classic".
 
          2. Windows:
-            - export SRB2CLASSIC="\$HOME/Games/SRB2CLASSIC/srb2win.exe",
-            - export SRB2CLASSIC="\$HOME/Games/SRB2CLASSIC/srb2win64.exe",
+            - export SRB2CLASSIC="$HOME/Games/SRB2CLASSIC/srb2win.exe",
+            - export SRB2CLASSIC="$HOME/Games/SRB2CLASSIC/srb2win64.exe",
             - export SRB2CLASSIC="C:\Users\user\Games\SRB2CLASSIC\srb2win64.exe".
 
          3. macOS:
@@ -211,13 +211,13 @@ Usage: srb2srv [OPTION] <parameter>
 
        SRB2 Legacy
          1. Linux:
-            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/lsdl2srb2legacy",
+            - export SRB2LEGACY="$HOME/Games/SRB2LEGACY/lsdl2srb2legacy",
             - export SRB2LEGACY="/usr/local/bin/srb2legacy",
             - export SRB2LEGACY="flatpak org.srb2.srb2-legacy".
 
          2. Windows:
-            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/srb2legacywin.exe",
-            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/srb2legacywin64.exe",
+            - export SRB2LEGACY="$HOME/Games/SRB2LEGACY/srb2legacywin.exe",
+            - export SRB2LEGACY="$HOME/Games/SRB2LEGACY/srb2legacywin64.exe",
             - export SRB2LEGACY="C:\Users\user\Games\SRB2LEGACY\srb2legacywin64.exe".
 
          3. macOS:
@@ -302,13 +302,13 @@ Usage: srb2srv [OPTION] <parameter>
 
        SRB2 Legacy
          1. Linux:
-            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/lsdl2srb2legacy",
+            - export SRB2LEGACY="$HOME/Games/SRB2LEGACY/lsdl2srb2legacy",
             - export SRB2LEGACY="/usr/local/bin/srb2legacy",
             - export SRB2LEGACY="flatpak org.srb2.srb2-legacy".
 
          2. Windows:
-            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/srb2legacywin.exe",
-            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/srb2legacywin64.exe",
+            - export SRB2LEGACY="$HOME/Games/SRB2LEGACY/srb2legacywin.exe",
+            - export SRB2LEGACY="$HOME/Games/SRB2LEGACY/srb2legacywin64.exe",
             - export SRB2LEGACY="C:\Users\user\Games\SRB2LEGACY\srb2legacywin64.exe".
 
          3. macOS:
