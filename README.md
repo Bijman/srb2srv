@@ -1,11 +1,11 @@
-This shell script has number of uses related to SRB2/SRB2Kart/Ring Racers server.
+This shell script has number of uses related to SRB2/SRB2Classic/SRB2 Legacy/Ring Racers server.
 
-Mainly, the script obtains information about IP, number of players, gametype, etc. from https://ms.srb2.org and https://ms.kartkrew.org, which allows user to connect directly to selected server from SRB2/SRB2Kart/Ring Racers Master Server list.
+Mainly, the script obtains information about IP, number of players, gametype, etc. from https://ms.srb2.org and https://ms.kartkrew.org, which allows user to connect directly to selected server from SRB2/SRB2Classic/SRB2 Legacy/Ring Racers Master Server list.
 
 ![srb2srv](https://user-images.githubusercontent.com/16626326/134928198-1b1b3837-1da0-4f97-bb23-e533d4da3487.gif)
 
 # Features
-- Connecting directly to selected server's IP from SRB2/SRB2Kart/Ring Racers Master Server,
+- Connecting directly to selected server's IP from SRB2/SRB2Classic/SRB2 Legacy/Ring Racers Master Server,
 - Starting server and playing, or just creating dedicated one,
 - Checking if server is reachable (using [jameds.org's Port Checker](https://www.jameds.org/SRB2/port)),
 - Runs on Linux, macOS and Windows (Git Bash).
@@ -116,27 +116,35 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 
 # Usage (from help text)
 ```
-CLI for server related tools of SRB2/SRB2Kart/Ring Racers.
+CLI for server related tools of SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers.
 
 Usage: srb2srv [OPTION] <parameter>
   OPTIONS:
      -h, --help                                   Show this help text.
-     -c, --checkport                              Check if SRB2/SRB2Kart/Ring Racers server is reachable.
+     -c, --checkport                              Check if SRB2 server is reachable.
      -d, --dedicated            <addon-path>      Start dedicated SRB2 server.
+     -dc, --dedicatedclassic    <addon-path>      Start dedicated SRB2Classic (v2.2) server.
      -dk, --dedicatedkart       <addon-path>      Start dedicated SRB2Kart server.
+     -dl, --dedicatedlegacy     <addon-path>      Start dedicated SRB2 Legacy (v2.1) server.
      -dr, --dedicatedringracers <addon-path>      Start dedicated Ring Racers server.
      -f, --filter               <filter-query>    Filter list of SRB2 servers by query like server name, IP, gametype or map.
+     -fc, --filterclassic       <filter-query>    Filter list of SRB2Classic (v2.2) servers by query like server name, IP, gametype or room.
      -fk, --filterkart          <filter-query>    Filter list of SRB2Kart servers by query like server name, IP, gametype or kartspeed.
+     -fl, --filterlegacy        <filter-query>    Filter list of SRB2 Legacy (v2.1) servers by query like server name, IP, gametype or room.
      -fr, --filterringracers    <filter-query>    Filter list of Ring Racers servers by query like server name, IP, gametype or kartspeed.
      -i, --ip                   <server-ip>       Join SRB2 server from IP.
      -ik, --ipkart              <server-ip>       Join SRB2Kart server from IP.
      -ir, --ipringracers        <server-ip>       Join Ring Racers server from IP.
      -k, --kart                                   Go to SRB2Kart Master Server.
+     -l, --legacy                                 Go to SRB2 Legacy (v2.1) Master Server.
+     -lc, --classic                               Go to SRB2Classic (v2.2) Master Server.
      -kr, --ringracers                            Go to Ring Racers Master Server.
      -p, --port                 <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -dr, -s, -sk and -sr options.
      -r, --room                 <room-name>       Go to SRB2 Master Server room. Available parameters: "standard", "casual" and "custom".
      -s, --server               <addon-path>      Start SRB2 server and play.
+     -sc, --serverclassic       <addon-path>      Start SRB2Classic (v2.2) server and play.
      -sk, --serverkart          <addon-path>      Start SRB2Kart server and play.
+     -sl, --serverlegacy        <addon-path>      Start SRB2 Legacy (v2.1) server and play.
      -sr, --serverringracers    <addon-path>      Start Ring Racers server and play.
 
   EXAMPLES:
@@ -146,7 +154,7 @@ Usage: srb2srv [OPTION] <parameter>
      2. Go to Ring Racers Master Server and connect to selected server from list:
             srb2srv --ringracers
 
-     3. Check if port for SRB2/SRB2Kart/Ring Racers server is opened (default port to be checked is 5029 without --port option):
+     3. Check if port for SRB2 server is opened (default port to be checked is 5029 without --port option):
             srb2srv --checkport --port 5030
 
      4. Run SRB2 server and add path to addon or directory of addons (default port to hosting server is 5029):
@@ -168,7 +176,7 @@ Usage: srb2srv [OPTION] <parameter>
             srb2srv --filterkart "Normal"
 
   NOTES:
-     - Exporting SRB2/SRB2Kart/Ring Racers executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart", "ringracers", "ringracers.exe", "Ring Racers") path or "flatpak [SRB2/SRB2Kart/Ring Racers Flatpak Application ID]" (for installed Flatpaks, Linux only) in "SRB2", "SRB2KART" or "RINGRACERS" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
+     - Exporting SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"Sonic Robo Blast 2 Classic\", \"lsdl2srb2legacy\", \"srb2legacywin.exe\", \"srb2legacywin64.exe\", \"Sonic Robo Blast 2 Legacy\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\", \"ringracers\", \"ringracers.exe\", \"Ring Racers\") path or \"flatpak [SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers Flatpak Application ID]\" (for installed Flatpaks, Linux only) in \"SRB2\", \"SRB2KART\" or \"RINGRACERS\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
@@ -186,6 +194,34 @@ Usage: srb2srv [OPTION] <parameter>
 
          3. macOS:
             - export SRB2="/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2".
+
+       SRB2Classic
+         1. Linux:
+            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/lsdl2srb2\",
+            - export SRB2CLASSIC=\"/usr/local/bin/srb2classic\",
+            - export SRB2CLASSIC=\"flatpak org.srb2.srb2-classic\".
+
+         2. Windows:
+            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/srb2win.exe\",
+            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/srb2win64.exe\",
+            - export SRB2CLASSIC=\"C:\Users\user\Games\SRB2CLASSIC\srb2win64.exe\".
+
+         3. macOS:
+            - export SRB2CLASSIC=\"/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic\"."
+
+       SRB2 Legacy
+         1. Linux:
+            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/lsdl2srb2legacy\",
+            - export SRB2LEGACY=\"/usr/local/bin/srb2legacy\",
+            - export SRB2LEGACY=\"flatpak org.srb2.srb2-legacy\".
+
+         2. Windows:
+            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/srb2legacywin.exe\",
+            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/srb2legacywin64.exe\",
+            - export SRB2LEGACY=\"C:\Users\user\Games\SRB2LEGACY\srb2legacywin64.exe\".
+
+         3. macOS:
+            - export SRB2LEGACY=\"/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy\"."
 
        SRB2Kart
          1. Linux:
@@ -231,7 +267,7 @@ Usage: srb2srv [OPTION] <parameter>
 ```
 
 # Notes
-     - Exporting SRB2/SRB2Kart/Ring Racers executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart", "ringracers", "ringracers.exe", "Ring Racers") path or "flatpak [SRB2/SRB2Kart/Ring Racers Flatpak Application ID]" (for installed Flatpaks, Linux only) in "SRB2", "SRB2KART" or "RINGRACERS" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile" or ".zshrc") is required for script to work.
+     - Exporting SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"Sonic Robo Blast 2 Classic\", \"lsdl2srb2legacy\", \"srb2legacywin.exe\", \"srb2legacywin64.exe\", \"Sonic Robo Blast 2 Legacy\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\", \"ringracers\", \"ringracers.exe\", \"Ring Racers\") path or \"flatpak [SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers Flatpak Application ID]\" (for installed Flatpaks, Linux only) in \"SRB2\", \"SRB2KART\" or \"RINGRACERS\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
@@ -249,6 +285,34 @@ Usage: srb2srv [OPTION] <parameter>
 
          3. macOS:
             - export SRB2="/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2".
+
+      SRB2Classic
+         1. Linux:
+            - export SRB2CLASSIC="$HOME/Games/SRB2CLASSIC/lsdl2srb2",
+            - export SRB2CLASSIC="/usr/local/bin/srb2classic",
+            - export SRB2CLASSIC="flatpak org.srb2.srb2-classic".
+
+         2. Windows:
+            - export SRB2CLASSIC="$HOME/Games/SRB2CLASSIC/srb2win.exe",
+            - export SRB2CLASSIC="$HOME/Games/SRB2CLASSIC/srb2win64.exe",
+            - export SRB2CLASSIC="C:\Users\user\Games\SRB2CLASSIC\srb2win64.exe".
+
+         3. macOS:
+            - export SRB2CLASSIC="/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic"."
+
+       SRB2 Legacy
+         1. Linux:
+            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/lsdl2srb2legacy",
+            - export SRB2LEGACY="/usr/local/bin/srb2legacy",
+            - export SRB2LEGACY="flatpak org.srb2.srb2-legacy".
+
+         2. Windows:
+            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/srb2legacywin.exe",
+            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/srb2legacywin64.exe",
+            - export SRB2LEGACY="C:\Users\user\Games\SRB2LEGACY\srb2legacywin64.exe".
+
+         3. macOS:
+            - export SRB2LEGACY="/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy"."
 
        SRB2Kart
          1. Linux:

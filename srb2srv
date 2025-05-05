@@ -24,6 +24,8 @@ fi
 OS="$(uname)"
 SRB2MSURL="https://ms.srb2.org/list.json"
 SRB2KARTMSURL="https://ms.kartkrew.org:8860"
+SRB2LEGACYMSURL="https://ms.srb2classic.net/?contains=&version=legacy&room="
+SRB2CLASSICMSURL="https://ms.srb2classic.net/?contains=&version=classic&room="
 RINGRACERSMSURL="https://ms.kartkrew.org/list.json"
 FAILURE="\e[1;91m"
 NOTICE="\e[1;93m"
@@ -144,6 +146,63 @@ EXAMPLES:
     fi
 }
 
+checksrb2legacy() {
+    # Checking if valid executable was entered to SRB2 environment variable.
+    if [ "$($PRINTF "%s\n" "$SRB2CLASSIC" | gawk '{print $1}')" = "flatpak" ]; then
+
+        SRB2CLASSIC="$SRB2CLASSIC"
+
+    elif [ "$($PRINTF "%s\n" "$SRB2LEGACY" | gawk '{print $1}')" = "flatpak" ]; then
+
+        SRB2LEGACY="$SRB2LEGACY"
+
+    elif [ -z "$SRB2CLASSIC" ] || [ ! -f "$($PRINTF "%s\n" "$SRB2CLASSIC" | gawk -F';' '{gsub(" /",";/"); gsub(" \\\\",";\\\\"); gsub(" -",";-"); print $1}')" ]; then
+
+        $PRINTF "$FAILURE\n%s\n\e[0m" "ERROR: No executable file found in SRB2CLASSIC environment variable (\"lsdl2srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"Sonic Robo Blast 2 Classic\") or SRB2CLASSIC environment variable is not set at all. Set valid path to executable file in SRB2CLASSIC environment variable in shell configuration file (for example in \".bash_profile\" or \".bashrc\").
+
+EXAMPLES:
+         1. Linux:
+            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/lsdl2srb2\",
+            - export SRB2CLASSIC=\"/usr/local/bin/srb2classic\",
+            - export SRB2CLASSIC=\"flatpak org.srb2.srb2-classic\".
+
+         2. Windows:
+            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/srb2win.exe\",
+            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/srb2win64.exe\",
+            - export SRB2CLASSIC=\"C:\Users\user\Games\SRB2CLASSIC\srb2win64.exe\".
+
+         3. macOS:
+            - export SRB2CLASSIC=\"/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic\"."
+
+        exit
+
+    elif [ -z "$SRB2LEGACY" ] || [ ! -f "$($PRINTF "%s\n" "$SRB2LEGACY" | gawk -F';' '{gsub(" /",";/"); gsub(" \\\\",";\\\\"); gsub(" -",";-"); print $1}')" ]; then
+
+        $PRINTF "$FAILURE\n%s\n\e[0m" "ERROR: No executable file found in SRB2LEGACY environment variable (\"lsdl2srb2legacy\", \"srb2legacywin.exe\", \"srb2legacywin64.exe\", \"Sonic Robo Blast 2 Legacy\") or SRB2LEGACY environment variable is not set at all. Set valid path to executable file in SRB2LEGACY environment variable in shell configuration file (for example in \".bash_profile\" or \".bashrc\").
+
+EXAMPLES:
+         1. Linux:
+            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/lsdl2srb2legacy\",
+            - export SRB2LEGACY=\"/usr/local/bin/srb2legacy\",
+            - export SRB2LEGACY=\"flatpak org.srb2.srb2-legacy\".
+
+         2. Windows:
+            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/srb2legacywin.exe\",
+            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/srb2legacywin64.exe\",
+            - export SRB2LEGACY=\"C:\Users\user\Games\SRB2LEGACY\srb2legacywin64.exe\".
+
+         3. macOS:
+            - export SRB2LEGACY=\"/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy\"."
+
+        exit
+
+    else
+
+        SRB2LEGACY=$($PRINTF "%s\n" "$SRB2LEGACY" | gawk '{gsub(" /",";/"); gsub(" \\\\",";\\\\"); gsub(" -",";-"); print}')
+
+    fi
+}
+
 checksrb2kart() {
     # Checking if valid executable was entered to SRB2KART environment variable.
     if [ "$($PRINTF "%s\n" "$SRB2KART" | gawk '{print $1}')" = "flatpak" ]; then
@@ -214,6 +273,38 @@ dedicated() {
     # Hosting dedicated server for SRB2. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
     IFS=";"
 
+    if [ "$CLASSIC" = "1" ]; then
+
+        SRB2="$SRB2CLASSIC"
+        ROOMID1="1"
+        ROOMID2="2"
+        ROOMID3="3"
+        ROOMNAME1="Standard"
+        ROOMNAME2="Action"
+        ROOMNAME3="Other"
+
+    elif [ "$LEGACY" = "1" ]; then
+
+        SRB2="$SRB2LEGACY"
+        ROOMID1="1"
+        ROOMID2="2"
+        ROOMID3="3"
+        ROOMNAME1="Standard"
+        ROOMNAME2="Action"
+        ROOMNAME3="Other"
+
+    else
+
+        SRB2="$SRB2"
+        ROOMID1="33"
+        ROOMID2="28"
+        ROOMID3="38"
+        ROOMNAME1="Standard"
+        ROOMNAME2="Casual"
+        ROOMNAME3="Custom"
+
+    fi
+
     if [ -n "$($PRINTF "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')" ]; then
 
         SLASHARG=$($PRINTF "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
@@ -228,7 +319,7 @@ dedicated() {
 
     if ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$1" = "-d" ] || [ "$1" = "--dedicated" ]); then
 
-        PATHARGS=$($PRINTF "%s" "$*" | gawk '{gsub("-d;|--dedicated;|;-p;[0-9][0-9]*|;--port;[0-9][0-9]*|-p;[0-9][0-9]*;|--port;[0-9][0-9]*;",""); gsub("~/","'$HOME'/"); print}')
+        PATHARGS=$($PRINTF "%s" "$*" | gawk '{gsub("-d;|--dedicated;|-dc;|--dedicatedclassic;|-dl;|--dedicatedlegacy;|;-p;[0-9][0-9]*|;--port;[0-9][0-9]*|-p;[0-9][0-9]*;|--port;[0-9][0-9]*;",""); gsub("~/","'$HOME'/"); print}')
 
         FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
 
@@ -287,7 +378,7 @@ dedicated() {
 
                     $PRINTF "$MESSAGE\n%s\n\e[0m" "Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
 
-                    for loop in "Standard" "Casual" "Custom"; do $PRINTF "%s\n" "$((i += 1))) $loop"; done
+                    for loop in "$ROOMNAME1" "$ROOMNAME2" "$ROOMNAME3"; do $PRINTF "%s\n" "$((i += 1))) $loop"; done
 
                     $PRINTF "#? "
                     read -r choose
@@ -306,11 +397,11 @@ dedicated() {
                             # Standard room.
                             if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room $ROOMID1 -port $PORT -file $FILELIST 2>&1
 
                             else
 
-                                $SRB2 -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                $SRB2 -dedicated "$@" -room $ROOMID1 -port $PORT -file $FILELIST 2>&1
 
                             fi
 
@@ -340,11 +431,11 @@ dedicated() {
 
                                         if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room $ROOMID1 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
-                                            $SRB2 -dedicated "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                            $SRB2 -dedicated "$@" -room $ROOMID1 -port $PORT -file $FILELIST 2>&1
 
                                         fi
 
@@ -366,14 +457,14 @@ dedicated() {
                             # Unsetting DISPLAY for a purpose of suppressing any message popups.
                             unset DISPLAY
 
-                            # Casual room.
+                            # Casual/Action room.
                             if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room $ROOMID2 -port $PORT -file $FILELIST 2>&1
 
                             else
 
-                                $SRB2 -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                $SRB2 -dedicated "$@" -room $ROOMID2 -port $PORT -file $FILELIST 2>&1
 
                             fi
 
@@ -403,11 +494,11 @@ dedicated() {
 
                                         if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room $ROOMID2 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
-                                            $SRB2 -dedicated "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                            $SRB2 -dedicated "$@" -room $ROOMID2 -port $PORT -file $FILELIST 2>&1
 
                                         fi
 
@@ -429,14 +520,14 @@ dedicated() {
                             # Unsetting DISPLAY for a purpose of suppressing any message popups.
                             unset DISPLAY
 
-                            # Custom room.
+                            # Custom/Other room.
                             if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room $ROOMID3 -port $PORT -file $FILELIST 2>&1
 
                             else
 
-                                $SRB2 -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                $SRB2 -dedicated "$@" -room $ROOMID3 -port $PORT -file $FILELIST 2>&1
 
                             fi
 
@@ -466,11 +557,11 @@ dedicated() {
 
                                         if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -dedicated "$@" -room $ROOMID3 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
-                                            $SRB2 -dedicated "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                            $SRB2 -dedicated "$@" -room $ROOMID3 -port $PORT -file $FILELIST 2>&1
 
                                         fi
 
@@ -867,6 +958,38 @@ server() {
     # Hosting server for SRB2. Checking which slashes in addons' paths where entered to determine OS and how the script should act to remove unnecessary arguments to find addons.
     IFS=";"
 
+    if [ "$CLASSIC" = "1" ]; then
+
+        SRB2="$SRB2CLASSIC"
+        ROOMID1="1"
+        ROOMID2="2"
+        ROOMID3="3"
+        ROOMNAME1="Standard"
+        ROOMNAME2="Action"
+        ROOMNAME3="Other"
+
+    elif [ "$LEGACY" = "1" ]; then
+
+        SRB2="$SRB2LEGACY"
+        ROOMID1="1"
+        ROOMID2="2"
+        ROOMID3="3"
+        ROOMNAME1="Standard"
+        ROOMNAME2="Action"
+        ROOMNAME3="Other"
+
+    else
+
+        SRB2="$SRB2"
+        ROOMID1="33"
+        ROOMID2="28"
+        ROOMID3="38"
+        ROOMNAME1="Standard"
+        ROOMNAME2="Casual"
+        ROOMNAME3="Custom"
+
+    fi
+
     if [ -n "$($PRINTF "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')" ]; then
 
         SLASHARG=$($PRINTF "%s\n" "$*" | gawk 'match($0, /\\/) {print substr($0, RSTART, RLENGTH)}')
@@ -881,7 +1004,7 @@ server() {
 
     if ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$1" = "-s" ] || [ "$1" = "--server" ]); then
 
-        PATHARGS=$($PRINTF "%s" "$*" | gawk '{gsub("-s;|--server;|;-p;[0-9][0-9]*|;--port;[0-9][0-9]*|-p;[0-9][0-9]*;|--port;[0-9][0-9]*;",""); gsub("~/","'$HOME'/"); print}')
+        PATHARGS=$($PRINTF "%s" "$*" | gawk '{gsub("-s;|--server;|-sc;|--serverclassic;|-sl;|--serverlegacy;|;-p;[0-9][0-9]*|;--port;[0-9][0-9]*|-p;[0-9][0-9]*;|--port;[0-9][0-9]*;",""); gsub("~/","'$HOME'/"); print}')
         FILELIST=$(find $PATHARGS -maxdepth 1 -type f | gawk '!a[$0]++' | gawk '{printf "%s;", $0}')
 
     elif ([ "$SLASHARG" = "/" ] || [ "$SLASHARG" = "\\" ]) && ([ "$3" = "-s" ] || [ "$3" = "--server" ]); then
@@ -938,7 +1061,7 @@ server() {
 
                     $PRINTF "$MESSAGE\n%s\n\e[0m" "Please choose by typing number and then pressing enter. Press enter or ctrl+c to quit."
 
-                    for loop in "Standard" "Casual" "Custom"; do $PRINTF "%s\n" "$((i += 1))) $loop"; done
+                    for loop in "$ROOMNAME1" "$ROOMNAME2" "$ROOMNAME3"; do $PRINTF "%s\n" "$((i += 1))) $loop"; done
 
                     $PRINTF "#? "
                     read -r choose
@@ -954,11 +1077,11 @@ server() {
                             # Standard room.
                             if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room $ROOMID1 -port $PORT -file $FILELIST 2>&1
 
                             else
 
-                                $SRB2 -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                $SRB2 -server "$@" -room $ROOMID1 -port $PORT -file $FILELIST 2>&1
 
                             fi
 
@@ -988,11 +1111,11 @@ server() {
 
                                         if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room $ROOMID1 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
-                                            $SRB2 -server "$@" -room 33 -port $PORT -file $FILELIST 2>&1
+                                            $SRB2 -server "$@" -room $ROOMID1 -port $PORT -file $FILELIST 2>&1
 
                                         fi
 
@@ -1014,11 +1137,11 @@ server() {
                             # Casual room.
                             if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room $ROOMID2 -port $PORT -file $FILELIST 2>&1
 
                             else
 
-                                $SRB2 -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                $SRB2 -server "$@" -room $ROOMID2 -port $PORT -file $FILELIST 2>&1
 
                             fi
 
@@ -1048,11 +1171,11 @@ server() {
 
                                         if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room $ROOMID2 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
-                                            $SRB2 -server "$@" -room 28 -port $PORT -file $FILELIST 2>&1
+                                            $SRB2 -server "$@" -room $ROOMID2 -port $PORT -file $FILELIST 2>&1
 
                                         fi
 
@@ -1074,11 +1197,11 @@ server() {
                             # Custom room.
                             if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room $ROOMID3 -port $PORT -file $FILELIST 2>&1
 
                             else
 
-                                $SRB2 -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                $SRB2 -server "$@" -room $ROOMID3 -port $PORT -file $FILELIST 2>&1
 
                             fi
 
@@ -1108,11 +1231,11 @@ server() {
 
                                         if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
 
-                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                            flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -server "$@" -room $ROOMID3 -port $PORT -file $FILELIST 2>&1
 
                                         else
 
-                                            $SRB2 -server "$@" -room 38 -port $PORT -file $FILELIST 2>&1
+                                            $SRB2 -server "$@" -room $ROOMID3 -port $PORT -file $FILELIST 2>&1
 
                                         fi
 
@@ -1456,13 +1579,13 @@ srb2ms() {
     fi
 
     # Connecting to SRB2 servers in Master Server. Keeping colored names, players, IP, gametype, etc.
-    SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F',|"' '{print $2}')
-    SRVPORT=$(printf "%s\n" "$SRVCODE" | gawk -F',|]' '{print $2}')
-    SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk -F',' '!/error/ && /address:/ {gsub("\"server_name\":\"|\"",""); print $12}' | gawk '{gsub("\\^2","\\e[0;38;2;255;255;15m"); gsub("\\^3","\\e[0;38;2;105;224;70m"); gsub("\\^4","\\e[0;38;2;115;115;255m"); gsub("\\^5","\\e[0;38;2;255;63;63m"); gsub("\\^7","\\e[0;38;2;255;151;54m"); gsub("\\^6","\\e[0;38;2;167;167;167m"); gsub("\\^8","\\e[0;38;2;85;200;255m"); gsub("\\^C","\\e[0;38;2;196;196;225m"); gsub("\\^1","\\e[0;38;2;223;0;223m"); gsub("\\^A","\\e[0;38;2;215;187;67m"); gsub("\\^B","\\e[0;38;2;199;228;148m"); gsub("\\^9","\\e[0;38;2;207;127;207m"); gsub("\\^D","\\e[0;38;2;243;163;163m"); gsub("</span>","\033[0m"); gsub("\\^0","\\e[0m"); print}')\n")
-    PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F'"num_humans":|,"max_connections":|,"joinable_state":' '{print $2 " / "$3}')
-    GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F'"gametype":"|","modified":' '{print $2}')
-    MAP=$(printf "%s\n" "$SRVCODE" | gawk -F',"map_title":"|","players":|","num_bots":' '{print $2}')
-    MODIFIED=$(printf "%s\n" "$SRVCODE" | gawk -F'"modified":|,"cheats":' '{print $2}')
+    SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F',|"' '{gsub("\\\\u0000",""); print $2}')
+    SRVPORT=$(printf "%s\n" "$SRVCODE" | gawk -F',|]' '{gsub("\\\\u0000",""); print $2}')
+    SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk -F',' '!/error/ && /address:/ {gsub("\"server_name\":\"|\"|\\\\u0000",""); print $12}' | gawk '{gsub("\\^2","\\e[0;38;2;255;255;15m"); gsub("\\^3","\\e[0;38;2;105;224;70m"); gsub("\\^4","\\e[0;38;2;115;115;255m"); gsub("\\^5","\\e[0;38;2;255;63;63m"); gsub("\\^7","\\e[0;38;2;255;151;54m"); gsub("\\^6","\\e[0;38;2;167;167;167m"); gsub("\\^8","\\e[0;38;2;85;200;255m"); gsub("\\^C","\\e[0;38;2;196;196;225m"); gsub("\\^1","\\e[0;38;2;223;0;223m"); gsub("\\^A","\\e[0;38;2;215;187;67m"); gsub("\\^B","\\e[0;38;2;199;228;148m"); gsub("\\^9","\\e[0;38;2;207;127;207m"); gsub("\\^D","\\e[0;38;2;243;163;163m"); gsub("</span>","\033[0m"); gsub("\\^0","\\e[0m"); gsub("\\\\u0000",""); print}')\n")
+    PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F'"num_humans":|,"max_connections":|,"joinable_state":' '{gsub("\\\\u0000",""); print $2 " / "$3}')
+    GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F'"gametype":"|","modified":' '{gsub("\\\\u0000",""); print $2}')
+    MAP=$(printf "%s\n" "$SRVCODE" | gawk -F',"map_title":"|","players":|","num_bots":' '{gsub("\\\\u0000",""); print $2}')
+    MODIFIED=$(printf "%s\n" "$SRVCODE" | gawk -F'"modified":|,"cheats":' '{gsub("\\\\u0000",""); print $2}')
     arraynametmp=$(printf "%s\n" "$(gawk -v furtherleft="$SRVNAMECOLOR" -v left="$SRVIP" -v leftcenter="$SRVPORT" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" -v furtherright="$MODIFIED" 'BEGIN{
 split(furtherleft,fl,/\n/)
 split(left,l,/\n/)
@@ -1652,6 +1775,162 @@ END {
     done
 }
 
+srb2legacyms() {
+    if [ "$CLASSIC" = "1" ]; then
+
+        SRVCODE=$(curl -sL "$SRB2CLASSICMSURL" | gawk '{gsub("><","\n"); print}')
+
+    elif [ "$LEGACY" = "1" ]; then
+
+        SRVCODE=$(curl -sL "$SRB2LEGACYMSURL" | gawk '{gsub("><","\n"); print}')
+
+    fi
+
+    # Check connection to SRB2 Master Server.
+    if [ -z "$(printf "%s\n" "$SRVCODE" | gawk 'match($0, /players/) {print substr($0, RSTART, RLENGTH)}' | head -n1)" ]; then
+
+        clear
+        $PRINTF "$FAILURE\n%s\n\e[0m" "ERROR: Can't connect to Master Server. Try again later or check your internet connection."
+        exit
+
+    fi
+
+    # Connecting to SRB2 servers in Master Server. Keeping colored names, players, IP, gametype, etc.
+    SRVIP=$(printf "%s\n" "$SRVCODE" | gawk -F'td class="address">|</td|:' '/address/ && !/\[[0-9]/ {print $2}' | gawk 'NF{print}')
+    SRVPORT=$(printf "%s\n" "$SRVCODE" | gawk -F'td class="address">|</td|:' '/address/ && !/\[[0-9]/ {print $3}' | gawk 'NF{print}')
+    SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk '/td class="name"/ {getline; getline; print}' | gawk '{gsub("span class=\"yellow\">","\033[0;38;2;255;255;0m"); gsub("span class=\"green\">","\033[0;38;2;105;224;70m"); gsub("span class=\"blue\">","\033[0;38;2;115;115;255m"); gsub("span class=\"red\">","\033[0;38;2;255;0;0m"); gsub("span class=\"gray\">","\033[0;38;2;167;167;167m"); gsub("span class=\"orange\">","\033[0;38;2;255;151;54m"); gsub("span class=\"sky\">","\033[0;38;2;85;200;255m"); gsub("span class=\"purple\">","\033[0;38;2;160;32;240m"); gsub("span class=\"magenta\">","\033[0;38;2;255;0;255m"); gsub("span class=\"brown\">","\033[0;38;2;215;187;67m"); gsub("span class=\"aqua\">","\033[0;38;2;0;255;255m"); gsub("span class=\"peridot\">","\033[0;38;2;184;196;48m"); gsub("span class=\"azure\">","\033[0;38;2;0;127;255m"); gsub("span class=\"rosy\">","\033[0;38;2;243;163;163m"); gsub("span class=\"black\">","\033[0;38;2;0;0;0m"); gsub("</span>","\033[0m");  gsub("</span|<",""); print}')\n")
+    PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F'td class="players">|</td|:' '/players/ {print $2}' | gawk 'NF{print}')
+    GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk '/tr class="details"/ {getline; getline; print}' | gawk -F'Playing | on ' 'NF{print $2}')
+    MAP=$(printf "%s\n" "$SRVCODE" | gawk '/tr class="details"/ {getline; getline; print}' | gawk -F' on |</p' 'NF{print $2}')
+    ROOM=$(printf "%s\n" "$SRVCODE" | gawk -F'td class="room">|</td|:' '/room/ {print $2}' | gawk 'NF{print}')
+    arraynametmp=$(printf "%s\n\033[1;34mFilter\033[0m\n\033[1;34mRefresh\033[0m" "$(gawk -v furtherleft="$SRVNAMECOLOR" -v left="$SRVIP" -v leftcenter="$SRVPORT" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" -v furtherright="$ROOM" 'BEGIN{
+split(furtherleft,fl,/\n/)
+split(left,l,/\n/)
+split(leftcenter,lc,/\n/)
+split(center,c,/\n/)
+split(rightcenter,rc,/\n/)
+split(right,r,/\n/)
+split(furtherright,fr,/\n/)
+for (i = 1; i in l; i++) {print fl[i]"\033[0m" " - " "\033[2mIP: "l[i]":"lc[i]"\033[0m" " - " "\033[37mPlayers: "c[i]"\033[0m" " - " "\033[37mGametype: "rc[i]"\033[0m" " - " "\033[37mMap: "r[i]"\033[0m" " - " "\033[37mRoom: "fr[i]"\033[0m"}}')")
+    arraytmp=$(printf "%s\nFilter\nRefresh" "$(gawk -v furtherleft="$SRVIP" -v left="$SRVPORT" -v leftcenter="$SRVNAMECOLOR" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$MAP" -v furtherright="$ROOM" 'BEGIN{
+split(furtherleft,fl,/\n/)
+split(left,l,/\n/)
+split(leftcenter,lc,/\n/)
+split(center,c,/\n/)
+split(rightcenter,rc,/\n/)
+split(right,r,/\n/)
+split(furtherright,fr,/\n/)
+for (i = 1; i in l; i++) {print fl[i]":"l[i],lc[i],c[i],rc[i],r[i],fr[i]}}')")
+    array="$arraytmp"
+    arrayname="$arraynametmp"
+
+    # Filtering list of SRB2 servers.
+    if ([ "$1" = "-fc" ] || [ "$1" = "--filterclassic" ] || [ "$1" = "-fl" ] || [ "$1" = "--filterlegacy" ]) && [ -z "$SRVAPIIP" ]; then
+
+        SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$2" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
+        array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
+        arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
+
+    elif [ -n "$SRVAPIIP" ]; then
+
+        SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}')
+        array=$(printf "%s\n" "$arraytmp" | gawk '/'"$SRVAPIIP"'/ || /^Filter$|^Refresh$/ {print}')
+        arrayname=$(printf "%s\n" "$arraynametmp" | gawk '/'"$SRVAPIIP"'/ || /^\033\[1;34mFilter\033\[0m$|^\033\[1;34mRefresh\033\[0m$/ {print}')
+
+    fi
+
+    count=$(printf "%s\n" "$array" | wc -l)
+    n=""
+    while true; do
+
+        clear
+        $PRINTF "$MESSAGE\n%s\n\e[0m" "Please choose server by typing number and then pressing enter. Press enter or ctrl+c to quit."
+        $PRINTF "%s\n" "$arrayname" | gawk '{print NR")", $0}'
+        $PRINTF "#? "
+        read -r n
+
+        if [ -n "$n" ] && [ "$n" -eq "$n" ] && [ "$n" -gt 0 ] && [ "$n" -le "$count" ]; then
+
+            OPTURL=$($PRINTF "%s\n" "$array" | gawk 'NR=='"${n}"' {print $1}')
+
+            if [ "$OPTURL" = "Filter" ]; then
+
+                $PRINTF "$MESSAGE\n%s\n\e[0m" "Please enter text to filter. Press ctrl+c to quit."
+                read -r SRVAPIIP
+
+                if [ "$CLASSIC" = "1" ]; then
+
+                    STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0" --classic
+
+                elif [ "$LEGACY" = "1" ]; then
+
+                    STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP=$(printf "%s\n" "$array" | gawk '{gsub(/\033\[[0-9;]*m/,"")}1' | gawk '{IGNORECASE=1} /'"$($PRINTF "%s\n" "$SRVAPIIP" | gawk '{gsub("\\/","\\/"); gsub("*","\\*"); gsub("\\[","\\["); gsub("\\]","\\]"); gsub("\\(","\\("); gsub("\\)","\\)"); print}')"'/ {printf $1"|"}' | gawk '{gsub("\\|$",""); print}') exec "$0" --legacy
+
+                fi
+
+            elif [ "$OPTURL" = "Refresh" ]; then
+
+                if [ "$CLASSIC" = "1" ]; then
+
+                    STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP="" exec "$0" --classic
+
+                elif [ "$LEGACY" = "1" ]; then
+
+                    STANDARD="$STANDARD" CASUAL="$CASUAL" CUSTOM="$CUSTOM" ROOM="$ROOM" SRVAPIIP="" exec "$0" --legacy
+
+                fi
+
+            else
+
+                IFS=";"
+
+                if [ "$CLASSIC" = "1" ]; then
+
+                    SRB2CLASSIC=$($PRINTF "%s\n" "$SRB2CLASSIC" | gawk '{gsub(" /",";/"); gsub(" -",";-"); print}')
+                    $PRINTF "$MESSAGE\n%s\n\e[0m" "Connecting to server $OPTURL."
+                    sleep 1
+
+                    if [ "$($PRINTF "%s\n" "$SRB2CLASSIC" | gawk '{print $1}')" = "flatpak" ]; then
+
+                        flatpak run $($PRINTF "%s\n" "$SRB2CLASSIC" | gawk '{print $NF}') -connect $OPTURL 2>&1 || checksrb2legacy
+
+                    else
+
+                        $SRB2CLASSIC -connect $OPTURL 2>&1 || checksrb2legacy
+
+                    fi
+
+                elif [ "$LEGACY" = "1" ]; then
+
+                    SRB2LEGACY=$($PRINTF "%s\n" "$SRB2LEGACY" | gawk '{gsub(" /",";/"); gsub(" -",";-"); print}')
+                    $PRINTF "$MESSAGE\n%s\n\e[0m" "Connecting to server $OPTURL."
+                    sleep 1
+
+                    if [ "$($PRINTF "%s\n" "$SRB2LEGACY" | gawk '{print $1}')" = "flatpak" ]; then
+
+                        flatpak run $($PRINTF "%s\n" "$SRB2LEGACY" | gawk '{print $NF}') -connect $OPTURL 2>&1 || checksrb2legacy
+
+                    else
+
+                        $SRB2LEGACY -connect $OPTURL 2>&1 || checksrb2legacy
+
+                    fi
+
+                fi
+
+            fi
+            break
+
+        else
+
+            $PRINTF "$NOTICE\n%s\n\e[0m" "No option has been chosen."
+            exit
+
+        fi
+
+    done
+}
+
 srb2kartms() {
     SRVCODE=$(curl -sL "$SRB2KARTMSURL" | gawk '{gsub("&#x27;|&#39;","\\47"); gsub("&amp;","\\&"); gsub("&gt;",">"); print}')
 
@@ -1798,13 +2077,13 @@ ringracersms() {
 
     fi
 
-    SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk -F':"|"' '/"server_name":/ {print $10}' | gawk '{gsub("\\^2","\\e[0;38;2;255;255;15m"); gsub("\\^3","\\e[0;38;2;105;224;70m"); gsub("\\^4","\\e[0;38;2;115;115;255m"); gsub("\\^5","\\e[0;38;2;255;63;63m"); gsub("\\^7","\\e[0;38;2;255;151;54m"); gsub("\\^6","\\e[0;38;2;167;167;167m"); gsub("\\^8","\\e[0;38;2;85;200;255m"); gsub("\\^C","\\e[0;38;2;196;196;225m"); gsub("\\^1","\\e[0;38;2;223;0;223m"); gsub("\\^A","\\e[0;38;2;215;187;67m"); gsub("\\^B","\\e[0;38;2;199;228;148m"); gsub("\\^9","\\e[0;38;2;207;127;207m"); gsub("\\^D","\\e[0;38;2;243;163;163m"); gsub("</span>","\033[0m"); gsub("\\^0","\\e[0m"); print}')\n")
-    SRVNAMENOCOLOR=$(printf "%s\n" "$SRVNAMECOLOR" | gawk '{gsub("\\^0",""); print}')
-    PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F',' '/"num_humans":/ {gsub("\"num_humans\":",""); gsub(",\"max_connections\":"," / "); print $1}')
-    GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"gametype":/ {gsub("\"|,",""); print $2}')
-    KARTSPEED=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"speed":/ {gsub("\"|,",""); print $NF}')
-    MAP=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"map_title":/ {gsub("\"|,",""); print $2}')
-    MODIFIED=$(printf "%s\n" "$SRVCODE" | gawk -F':|,"' '/"modified":/ {print $2}')
+    SRVNAMECOLOR=$(printf "%s$(printf "%s\n" "$SRVCODE" | gawk -F':"|"' '/"server_name":/ {print $10}' | gawk '{gsub("\\^2","\\e[0;38;2;255;255;15m"); gsub("\\^3","\\e[0;38;2;105;224;70m"); gsub("\\^4","\\e[0;38;2;115;115;255m"); gsub("\\^5","\\e[0;38;2;255;63;63m"); gsub("\\^7","\\e[0;38;2;255;151;54m"); gsub("\\^6","\\e[0;38;2;167;167;167m"); gsub("\\^8","\\e[0;38;2;85;200;255m"); gsub("\\^C","\\e[0;38;2;196;196;225m"); gsub("\\^1","\\e[0;38;2;223;0;223m"); gsub("\\^A","\\e[0;38;2;215;187;67m"); gsub("\\^B","\\e[0;38;2;199;228;148m"); gsub("\\^9","\\e[0;38;2;207;127;207m"); gsub("\\^D","\\e[0;38;2;243;163;163m"); gsub("</span>","\033[0m"); gsub("\\^0","\\e[0m"); gsub("\\\\u0000",""); print}')\n")
+    SRVNAMENOCOLOR=$(printf "%s\n" "$SRVNAMECOLOR" | gawk '{gsub("\\^0|\\\\u0000",""); print}')
+    PLAYERS=$(printf "%s\n" "$SRVCODE" | gawk -F',' '/"num_humans":/ {gsub("\"num_humans\":|\\\\u0000",""); gsub(",\"max_connections\":"," / "); print $1}')
+    GAMETYPE=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"gametype":/ {gsub("\"|,|\\\\u0000",""); print $2}')
+    KARTSPEED=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"speed":/ {gsub("\"|,|\\\\u0000",""); print $NF}')
+    MAP=$(printf "%s\n" "$SRVCODE" | gawk -F':' '/"map_title":/ {gsub("\"|,|\\\\u0000",""); print $2}')
+    MODIFIED=$(printf "%s\n" "$SRVCODE" | gawk -F':|,"' '/"modified":/ {gsub("\\\\u0000",""); print $2}')
     arraynametmp=$(printf "%s\n" "$(gawk -v furtherleft="$SRVNAMECOLOR" -v left="$SRVIP" -v leftcenter="$SRVPORT" -v center="$PLAYERS" -v rightcenter="$GAMETYPE" -v right="$KARTSPEED" -v furtherright="$MAP" -v muchfurtherright="$MODIFIED" 'BEGIN{
 split(furtherleft,fl,/\n/)
 split(left,l,/\n/)
@@ -1949,27 +2228,35 @@ END {
 
 usage() {
     $PRINTF "%s\n" "
-CLI for server related tools of SRB2/SRB2Kart/Ring Racers.
+CLI for server related tools of SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers.
 
 Usage: srb2srv [OPTION] <parameter>
   OPTIONS:
      -h, --help                                   Show this help text.
-     -c, --checkport                              Check if SRB2/SRB2Kart/Ring Racers server is reachable.
+     -c, --checkport                              Check if SRB2 server is reachable.
      -d, --dedicated            <addon-path>      Start dedicated SRB2 server.
+     -dc, --dedicatedclassic    <addon-path>      Start dedicated SRB2Classic (v2.2) server.
      -dk, --dedicatedkart       <addon-path>      Start dedicated SRB2Kart server.
+     -dl, --dedicatedlegacy     <addon-path>      Start dedicated SRB2 Legacy (v2.1) server.
      -dr, --dedicatedringracers <addon-path>      Start dedicated Ring Racers server.
      -f, --filter               <filter-query>    Filter list of SRB2 servers by query like server name, IP, gametype or map.
+     -fc, --filterclassic       <filter-query>    Filter list of SRB2Classic (v2.2) servers by query like server name, IP, gametype or room.
      -fk, --filterkart          <filter-query>    Filter list of SRB2Kart servers by query like server name, IP, gametype or kartspeed.
+     -fl, --filterlegacy        <filter-query>    Filter list of SRB2 Legacy (v2.1) servers by query like server name, IP, gametype or room.
      -fr, --filterringracers    <filter-query>    Filter list of Ring Racers servers by query like server name, IP, gametype or kartspeed.
      -i, --ip                   <server-ip>       Join SRB2 server from IP.
      -ik, --ipkart              <server-ip>       Join SRB2Kart server from IP.
      -ir, --ipringracers        <server-ip>       Join Ring Racers server from IP.
      -k, --kart                                   Go to SRB2Kart Master Server.
      -kr, --ringracers                            Go to Ring Racers Master Server.
+     -l, --legacy                                 Go to SRB2 Legacy (v2.1) Master Server.
+     -lc, --classic                               Go to SRB2Classic (v2.2) Master Server.
      -p, --port                 <port-number>     Specify the local UDP port to use. Works with -c, -d, -dk, -dr, -s, -sk and -sr options.
      -r, --room                 <room-name>       Go to SRB2 Master Server room. Available parameters: \"standard\", \"casual\" and \"custom\".
      -s, --server               <addon-path>      Start SRB2 server and play.
+     -sc, --serverclassic       <addon-path>      Start SRB2Classic (v2.2) server and play.
      -sk, --serverkart          <addon-path>      Start SRB2Kart server and play.
+     -sl, --serverlegacy        <addon-path>      Start SRB2 Legacy (v2.1) server and play.
      -sr, --serverringracers    <addon-path>      Start Ring Racers server and play.
 
   EXAMPLES:
@@ -1979,7 +2266,7 @@ Usage: srb2srv [OPTION] <parameter>
      2. Go to Ring Racers Master Server and connect to selected server from list:
             srb2srv --ringracers
 
-     3. Check if port 5030 for SRB2/SRB2Kart/Ring Racers server is opened (default port to be checked is 5029 without --port option):
+     3. Check if port 5030 for SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers server is opened (default port to be checked is 5029 without --port option):
             srb2srv --checkport --port 5030
 
      4. Run SRB2 server and add path to addon or directory of addons (default port to hosting server is 5029):
@@ -2001,7 +2288,7 @@ Usage: srb2srv [OPTION] <parameter>
             srb2srv --filterkart \"Normal\"
 
   NOTES:
-     - Exporting SRB2/SRB2Kart/Ring Racers executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\", \"ringracers\", \"ringracers.exe\", \"Ring Racers\") path or \"flatpak [SRB2/SRB2Kart/Ring Racers Flatpak Application ID]\" (for installed Flatpaks, Linux only) in \"SRB2\", \"SRB2KART\" or \"RINGRACERS\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
+     - Exporting SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"Sonic Robo Blast 2 Classic\", \"lsdl2srb2legacy\", \"srb2legacywin.exe\", \"srb2legacywin64.exe\", \"Sonic Robo Blast 2 Legacy\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\", \"ringracers\", \"ringracers.exe\", \"Ring Racers\") path or \"flatpak [SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers Flatpak Application ID]\" (for installed Flatpaks, Linux only) in \"SRB2\", \"SRB2KART\" or \"RINGRACERS\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
@@ -2019,6 +2306,34 @@ Usage: srb2srv [OPTION] <parameter>
 
          3. macOS:
             - export SRB2=\"/Applications/Sonic Robo Blast 2.app/Contents/MacOS/Sonic Robo Blast 2\".
+
+       SRB2Classic
+         1. Linux:
+            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/lsdl2srb2\",
+            - export SRB2CLASSIC=\"/usr/local/bin/srb2classic\",
+            - export SRB2CLASSIC=\"flatpak org.srb2.srb2-classic\".
+
+         2. Windows:
+            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/srb2win.exe\",
+            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/srb2win64.exe\",
+            - export SRB2CLASSIC=\"C:\Users\user\Games\SRB2CLASSIC\srb2win64.exe\".
+
+         3. macOS:
+            - export SRB2CLASSIC=\"/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic\"."
+
+       SRB2 Legacy
+         1. Linux:
+            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/lsdl2srb2legacy\",
+            - export SRB2LEGACY=\"/usr/local/bin/srb2legacy\",
+            - export SRB2LEGACY=\"flatpak org.srb2.srb2-legacy\".
+
+         2. Windows:
+            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/srb2legacywin.exe\",
+            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/srb2legacywin64.exe\",
+            - export SRB2LEGACY=\"C:\Users\user\Games\SRB2LEGACY\srb2legacywin64.exe\".
+
+         3. macOS:
+            - export SRB2LEGACY=\"/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy\"."
 
        SRB2Kart
          1. Linux:
@@ -2147,9 +2462,23 @@ case "$1" in
 
         ;;
 
+    -dc | --dedicatedclassic)
+
+        CLASSIC="1"
+        dedicated "$@"
+
+        ;;
+
     -dk | --dedicatedkart)
 
         dedicatedkart "$@"
+
+        ;;
+
+    -dl | --dedicatedlegacy)
+
+        LEGACY="1"
+        dedicated "$@"
 
         ;;
 
@@ -2165,9 +2494,23 @@ case "$1" in
 
         ;;
 
+    -fc | --filterclassic)
+
+        CLASSIC="1"
+        srb2legacyms "$@"
+
+        ;;
+
     -fk | --filterkart)
 
         srb2kartms "$@"
+
+        ;;
+
+    -fl | --filterlegacy)
+
+        LEGACY="1"
+        srb2legacyms "$@"
 
         ;;
 
@@ -2207,6 +2550,20 @@ case "$1" in
 
         ;;
 
+    -l | --legacy)
+
+        LEGACY="1"
+        srb2legacyms
+
+        ;;
+
+    -lc | --classic)
+
+        CLASSIC="1"
+        srb2legacyms
+
+        ;;
+
     -r | --room)
 
         srb2ms "$@"
@@ -2219,9 +2576,23 @@ case "$1" in
 
         ;;
 
+    -sc | --serverclassic)
+
+        CLASSIC="1"
+        server "$@"
+
+        ;;
+
     -sk | --serverkart)
 
         serverkart "$@"
+
+        ;;
+
+    -sl | --serverlegacy)
+
+        LEGACY="1"
+        server "$@"
 
         ;;
 
