@@ -935,6 +935,36 @@ ipkart() {
     fi
 }
 
+iplegacy() {
+    IFS=";"
+
+    if [ "$CLASSIC" = "1" ]; then
+
+        SRB2="$SRB2CLASSIC"
+
+    elif [ "$LEGACY" = "1" ]; then
+
+        SRB2="$SRB2LEGACY"
+
+    fi
+
+    SRB2=$($PRINTF "%s\n" "$SRB2" | gawk '{gsub(" /",";/"); gsub(" -",";-"); print}')
+
+    checksrb2legacy
+    $PRINTF "$MESSAGE\n%s\n\e[0m" "Connecting to server $2."
+    sleep 1
+
+    if [ "$($PRINTF "%s\n" "$SRB2" | gawk '{print $1}')" = "flatpak" ]; then
+
+        flatpak run $($PRINTF "%s\n" "$SRB2" | gawk '{print $NF}') -connect $2 2>&1 || checksrb2legacy
+
+    else
+
+        $SRB2 -connect $2 2>&1 || checksrb2legacy
+
+    fi
+}
+
 ipringracers() {
     IFS=";"
     RINGRACERS=$($PRINTF "%s\n" "$RINGRACERS" | gawk '{gsub(" /",";/"); gsub(" -",";-"); print}')
@@ -2245,7 +2275,9 @@ Usage: srb2srv [OPTION] <parameter>
      -fl, --filterlegacy        <filter-query>    Filter list of SRB2 Legacy (v2.1) servers by query like server name, IP, gametype or room.
      -fr, --filterringracers    <filter-query>    Filter list of Ring Racers servers by query like server name, IP, gametype or kartspeed.
      -i, --ip                   <server-ip>       Join SRB2 server from IP.
+     -ic, --ipclassic           <server-ip>       Join SRB2Classic (v2.2) server from IP.
      -ik, --ipkart              <server-ip>       Join SRB2Kart server from IP.
+     -il, --iplegacy            <server-ip>       Join SRB2 Legacy (v2.1) server from IP.
      -ir, --ipringracers        <server-ip>       Join Ring Racers server from IP.
      -k, --kart                                   Go to SRB2Kart Master Server.
      -kr, --ringracers                            Go to Ring Racers Master Server.
@@ -2266,7 +2298,7 @@ Usage: srb2srv [OPTION] <parameter>
      2. Go to Ring Racers Master Server and connect to selected server from list:
             srb2srv --ringracers
 
-     3. Check if port 5030 for SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers server is opened (default port to be checked is 5029 without --port option):
+     3. Check if port 5030 for SRB2 server is opened (default port to be checked is 5029 without --port option):
             srb2srv --checkport --port 5030
 
      4. Run SRB2 server and add path to addon or directory of addons (default port to hosting server is 5029):
@@ -2319,7 +2351,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2CLASSIC=\"C:\Users\user\Games\SRB2CLASSIC\srb2win64.exe\".
 
          3. macOS:
-            - export SRB2CLASSIC=\"/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic\"."
+            - export SRB2CLASSIC=\"/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic\".
 
        SRB2 Legacy
          1. Linux:
@@ -2333,7 +2365,7 @@ Usage: srb2srv [OPTION] <parameter>
             - export SRB2LEGACY=\"C:\Users\user\Games\SRB2LEGACY\srb2legacywin64.exe\".
 
          3. macOS:
-            - export SRB2LEGACY=\"/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy\"."
+            - export SRB2LEGACY=\"/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy\".
 
        SRB2Kart
          1. Linux:
@@ -2526,9 +2558,23 @@ case "$1" in
 
         ;;
 
+    -ic | --ipclassic)
+
+        CLASSIC="1"
+        iplegacy "$@"
+
+        ;;
+
     -ik | --ipkart)
 
         ipkart "$@"
+
+        ;;
+
+    -il | --iplegacy)
+
+        LEGACY="1"
+        iplegacy "$@"
 
         ;;
 

@@ -133,7 +133,9 @@ Usage: srb2srv [OPTION] <parameter>
      -fl, --filterlegacy        <filter-query>    Filter list of SRB2 Legacy (v2.1) servers by query like server name, IP, gametype or room.
      -fr, --filterringracers    <filter-query>    Filter list of Ring Racers servers by query like server name, IP, gametype or kartspeed.
      -i, --ip                   <server-ip>       Join SRB2 server from IP.
+     -ic, --ipclassic           <server-ip>       Join SRB2Classic (v2.2) server from IP.
      -ik, --ipkart              <server-ip>       Join SRB2Kart server from IP.
+     -il, --iplegacy            <server-ip>       Join SRB2 Legacy (v2.1) server from IP.
      -ir, --ipringracers        <server-ip>       Join Ring Racers server from IP.
      -k, --kart                                   Go to SRB2Kart Master Server.
      -l, --legacy                                 Go to SRB2 Legacy (v2.1) Master Server.
