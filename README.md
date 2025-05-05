@@ -176,7 +176,7 @@ Usage: srb2srv [OPTION] <parameter>
             srb2srv --filterkart "Normal"
 
   NOTES:
-     - Exporting SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"Sonic Robo Blast 2 Classic\", \"lsdl2srb2legacy\", \"srb2legacywin.exe\", \"srb2legacywin64.exe\", \"Sonic Robo Blast 2 Legacy\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\", \"ringracers\", \"ringracers.exe\", \"Ring Racers\") path or \"flatpak [SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers Flatpak Application ID]\" (for installed Flatpaks, Linux only) in \"SRB2\", \"SRB2KART\" or \"RINGRACERS\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
+     - Exporting SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "Sonic Robo Blast 2 Classic", "lsdl2srb2legacy", "srb2legacywin.exe", "srb2legacywin64.exe", "Sonic Robo Blast 2 Legacy", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart", "ringracers", "ringracers.exe", "Ring Racers") path or "flatpak [SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers Flatpak Application ID]" (for installed Flatpaks, Linux only) in "SRB2", "SRB2KART" or "RINGRACERS" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
@@ -197,31 +197,31 @@ Usage: srb2srv [OPTION] <parameter>
 
        SRB2Classic
          1. Linux:
-            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/lsdl2srb2\",
-            - export SRB2CLASSIC=\"/usr/local/bin/srb2classic\",
-            - export SRB2CLASSIC=\"flatpak org.srb2.srb2-classic\".
+            - export SRB2CLASSIC="\$HOME/Games/SRB2CLASSIC/lsdl2srb2",
+            - export SRB2CLASSIC="/usr/local/bin/srb2classic",
+            - export SRB2CLASSIC="flatpak org.srb2.srb2-classic".
 
          2. Windows:
-            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/srb2win.exe\",
-            - export SRB2CLASSIC=\"\$HOME/Games/SRB2CLASSIC/srb2win64.exe\",
-            - export SRB2CLASSIC=\"C:\Users\user\Games\SRB2CLASSIC\srb2win64.exe\".
+            - export SRB2CLASSIC="\$HOME/Games/SRB2CLASSIC/srb2win.exe",
+            - export SRB2CLASSIC="\$HOME/Games/SRB2CLASSIC/srb2win64.exe",
+            - export SRB2CLASSIC="C:\Users\user\Games\SRB2CLASSIC\srb2win64.exe".
 
          3. macOS:
-            - export SRB2CLASSIC=\"/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic\"."
+            - export SRB2CLASSIC="/Applications/Sonic Robo Blast 2 Classic.app/Contents/MacOS/Sonic Robo Blast 2 Classic"."
 
        SRB2 Legacy
          1. Linux:
-            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/lsdl2srb2legacy\",
-            - export SRB2LEGACY=\"/usr/local/bin/srb2legacy\",
-            - export SRB2LEGACY=\"flatpak org.srb2.srb2-legacy\".
+            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/lsdl2srb2legacy",
+            - export SRB2LEGACY="/usr/local/bin/srb2legacy",
+            - export SRB2LEGACY="flatpak org.srb2.srb2-legacy".
 
          2. Windows:
-            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/srb2legacywin.exe\",
-            - export SRB2LEGACY=\"\$HOME/Games/SRB2LEGACY/srb2legacywin64.exe\",
-            - export SRB2LEGACY=\"C:\Users\user\Games\SRB2LEGACY\srb2legacywin64.exe\".
+            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/srb2legacywin.exe",
+            - export SRB2LEGACY="\$HOME/Games/SRB2LEGACY/srb2legacywin64.exe",
+            - export SRB2LEGACY="C:\Users\user\Games\SRB2LEGACY\srb2legacywin64.exe".
 
          3. macOS:
-            - export SRB2LEGACY=\"/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy\"."
+            - export SRB2LEGACY="/Applications/Sonic Robo Blast 2 Legacy.app/Contents/MacOS/Sonic Robo Blast 2 Legacy"."
 
        SRB2Kart
          1. Linux:
@@ -267,7 +267,7 @@ Usage: srb2srv [OPTION] <parameter>
 ```
 
 # Notes
-     - Exporting SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers executable file (\"lsdl2srb2\", \"lsdlsrb2\", \"srb2\", \"srb2win.exe\", \"srb2win64.exe\", \"srb2.exe\", \"Sonic Robo Blast 2\", \"Sonic Robo Blast 2 Classic\", \"lsdl2srb2legacy\", \"srb2legacywin.exe\", \"srb2legacywin64.exe\", \"Sonic Robo Blast 2 Legacy\", \"lsdl2srb2kart\", \"srb2kart\", \"srb2kart.exe\", \"Sonic Robo Blast 2 Kart\", \"ringracers\", \"ringracers.exe\", \"Ring Racers\") path or \"flatpak [SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers Flatpak Application ID]\" (for installed Flatpaks, Linux only) in \"SRB2\", \"SRB2KART\" or \"RINGRACERS\" environment variable to shell configuration file (for example in \".bashrc\" or \".bash_profile\") is required for script to work.
+     - Exporting SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers executable file ("lsdl2srb2", "lsdlsrb2", "srb2", "srb2win.exe", "srb2win64.exe", "srb2.exe", "Sonic Robo Blast 2", "Sonic Robo Blast 2 Classic", "lsdl2srb2legacy", "srb2legacywin.exe", "srb2legacywin64.exe", "Sonic Robo Blast 2 Legacy", "lsdl2srb2kart", "srb2kart", "srb2kart.exe", "Sonic Robo Blast 2 Kart", "ringracers", "ringracers.exe", "Ring Racers") path or "flatpak [SRB2/SRB2Classic/SRB2 Legacy/SRB2Kart/Ring Racers Flatpak Application ID]" (for installed Flatpaks, Linux only) in "SRB2", "SRB2KART" or "RINGRACERS" environment variable to shell configuration file (for example in ".bashrc" or ".bash_profile") is required for script to work.
      Here are a few examples:
        SRB2
          1. Linux:
