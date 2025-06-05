@@ -2,7 +2,7 @@ This shell script has number of uses related to SRB2/SRB2Classic/SRB2 Legacy/Rin
 
 Mainly, the script obtains information about IP, number of players, gametype, etc. from https://ms.srb2.org and https://ms.kartkrew.org, which allows user to connect directly to selected server from SRB2/SRB2Classic/SRB2 Legacy/Ring Racers Master Server list.
 
-![srb2srv](https://user-images.githubusercontent.com/16626326/134928198-1b1b3837-1da0-4f97-bb23-e533d4da3487.gif)
+![srb2srv](https://github.com/user-attachments/assets/70711954-4da8-4a69-bf17-7efc58adc5ff)
 
 # Features
 - Connecting directly to selected server's IP from SRB2/SRB2Classic/SRB2 Legacy/Ring Racers Master Server,
@@ -49,7 +49,7 @@ Additionally, Windows users need to have installed Git Bash to run this script.
 - NixOS/NixOS based: `sudo nix profile install nixpkgs#gnumake nixpkgs#git nixpkgs#which nixpkgs#coreutils nixpkgs#findutils nixpkgs#ncurses nixpkgs#curl nixpkgs#gawk --extra-experimental-features 'nix-command flakes'` or set those packages in "environment.systemPackages = with pkgs;" in "/etc/nixos/configuration.nix", and then enter `sudo nixos-rebuild switch`.
 
 - Immutable systems like Steam Deck's SteamOS need rootless method of getting dependencies to avoid issues with wiping out installed packages after system's update or not to be able to write to certain path, like "/usr/local":
-	- Install dependencies with package manager [Homebrew](https://brew.sh/): `brew install make git coreutils findutils ncurses curl gawk`.
+	- Install dependencies with package manager [Homebrew](https://brew.sh/): `brew install make git gnu-which coreutils findutils ncurses curl gawk`.
 
 **Windows:**
 1. Installing Git Bash:
